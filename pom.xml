@@ -47,7 +47,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>strongbox-commons</artifactId>
+            <artifactId>strongbox-web-core</artifactId>
             <version>${project.version}</version>
         </dependency>
 
