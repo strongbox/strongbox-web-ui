@@ -1,14 +1,36 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>StrongboxWebUi</title>
-  <base href="/">
+    <title>Strongbox</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <base href="/">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100&text=Strongbox" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-  <app-root></app-root>
+
+    <div id="fullscreen-splash">
+        <div class="container">
+            <div class="logo-text">Strongbox</div>
+            <div class="clearfix"></div>
+            <div class="spinner-container">
+                <div class="spinner">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-strongbox style="display: none;"></app-strongbox>
+
 </body>
 </html>

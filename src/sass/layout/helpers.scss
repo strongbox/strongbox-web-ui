@@ -1,0 +1,26 @@
+@mixin logo-text($font-size: 3.1rem, $margin: null) {
+  .logo-text {
+    font-family: 'Raleway', sans-serif;
+    font-size: $font-size;
+    font-weight: 100;
+    @if $margin != null {
+      margin: $margin
+    }
+  }
+
+  .logo-text:before,
+  .logo-text:after {
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 100;
+    font-size: $font-size + 0.4;
+    color: #2684bd;
+  }
+
+  .logo-text:before {
+    content: "{ ";
+  }
+
+  .logo-text:after {
+    content: " }";
+  }
+}

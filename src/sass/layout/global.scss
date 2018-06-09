@@ -1,0 +1,23 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    display: flex;
+    background: #293b48;
+    color: white;
+}
+
+app-strongbox {
+    width: 100vw;
+}
+
+a {
+    cursor: pointer;
+    user-select: none;
+}
+
+.clearfix {
+    clear: both;
+}
