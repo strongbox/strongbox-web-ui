@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "build-prod": "ng build --prod --aot",
+    "start": "ng serve --aot",
+    "build": "npm run clean-dist && ng build",
+    "build-prod": "npm run clean-dist && ng build --prod --aot",
     "clean-dist": "./node_modules/.bin/rimraf dist/packaging dist/strongbox-web-ui",
     "clean-install": "./node_modules/.bin/rimraf node_modules && npm install",
     "ci-build": "npm run clean-dist && npm run build-prod && npm run package",
