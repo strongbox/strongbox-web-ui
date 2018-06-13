@@ -6,6 +6,6 @@ export class AppPage {
   }
 
   getParagraphText() {
-    return element(by.css('app-strongbox h1')).getText();
+    return element(by.deepCss('.logo-text')).getText();
   }
 }

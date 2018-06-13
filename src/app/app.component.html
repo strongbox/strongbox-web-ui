@@ -1,7 +1,97 @@
-<section>
-    <div fxLayout="row" fxLayoutAlign="center center">
+<mat-toolbar id="navigation" fxLayout="row" fxLayoutGap="2%" fxLayoutGap.lt-sm="10%" fxLayoutGap.lt-md="6%" [class.transparent]="false">
+    <div class="logo-container" fxLayout="row" fxLayoutGap="10%">
         <div fxLayout="column" fxLayoutAlign="center center">
-            <router-outlet></router-outlet>
+            <div class="logo-text">Strongbox</div>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center" fxHide.lt-lg>
+            <div class="menu-button-wrapper" fxLayoutAlign="center">
+                <div fxLayoutAlign="center center">
+                    <div class="menu-container">
+                        <a id="toggleSideNav" (click)="sidenav.toggle()" [class.close]="sidenav.opened">
+                            <div class="line top"></div>
+                            <div class="line middle"></div>
+                            <div class="line bottom"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+
+    <!-- This fills the remaining space of the current row -->
+    <div fxFlex="1 1 auto" class="search-container"  fxHide.xs>
+        <div class="search" fxHide.lt-sm fxLayout="column">
+            <input type="text" placeholder="Search query"/>
+            <i class="icon ion-md-search"></i>
+        </div>
+    </div>
+
+    <div fxLayoutAlign="center center" class="right-container">
+        <ul fxLayoutAlign="center center">
+            <li>
+                <a title="Browse repositories">
+                    <i class="icon ion-md-apps"></i>
+                </a>
+            </li>
+            <li>
+                <a title="Notifications">
+                    <span matBadge="14" matBadgeOverlap="false" matBadgeSize="small" matBadgePosition="after above" matBadgeColor="warn" class="alert">
+                        <i class="icon ion-md-notifications"></i>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a title="Profile">
+                    <i class="icon ion-md-person"></i> <span fxHide.lt-lg>&nbsp;&nbsp;Steve</span>
+                </a>
+            </li>
+            <li [fxHide]="!isMobile">
+                <div class="menu-button-wrapper" fxLayoutAlign="center">
+                    <div fxLayoutAlign="center center">
+                        <div class="menu-container">
+                            <a id="toggleMobileSideNav" (click)="sidenav.toggle()" [class.close]="sidenav.opened">
+                                <div class="line top"></div>
+                                <div class="line middle"></div>
+                                <div class="line bottom"></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</mat-toolbar>
+
+<div fxFill>
+    <mat-sidenav-container class="main-content">
+        <mat-sidenav #sidenav mode="side" opened="false" class="menu-sidenav" [fixedInViewport]="true" [position]="isMobile ? 'end' : 'start'">
+            <ul fxLayout="column" fxLayoutAlign="start">
+                <li>
+                    <a>Dashboard</a>
+                </li>
+                <li>
+                    <a>Browse</a>
+                </li>
+                <li>
+                    <a href="#">Administration</a>
+                    <ul fxLayout="column" fxLayoutAlign="start">
+                        <li><a>Server</a></li>
+                        <li><a>Logs</a></li>
+                        <li><a>Proxy configuration</a></li>
+                        <li>
+                            <a>Repositories</a>
+                            <!--<li><a>Remote repositories configuration</a></li>-->
+                        </li>
+                        <li><a>Routing</a></li>
+                        <li><a>Security</a></li>
+                        <li><a>Storages</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

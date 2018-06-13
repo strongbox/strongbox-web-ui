@@ -10,7 +10,7 @@
     "clean-install": "./node_modules/.bin/rimraf node_modules && npm install",
     "ci-build": "npm run clean-dist && npm run build-prod && npm run package",
     "ci-test": "ng test --browsers ChromeHeadless",
-    "ci-e2e": "ng e2e --protractor-config ./e2e/protractor-ci.conf.js",
+    "ci-e2e": "ng e2e --port 4201 --protractor-config ./e2e/protractor-ci.conf.js",
     "package": "./node_modules/.bin/rimraf dist/packaging/* && ./node_modules/.bin/webpack",
     "test": "ng test --watch",
     "lint": "ng lint",

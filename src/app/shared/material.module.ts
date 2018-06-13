@@ -1,7 +1,10 @@
 import {NgModule} from '@angular/core';
+import {FlexLayoutModule} from '@angular/flex-layout';
+
 import {
     MatButtonModule,
     MatCardModule,
+    MatBadgeModule,
     MatDialogModule,
     MatExpansionModule,
     MatIconModule,
@@ -12,6 +15,7 @@ import {
     MatProgressSpinnerModule,
     MatRadioModule,
     MatSelectModule,
+    MatSidenavModule,
     MatSlideToggleModule,
     MatSnackBarModule,
     MatTableModule,
@@ -23,7 +27,9 @@ import {CdkTableModule} from '@angular/cdk/table';
 
 const components = [
     CdkTableModule,
+    FlexLayoutModule,
     MatIconModule,
+    MatBadgeModule,
     MatButtonModule,
     MatCardModule,
     MatDialogModule,
@@ -36,6 +42,7 @@ const components = [
     MatProgressSpinnerModule,
     MatRadioModule,
     MatSelectModule,
+    MatSidenavModule,
     MatSlideToggleModule,
     MatSnackBarModule,
     MatTableModule,

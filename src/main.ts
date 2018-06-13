@@ -11,13 +11,15 @@ if (environment.production) {
 platformBrowserDynamic()
     .bootstrapModule(AppModule)
     .then(() => {
-        const splashScreen = document.getElementById('fullscreen-splash');
-        if (splashScreen) {
-            splashScreen.setAttribute('class', 'loaded');
-            document.getElementsByTagName('app-strongbox').item(0).removeAttribute('style');
-            setTimeout(function () {
-                splashScreen.remove();
-            }, 680);
-        }
+        setTimeout(function(){
+            const splashScreen = document.getElementById('fullscreen-splash');
+            if (splashScreen) {
+                splashScreen.setAttribute('class', 'loaded');
+                document.getElementsByTagName('app-strongbox').item(0).removeAttribute('style');
+                setTimeout(function () {
+                    splashScreen.remove();
+                }, 680);
+            }
+        }, 400);
     })
     .catch(err => console.log(err));

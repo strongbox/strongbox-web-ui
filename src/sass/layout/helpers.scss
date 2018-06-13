@@ -24,3 +24,35 @@
     content: " }";
   }
 }
+
+@mixin input-placeholder($color, $hover) {
+  // these need to be separate declarations!
+  input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: $color;
+    transition: all 0.28s ease;
+  }
+  input:focus::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: $hover;
+  }
+  input::-moz-placeholder { /* Firefox 19+ */
+    color: $color;
+    transition: all 0.28s ease;
+  }
+  input:focus::-moz-placeholder { /* Firefox 19+ */
+    color: $hover;
+  }
+  input:-ms-input-placeholder { /* IE 10+ */
+    color: $color;
+    transition: all 0.28s ease;
+  }
+  input:focus:-ms-input-placeholder { /* IE 10+ */
+    color: $hover;
+  }
+  input:-moz-placeholder { /* Firefox 18- */
+    color: $color;
+    transition: all 0.28s ease;
+  }
+  input:focus:-moz-placeholder { /* Firefox 18- */
+    color: $hover;
+  }
+}
