@@ -3,3 +3,13 @@
 @import "sass/layout/helpers";
 @import "sass/layout/global";
 @import "sass/layout/splash-screen";
+@import "sass/layout/navigation";
+@import "sass/layout/components/expansion-panel";
+
+// This is necessary for the search results tabs.
+// TODO: Figure out a better way.
+.mat-tab-body-content {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  height: unset!important;
+}

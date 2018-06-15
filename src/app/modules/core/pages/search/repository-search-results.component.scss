@@ -1,0 +1,61 @@
+h3 {
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+
+.results {
+  max-width: 88rem;
+  margin: auto;
+  padding-top: 20px;
+}
+
+.code {
+  background: rgba(255, 255, 255, 0.1);
+  width: 100%;
+  border: 0px;
+  color: white;
+  padding: 17px 0px 8px 15px;
+  font-size: 12px;
+  margin: 0px;
+}
+
+.mat-expansion-panel-header-title,
+.mat-expansion-panel-header-description {
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+.panel-description {
+  width: 100%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  &.small-screen {
+    margin-bottom: 20px;
+  }
+
+  > span {
+    margin-right: 1%;
+  }
+
+  span.highlight {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .separator:after {
+    content: " | ";
+  }
+
+  .storage {
+    margin-right: 27px;
+  }
+}
+
+.links {
+  width: 100%;
+  padding: 10px 0px 10px 0px;
+  text-align: right;
+
+  a {
+    margin-right: 10px;
+  }
+}

@@ -1,3 +1,5 @@
+<ng-progress #progressBar></ng-progress>
+
 <mat-toolbar id="navigation" fxLayout="row" fxLayoutGap="2%" fxLayoutGap.lt-sm="10%" fxLayoutGap.lt-md="6%" [class.transparent]="false">
     <div class="logo-container" fxLayout="row" fxLayoutGap="10%">
         <div fxLayout="column" fxLayoutAlign="center center">
@@ -21,9 +23,9 @@
     </div>
 
     <!-- This fills the remaining space of the current row -->
-    <div fxFlex="1 1 auto" class="search-container"  fxHide.xs>
+    <div fxFlex="1 1 auto" class="search-container" fxHide.xs>
         <div class="search" fxHide.lt-sm fxLayout="column">
-            <input type="text" placeholder="Search query"/>
+            <input type="text" placeholder="Search query" [ngModel]="searchQuery | async" (ngModelChange)="this.searchQuery.next($event)" (keyup.enter)="submitSearchRequest()"/>
             <i class="icon ion-md-search"></i>
         </div>
     </div>
@@ -31,7 +33,7 @@
     <div fxLayoutAlign="center center" class="right-container">
         <ul fxLayoutAlign="center center">
             <li>
-                <a title="Browse repositories">
+                <a title="Browse repositories" [routerLink]="['/browse']">
                     <i class="icon ion-md-apps"></i>
                 </a>
             </li>
@@ -66,7 +68,9 @@
 
 <div fxFill fxLayout="column">
     <mat-sidenav-container class="main-content">
-        <mat-sidenav #sidenav mode="side" opened="false" class="menu-sidenav" [fixedInViewport]="true" [position]="isMobile ? 'end' : 'start'">
+        <mat-drawer-container [hasBackdrop]="false" [autosize]="true"></mat-drawer-container>
+
+        <mat-sidenav #sidenav opened="false" class="menu-sidenav" [fixedInViewport]="true" [position]="isMobile ? 'end' : 'start'" [mode]="isMobile ? 'over' : 'side'">
             <ul fxLayout="column" fxLayoutAlign="start">
                 <li>
                     <a>Dashboard</a>

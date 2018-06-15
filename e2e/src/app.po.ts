@@ -6,6 +6,6 @@ export class AppPage {
   }
 
   getParagraphText() {
-    return element(by.deepCss('.logo-text')).getText();
+    return element(by.deepCss('.logo-text a')).getText();
   }
 }

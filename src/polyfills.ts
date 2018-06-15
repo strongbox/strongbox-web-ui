@@ -46,7 +46,12 @@ import 'core-js/es6/reflect';
 
 /** Evergreen browsers require these. **/
 // Used for reflect-metadata in JIT. If you use AOT (and only Angular decorators), you can remove.
+// IGNORE THE UPPER NOTICE!
+// DO NOT REMOVE THIS OR I WILL FIND YOU AND I WILL KILL YOU !!!!!!!!!
+// REMOVING THIS RESULTS IN "Uncaught Error: Can't resolve all parameters for ComponentName: (?, ?, ....)" ALL OVER THE PLACE!
 // import 'core-js/es7/reflect';
+// import 'reflect-metadata';
+import 'core-js/es7/reflect';
 
 
 /**
