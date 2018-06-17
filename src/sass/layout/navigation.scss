@@ -152,6 +152,8 @@
 }
 
 .main-content {
+  width: 100vw;
+  height: 100vh;
 
   &.mat-drawer-container {
     background-color: transparent;
@@ -159,6 +161,10 @@
 
   > mat-sidenav-content {
     padding: 70px 10px 0px 10px;
+  }
+
+  .mat-drawer-backdrop.mat-drawer-shown {
+    background-color: rgba(13, 23, 31, 0.68);
   }
 }
 
