@@ -24,6 +24,7 @@ import {SessionState} from './auth/session.state';
 import {AuthService} from './auth/auth.service';
 import {LoginDialogComponent} from './dialogs/login/login.dialog.component';
 import {AppState} from '../../state/app.state';
+import {TokenInterceptor} from './services/interceptors/token.interceptor';
 
 @NgModule({
     imports: [
@@ -89,6 +90,11 @@ import {AppState} from '../../state/app.state';
             useClass: ApiURLInterceptor,
             multi: true
         }),
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptor,
+            multi: true
+        },
         CoreRouterResolver,
         AuthService,
         RepositorySearchService

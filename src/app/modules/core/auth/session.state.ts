@@ -3,10 +3,10 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 
-import {LoginAction, LogoutAction} from './auth.actions';
+import {CredentialsExpiredAction, LoginAction, LogoutAction} from './auth.actions';
 import {User, UserAuthority} from './auth.model';
 import {AuthService} from './auth.service';
-import {HideSideNavAction} from '../../../state/app.actions';
+import {HideSideNavAction, OpenLoginDialogAction} from '../../../state/app.actions';
 
 export interface SessionStateModel {
     user: User | null;
@@ -108,4 +108,11 @@ export class SessionState {
             this.store.dispatch(new HideSideNavAction());
         }
     }
+
+    @Action(CredentialsExpiredAction)
+    expired(ctx: StateContext<SessionStateModel>, {payload}: CredentialsExpiredAction) {
+        this.store.dispatch([new LogoutAction(), new OpenLoginDialogAction(payload)]);
+    }
+
+
 }

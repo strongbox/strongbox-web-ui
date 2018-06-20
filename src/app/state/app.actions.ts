@@ -12,6 +12,9 @@ export class ToggleSideNavAction {
 
 export class OpenLoginDialogAction {
     static readonly type = '[App] Open login dialog';
+
+    constructor(public payload: any = null) {
+    }
 }
 
 export class CloseLoginDialogAction {

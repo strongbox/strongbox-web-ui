@@ -46,6 +46,8 @@ export class LoginDialogComponent implements OnInit {
             this.form.get('username').value,
             this.form.get('password').value
         );
+        this.data.sessionHasExpired = false;
+        this.data.sessionIsInvalid = false;
         this.store.dispatch(new LoginAction(credentials));
     }
 

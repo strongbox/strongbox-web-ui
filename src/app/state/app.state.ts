@@ -59,11 +59,11 @@ export class AppState {
     }
 
     @Action(OpenLoginDialogAction)
-    openLoginDialogAction(ctx: StateContext<AppStateModel>) {
+    openLoginDialogAction(ctx: StateContext<AppStateModel>, {payload}: OpenLoginDialogAction) {
         this.session$.pipe(take(1)).subscribe((session) => {
             if (!ctx.getState().loginModalOpened && session.hasOwnProperty('state') && session.state !== 'authenticated' ) {
                 ctx.patchState({loginModalOpened: true});
-                this.dialog.open(LoginDialogComponent);
+                this.dialog.open(LoginDialogComponent, {data: payload});
             }
         });
     }

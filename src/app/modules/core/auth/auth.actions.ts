@@ -7,21 +7,24 @@ export class LoginAction {
     }
 }
 
-export class LoginSuccess {
-    static readonly type = '[Auth] Login success';
-}
-
 export class LogoutAction {
     static readonly type = '[Auth] Logout';
 }
 
-export class CheckCredentials {
+export class CheckCredentialsAction {
     static readonly type = '[Auth] Credentials check';
 }
 
-export class LoginFailed {
-    static readonly type = '[Auth] Login failed';
+export class CredentialsExpiredAction {
+    static readonly type = '[Auth] Credentials have expired';
 
-    constructor(public payload) {
+    constructor(public payload: any = null) {
+    }
+}
+
+export class InvalidCredentialsAction {
+    static readonly type = '[Auth] Invalid credentials';
+
+    constructor(public payload: any = null) {
     }
 }
