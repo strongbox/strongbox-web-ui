@@ -1,0 +1,23 @@
+.loginDialog {
+  @media screen and(min-width: 450px) {
+    min-width: 270px;
+  }
+  padding: 30px;
+}
+
+.loginDialog form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.loginDialog .mat-form-field {
+  width: 100%;
+}
+
+.loginDialog .errors {
+  text-align: center;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}

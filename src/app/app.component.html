@@ -1,13 +1,13 @@
 <ng-progress #progressBar></ng-progress>
 
-<mat-toolbar id="navigation" fxLayout="row" fxLayoutGap="2%" fxLayoutGap.lt-sm="10%" fxLayoutGap.lt-md="6%" [class.transparent]="false">
+<mat-toolbar id="navigation" fxLayout="row" fxLayoutGap="2%" fxLayoutGap.xs="0" [class.transparent]="false">
     <div class="logo-container" fxLayout="row" fxLayoutGap="10%">
         <div fxLayout="column" fxLayoutAlign="center center">
             <div class="logo-text">
                 <a routerLink="/">Strongbox</a>
             </div>
         </div>
-        <div fxLayout="column" fxLayoutAlign="center center" fxHide.lt-lg>
+        <div fxLayout="column" fxLayoutAlign="center center" fxHide.lt-lg *ngIf="(session$ | async).state === 'authenticated'">
             <div class="menu-button-wrapper" fxLayoutAlign="center">
                 <div fxLayoutAlign="center center">
                     <div class="menu-container">
@@ -23,7 +23,7 @@
     </div>
 
     <!-- This fills the remaining space of the current row -->
-    <div fxFlex="1 1 auto" class="search-container" fxHide.xs>
+    <div fxFlex="1 1 auto" class="search-container">
         <div class="search" fxHide.lt-sm fxLayout="column">
             <input type="text" placeholder="Search query" [ngModel]="searchQuery | async" (ngModelChange)="this.searchQuery.next($event)" (keyup.enter)="submitSearchRequest()"/>
             <i class="icon ion-md-search"></i>
@@ -37,23 +37,33 @@
                     <i class="icon ion-md-apps"></i>
                 </a>
             </li>
-            <li>
+            <li *ngIf="(session$ | async).state !== 'authenticated'">
+                <a title="Login" (click)="openLoginDialog()">
+                    <i class="icon ion-md-lock"></i>
+                </a>
+            </li>
+            <li *ngIf="(session$ | async).state === 'authenticated'">
                 <a title="Notifications">
                     <span matBadge="14" matBadgeOverlap="false" matBadgeSize="small" matBadgePosition="after above" matBadgeColor="warn" class="alert">
                         <i class="icon ion-md-notifications"></i>
                     </span>
                 </a>
             </li>
-            <li>
+            <li *ngIf="(session$ | async).state === 'authenticated'">
                 <a title="Profile">
-                    <i class="icon ion-md-person"></i> <span fxHide.lt-lg>&nbsp;&nbsp;Steve</span>
+                    <i class="icon ion-md-person"></i> <span fxHide.lt-lg>&nbsp;&nbsp;{{ (session$ | async).user.username }}</span>
                 </a>
             </li>
-            <li [fxHide]="!isMobile">
+            <li *ngIf="(session$ | async).state === 'authenticated'">
+                <a title="Logout" (click)="auth.logout()">
+                    <i class="icon ion-md-log-out"></i>
+                </a>
+            </li>
+            <li [fxHide]="!isMobile" *ngIf="(session$ | async).state === 'authenticated'">
                 <div class="menu-button-wrapper" fxLayoutAlign="center">
                     <div fxLayoutAlign="center center">
                         <div class="menu-container">
-                            <a id="toggleMobileSideNav" (click)="sidenav.toggle()" [class.close]="sidenav.opened">
+                            <a id="toggleMobileSideNav" (click)="toggleSideNav()" [class.close]="(app$ | async).sideNav">
                                 <div class="line top"></div>
                                 <div class="line middle"></div>
                                 <div class="line bottom"></div>
@@ -70,15 +80,15 @@
     <mat-sidenav-container class="main-content">
         <mat-drawer-container [hasBackdrop]="false" [autosize]="true"></mat-drawer-container>
 
-        <mat-sidenav #sidenav opened="false" class="menu-sidenav" [fixedInViewport]="true" [position]="isMobile ? 'end' : 'start'" [mode]="isMobile ? 'over' : 'side'">
-            <ul fxLayout="column" fxLayoutAlign="start">
+        <mat-sidenav [hidden]="(session$ | async).state == 'authenticated'" #sidenav [opened]="(app$ | async).sideNav" class="menu-sidenav" [fixedInViewport]="true" [position]="isMobile ? 'end' : 'start'" [mode]="isMobile ? 'over' : 'side'">
+            <ul fxLayout="column" fxLayoutAlign="start" *ngIf="(session$ | async).state == 'authenticated'">
                 <li>
                     <a>Dashboard</a>
                 </li>
                 <li>
                     <a>Browse</a>
                 </li>
-                <li>
+                <li *ngIf="(session$ | async).user.hasAuthority('ADMIN')">
                     <a href="#">Administration</a>
                     <ul fxLayout="column" fxLayoutAlign="start">
                         <li><a>Server</a></li>

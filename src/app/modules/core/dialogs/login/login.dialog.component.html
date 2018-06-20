@@ -1,0 +1,20 @@
+<div class="loginDialog">
+  <div class="errors">
+    <mat-error *ngIf="data.sessionHasExpired">Your session has expired!</mat-error>
+    <mat-error *ngIf="data.sessionIsInvalid">Your session is invalid!</mat-error>
+    <mat-error *ngIf="form.hasError('wrongCredentials')">Invalid credentials provided!</mat-error>
+  </div>
+  <form [formGroup]="form" (submit)="login()">
+    <mat-form-field>
+      <input matInput formControlName="username" placeholder="Username" required>
+      <mat-error *ngIf="hasError('username', 'required')">Please enter a valid username.</mat-error>
+    </mat-form-field>
+    <div class="spacer">&nbsp;</div>
+    <mat-form-field>
+      <input type="password" matInput formControlName="password" placeholder="Password" required>
+      <mat-error *ngIf="hasError('password', 'required')">Please enter a password.</mat-error>
+    </mat-form-field>
+    <div class="spacer">&nbsp;</div>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || (pending$ | async ) == 'pending' || (pending$ | async) == 'authenticated'">Login</button>
+  </form>
+</div>

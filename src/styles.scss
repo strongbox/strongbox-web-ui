@@ -5,6 +5,7 @@
 @import "sass/layout/splash-screen";
 @import "sass/layout/navigation";
 @import "sass/layout/components/expansion-panel";
+@import "sass/layout/components/dialog";
 
 // This is necessary for the search results tabs.
 // TODO: Figure out a better way.
@@ -12,4 +13,10 @@
   overflow-x: hidden !important;
   overflow-y: hidden !important;
   height: unset!important;
+}
+
+.mat-tab-label {
+  height: 40px !important;
+  padding: 0px 20px !important;
+  min-width: 120px !important;
 }
