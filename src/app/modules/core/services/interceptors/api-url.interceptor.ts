@@ -9,18 +9,24 @@ import {environment} from '../../../../../environments/environment';
     providedIn: 'root'
 })
 export class ApiURLInterceptor implements HttpInterceptor {
+
+    readonly protocolMatcher = new RegExp(/^(http(s)?).*/i);
+
     constructor(@Inject(DOCUMENT) private document) {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (environment.strongboxUrl != null) {
-            let url = environment.strongboxUrl + '/' + request.url.replace(/^\//, '');
+        // If the requested URL has "http(s)" - it's external.
+        if (environment.strongboxUrl != null && this.protocolMatcher.test(request.url) === false) {
+            let protocol;
 
-            if (!environment.strongboxUrl.match(/^http(s)?/i)) {
-                const protocol = document.location.protocol.startsWith('http') ? 'http' : 'https';
-                url = protocol + '://' + environment.strongboxUrl + '/' + request.url.replace(/^\//, '');
+            if (this.protocolMatcher.test(environment.strongboxUrl)) {
+                protocol = environment.strongboxUrl.match(this.protocolMatcher)[1];
+            } else {
+                protocol = document.location.protocol.startsWith('http') ? 'http' : 'https';
             }
 
+            const url = protocol + '://' + environment.strongboxUrl + '/' + request.url.replace(/^\//, '');
             request = request.clone({url: url, withCredentials: true});
         }
 
