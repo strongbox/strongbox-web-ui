@@ -158,13 +158,14 @@
 .main-content {
   width: 100vw;
   height: 100vh;
+  padding-top: 65px;
 
   &.mat-drawer-container {
     background-color: transparent;
   }
 
   > mat-sidenav-content {
-    padding: 70px 10px 0px 10px;
+    padding: 0px 10px 0px 60px;
   }
 
   .mat-drawer-backdrop.mat-drawer-shown {
