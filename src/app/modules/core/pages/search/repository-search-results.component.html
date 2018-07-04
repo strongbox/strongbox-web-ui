@@ -5,7 +5,7 @@
                 <mat-expansion-panel *ngFor="let result of (results$ | async)?.artifact">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            {{ result.artifactCoordinates.groupId }}.{{result.artifactCoordinates.artifactId}}:{{result.artifactCoordinates.extension}}:{{result.artifactCoordinates.version}}
+                            {{ result.artifactCoordinates.groupId }}:{{result.artifactCoordinates.artifactId}}:{{result.artifactCoordinates.extension}}:{{result.artifactCoordinates.version}}
                         </mat-panel-title>
                         <mat-panel-description fxHide.lt-lg>
                             <div class="panel-description text-right">
