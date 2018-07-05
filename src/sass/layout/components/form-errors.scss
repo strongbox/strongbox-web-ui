@@ -1,0 +1,9 @@
+// Workaround for https://github.com/angular/material2/issues/4580.
+mat-form-field .mat-form-field {
+  &-underline {
+    position: static;
+  }
+  &-subscript-wrapper {
+    position: static;
+  }
+}
