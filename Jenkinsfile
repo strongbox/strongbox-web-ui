@@ -28,7 +28,7 @@ pipeline {
                 nodeInfo("npm yarn node mvn")
             }
         }
-        stage('NPM install')
+        stage('Install dependencies')
         {
             steps {
                 sh "npm install"
@@ -62,7 +62,8 @@ pipeline {
                            " -Durl=" + SERVER_URL +
                            " -DartifactId=strongbox-web-ui" +
                            " -DgroupId=org.carlspring.strongbox" +
-                           " -Dpackaging=zip "
+                           " -Dpackaging=zip " +
+                           " -Dversion=1.0-SNAPSHOT"
                     }
                 }
             }
