@@ -1,11 +1,13 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {NgxsModule} from '@ngxs/store';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {of} from 'rxjs';
 
 import {LoginDialogComponent} from './login.dialog.component';
 import {MaterialModule} from '../../../../shared/material.module';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 
 describe('Component: LoginDialogComponent', () => {
@@ -15,6 +17,7 @@ describe('Component: LoginDialogComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
+                NoopAnimationsModule,
                 MaterialModule,
                 HttpClientTestingModule,
                 NgxsModule.forRoot([]),
@@ -23,7 +26,7 @@ describe('Component: LoginDialogComponent', () => {
             declarations: [LoginDialogComponent],
             providers: [
                 {provide: MAT_DIALOG_DATA, useValue: {}},
-                {provide: MatDialogRef, useValue: {}}
+                {provide: MatDialogRef, useValue: {afterClosed: () => of(null)}}
             ]
         });
 
