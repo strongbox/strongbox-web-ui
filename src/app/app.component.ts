@@ -48,6 +48,10 @@ export class AppComponent implements OnInit, AfterViewChecked {
         if (event.code === 'KeyQ' && event.altKey === true) {
             this.store.dispatch(new LogoutAction());
         }
+
+        if (event.code === 'KeyP' && event.altKey === true) {
+            this.router.navigate(['profile']);
+        }
     }
 
     openLoginDialog() {

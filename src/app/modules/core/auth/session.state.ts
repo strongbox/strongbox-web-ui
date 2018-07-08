@@ -79,6 +79,16 @@ export class SessionState {
         }
     }
 
+    @Selector()
+    static roles(session: SessionStateModel) {
+        if (session.user) {
+            console.log(session);
+            return session.user.roles;
+        } else {
+            return null;
+        }
+    }
+
     constructor(private auth: AuthService, private store: Store) {
     }
 

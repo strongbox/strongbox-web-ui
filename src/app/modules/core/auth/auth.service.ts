@@ -5,7 +5,7 @@ import {Observable, of} from 'rxjs';
 import {Select, Store} from '@ngxs/store';
 
 import {User, UserAuthority, UserCredentials} from './auth.model';
-import {SessionStateModel} from './session.state';
+import {SessionState, SessionStateModel} from './session.state';
 import {LogoutAction} from './auth.actions';
 
 @Injectable({

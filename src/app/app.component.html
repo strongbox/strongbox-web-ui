@@ -50,7 +50,7 @@
                 </a>
             </li>
             <li *ngIf="(session$ | async).state === 'authenticated'">
-                <a title="Profile">
+                <a title="Profile" [routerLink]="['profile']">
                     <i class="icon ion-md-person"></i> <span fxHide.lt-lg>&nbsp;&nbsp;{{ (session$ | async).user.username }}</span>
                 </a>
             </li>
@@ -87,6 +87,9 @@
                 </li>
                 <li>
                     <a>Browse</a>
+                </li>
+                <li>
+                    <a [routerLink]="['profile']">Profile</a>
                 </li>
                 <li *ngIf="(session$ | async).user.hasAuthority('ADMIN')">
                     <a href="#">Administration</a>

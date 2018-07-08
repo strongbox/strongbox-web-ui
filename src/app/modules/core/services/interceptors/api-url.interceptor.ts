@@ -30,6 +30,9 @@ export class ApiURLInterceptor implements HttpInterceptor {
             request = request.clone({url: url, withCredentials: true});
         }
 
+        // Some endpoints don't like it when you haven't specified the accept header.
+        request = request.clone({setHeaders: {'Accept': 'application/json'}});
+
         return next.handle(request);
     }
 }

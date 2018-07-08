@@ -9,12 +9,12 @@ import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
 import {NgxsRouterPluginModule} from '@ngxs/router-plugin';
 import {NgxsModule} from '@ngxs/store';
 import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
+import {RouterModule} from '@angular/router';
 
 import {MaterialModule} from '../../shared/material.module';
 import {PageNotFoundComponent} from './pages/page-not-found/page-not-found.component';
 import {HomepageComponent} from './pages/homepage/homepage.component';
 import {RepositorySearchResultsComponent} from './pages/search/repository-search-results.component';
-import {CoreRoutingModule} from './core.routing.module';
 import {environment} from '../../../environments/environment';
 import {ApiURLInterceptor} from './services/interceptors/api-url.interceptor';
 import {CodeSnippet} from './pipes/code-snippet.pipe';
@@ -25,6 +25,10 @@ import {AuthService} from './auth/auth.service';
 import {LoginDialogComponent} from './dialogs/login/login.dialog.component';
 import {AppState} from '../../state/app.state';
 import {TokenInterceptor} from './services/interceptors/token.interceptor';
+import {AuthGuard} from './auth/auth.guard';
+import {ProfileComponent} from './pages/profile/profile.component';
+import {NgxsFormPluginModule} from '@ngxs/form-plugin';
+import {ProfileService} from './pages/profile/profile.service';
 
 @NgModule({
     imports: [
@@ -32,12 +36,10 @@ import {TokenInterceptor} from './services/interceptors/token.interceptor';
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
+        RouterModule,
 
         FlexLayoutModule,
         MaterialModule,
-
-        // Order is important!
-        CoreRoutingModule,
 
         // State management
         NgxsModule.forRoot([
@@ -45,7 +47,9 @@ import {TokenInterceptor} from './services/interceptors/token.interceptor';
             SessionState
         ]),
         NgxsRouterPluginModule.forRoot(),
-        NgxsReduxDevtoolsPluginModule.forRoot(),
+        NgxsFormPluginModule.forRoot(),
+
+        (environment.production === false ? NgxsReduxDevtoolsPluginModule.forRoot() : []),
         (environment.production === false ? NgxsLoggerPluginModule.forRoot() : []),
 
         // Fancy progress loader.
@@ -58,12 +62,12 @@ import {TokenInterceptor} from './services/interceptors/token.interceptor';
         NgProgressHttpModule
     ],
     exports: [
+        CommonModule,
         FormsModule,
         ReactiveFormsModule,
 
         MaterialModule,
         FlexLayoutModule,
-        CoreRoutingModule,
 
         NgxsModule,
         NgxsRouterPluginModule,
@@ -74,11 +78,12 @@ import {TokenInterceptor} from './services/interceptors/token.interceptor';
         LoginDialogComponent
     ],
     declarations: [
+        CodeSnippet,
         HomepageComponent,
+        LoginDialogComponent,
         RepositorySearchResultsComponent,
         PageNotFoundComponent,
-        CodeSnippet,
-        LoginDialogComponent
+        ProfileComponent
     ],
     entryComponents: [
         LoginDialogComponent
@@ -97,6 +102,8 @@ import {TokenInterceptor} from './services/interceptors/token.interceptor';
         },
         CoreRouterResolver,
         AuthService,
+        AuthGuard,
+        ProfileService,
         RepositorySearchService
     ]
 })

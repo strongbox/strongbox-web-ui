@@ -36,6 +36,7 @@
     "@ngx-progressbar/core": "^5.0.1",
     "@ngx-progressbar/http": "^5.0.1",
     "@ngx-progressbar/router": "^5.0.1",
+    "@ngxs/form-plugin": "^3.1.4",
     "@ngxs/router-plugin": "^3.1.4",
     "@ngxs/store": "^3.1.4",
     "core-js": "^2.5.4",

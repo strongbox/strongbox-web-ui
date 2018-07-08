@@ -8,7 +8,7 @@ import {MaterialModule} from '../../../../shared/material.module';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 
-describe('LoginDialogComponent', () => {
+describe('Component: LoginDialogComponent', () => {
     let component: LoginDialogComponent;
     let fixture: ComponentFixture<LoginDialogComponent>;
 
@@ -32,7 +32,7 @@ describe('LoginDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it('should create an instance', () => {
         expect(component).toBeTruthy();
     });
 });
