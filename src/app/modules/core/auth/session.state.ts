@@ -1,5 +1,6 @@
-import {Action, Selector, State, StateContext, Store} from '@ngxs/store';
 import {HttpErrorResponse} from '@angular/common/http';
+import {Action, Selector, State, StateContext, Store} from '@ngxs/store';
+import {Navigate} from '@ngxs/router-plugin';
 import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 
@@ -82,7 +83,6 @@ export class SessionState {
     @Selector()
     static roles(session: SessionStateModel) {
         if (session.user) {
-            console.log(session);
             return session.user.roles;
         } else {
             return null;
@@ -116,6 +116,7 @@ export class SessionState {
             ctx.setState(defaultSessionState);
             localStorage.setItem('session', JSON.stringify(defaultSessionState));
             this.store.dispatch(new HideSideNavAction());
+            this.store.dispatch(new Navigate(['/']));
         }
     }
 

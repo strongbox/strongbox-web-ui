@@ -1,13 +1,14 @@
 import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {HttpErrorResponse} from '@angular/common/http';
+import {RouterTestingModule} from '@angular/router/testing';
+import {Location} from '@angular/common';
 import {NgxsModule, Store} from '@ngxs/store';
 
 import {defaultSessionState, SessionState} from './session.state';
 import {User, UserAuthority, UserCredentials} from './auth.model';
 import {LoginAction, LogoutAction} from './auth.actions';
 import {AuthService} from './auth.service';
-import {RouterTestingModule} from '@angular/router/testing';
 
 describe('SessionState', () => {
 
@@ -34,6 +35,7 @@ describe('SessionState', () => {
     describe('should handle login, logout and errors properly', () => {
         let store: Store;
         let backend: HttpTestingController;
+        let location: Location;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -49,6 +51,7 @@ describe('SessionState', () => {
 
             store = TestBed.get(Store);
             backend = TestBed.get(HttpTestingController);
+            location = TestBed.get(Location);
         });
 
         afterEach(() => {
@@ -144,6 +147,8 @@ describe('SessionState', () => {
                 expect(state).toBeTruthy();
                 expect(state).toBe(defaultSessionState);
             });
+
+            expect(location.path()).toBe('');
         });
     });
 
