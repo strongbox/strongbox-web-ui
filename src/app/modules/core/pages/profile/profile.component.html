@@ -23,12 +23,18 @@
                         <input matInput formControlName="repeatPassword" placeholder="Repeat password" type="password">
                         <mat-error *ngIf="hasError('repeatPassword', 'passwordMismatch')">Passwords must match!</mat-error>
                     </mat-form-field>
-                    <div>
-                        <mat-form-field style="float: left; width: 90%;">
-                            <input matInput formControlName="securityTokenKey" placeholder="Security Token">
-                            <mat-error *ngIf="hasError('securityTokenKey', 'required')">Security token is required!</mat-error>
-                        </mat-form-field>
-                        <button mat-raised-button color="primary" type="button" (click)="randomString(30)" style="float: right; width: 9%;">Generate token</button>
+                    <div fxLayout="row">
+                        <div fxFlex="1 1 auto">
+                            <mat-form-field fxLayout="column">
+                                <input matInput formControlName="securityTokenKey" placeholder="Security Token">
+                                <mat-error *ngIf="hasError('securityTokenKey', 'required')">Security token is required!</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxFlex="100px">
+                            <button mat-raised-button color="primary" type="button" (click)="randomString(30)">
+                                <i class="icon ion-md-shuffle"></i> <span fxHide.xs>Generate</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
