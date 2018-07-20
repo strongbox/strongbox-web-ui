@@ -12,7 +12,7 @@
   }
 
   .logo-container {
-    @include logo-text(1.8rem);
+    @include logo-text(1.8rem, -7px 0px 0px 0px);
   }
 
   .menu-button-wrapper {
@@ -21,7 +21,10 @@
     cursor: pointer;
 
     a {
-      display: inline;
+      /*display: inline;*/
+      display: block;
+      padding: 5px 7px 10px 7px;
+      margin-top: 10px;
     }
 
     .menu-container {
@@ -145,6 +148,7 @@
       a {
         @media screen and(max-width: 450px) {
           font-size: 17px;
+          padding: 7px 7px 10px 7px;
         }
 
         padding: 7px 0.7rem 10px 0.7rem;
@@ -152,6 +156,10 @@
 
     }
 
+  }
+
+  #toggleMobileSideNav {
+    margin-top: -1px;
   }
 }
 
@@ -165,12 +173,25 @@
   }
 
   > mat-sidenav-content {
-    padding: 0px 10px 0px 60px;
+    padding: 15px 10px 0px 10px;
+    overflow: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 58px;
   }
 
   .mat-drawer-backdrop.mat-drawer-shown {
     background-color: rgba(13, 23, 31, 0.68);
   }
+
+/*  .sidenav-content {
+    > div {
+      transition: all 0.3s linear;
+    }
+  }*/
+
 }
 
 .menu-sidenav {
@@ -182,6 +203,10 @@
   margin-top: 3.98em;
   border-top: 1px solid #1a303e;
   padding: 6px 0px 0px 0px;
+
+  @media screen and (max-width: 600px) {
+    margin-top: 3.4em;
+  }
 
   .mat-drawer-container {
     width: 100vw;

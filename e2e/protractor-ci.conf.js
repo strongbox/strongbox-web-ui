@@ -8,12 +8,7 @@ const capabilities = {
 };
 
 const multiCapabilities = [
-    {
-        'browserName': 'firefox',
-        'moz:firefoxOptions': {
-            args: ['-headless']
-        }
-    },
+    capabilities,
     {
         'browserName': 'chrome',
         chromeOptions: {

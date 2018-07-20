@@ -1,5 +1,4 @@
-import {AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnInit} from '@angular/core';
-import {MediaChange, ObservableMedia} from '@angular/flex-layout';
+import {ChangeDetectionStrategy, Component, HostListener, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
@@ -8,7 +7,9 @@ import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
 import {RepositorySearchService} from './modules/core/pages/search/repository-search.service';
 import {AuthService} from './modules/core/auth/auth.service';
 import {LogoutAction} from './modules/core/auth/auth.actions';
-import {OpenLoginDialogAction, ToggleSideNavAction} from './state/app.actions';
+import {HideSideNavAction, OpenLoginDialogAction, ToggleSideNavAction} from './state/app.actions';
+import {AppState} from './state/app.state';
+import {SessionState} from './modules/core/auth/session.state';
 
 @Component({
     selector: 'app-strongbox',
@@ -16,23 +17,30 @@ import {OpenLoginDialogAction, ToggleSideNavAction} from './state/app.actions';
     styleUrls: ['./app.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit, AfterViewChecked {
-    public isMobile;
-    public searchQuery: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+export class AppComponent implements OnInit {
 
     @Select()
     public session$;
 
-    @Select()
-    public app$;
+    @Select(SessionState.isAuthenticated)
+    public isAuthenticated$;
+
+    @Select(AppState.sideNav)
+    public sideNav$;
+
+    @Select(AppState.isSideNavOpened)
+    public sideNavOpened$;
+
+    @Select(AppState.isMobile)
+    public isMobile$;
+
+    public searchQuery: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
     constructor(public router: Router,
-                public media: ObservableMedia,
                 public auth: AuthService,
                 private actions: Actions,
                 private store: Store,
-                private repositorySearchService: RepositorySearchService,
-                private changeDetector: ChangeDetectorRef) {
+                private repositorySearchService: RepositorySearchService) {
     }
 
     @HostListener('window:keydown', ['$event'])
@@ -58,6 +66,10 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.store.dispatch(new OpenLoginDialogAction());
     }
 
+    closeSideNavBackdropClick() {
+        this.store.dispatch(new HideSideNavAction());
+    }
+
     toggleSideNav() {
         this.store.dispatch(new ToggleSideNavAction());
     }
@@ -68,12 +80,30 @@ export class AppComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    ngOnInit(): void {
-        this.media.subscribe((change: MediaChange) => {
-            this.isMobile = (change.mqAlias === 'xs' || change.mqAlias === 'sm' || change.mqAlias === 'md');
-            this.changeDetector.detectChanges();
-        });
+    sideNavFlex() {
+        const isMobile = this.store.selectSnapshot(AppState.isMobile);
+        const isSideNavOpened = this.store.selectSnapshot(AppState.isSideNavOpened);
 
+        let fxFlexLeft = '0.1 0 9vw';
+        let fxFlexRight = '0.1 0 9vw';
+
+        if (isMobile) {
+            fxFlexLeft = '1px';
+            fxFlexRight = '1px';
+        }
+
+        if (!isMobile && isSideNavOpened) {
+            fxFlexLeft = '10px';
+            fxFlexRight = '1px';
+        }
+
+        return {
+            left: fxFlexLeft,
+            right: fxFlexRight
+        };
+    }
+
+    ngOnInit(): void {
         this.searchQuery = this.repositorySearchService.getQueryObservable();
         this.searchQuery.pipe(debounceTime(850)).subscribe((query) => {
             if (query) {
@@ -84,9 +114,5 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.actions.pipe(ofActionDispatched(LogoutAction)).subscribe(() => {
             this.router.navigate(['/']);
         });
-    }
-
-    ngAfterViewChecked() {
-        this.changeDetector.detectChanges();
     }
 }

@@ -1,3 +1,5 @@
+import {SideNavStateModel, defaultAppSideNavState} from './app.state.interfaces';
+
 export class ShowSideNavAction {
     static readonly type = '[App] Show sidenav';
 }
@@ -19,4 +21,11 @@ export class OpenLoginDialogAction {
 
 export class CloseLoginDialogAction {
     static readonly type = '[App] Closing login dialog';
+}
+
+export class SetViewPortAction {
+    static readonly type = '[ChangeViewPort] Setting view port';
+
+    constructor(public payload: { mobile: boolean, mqAlias: string, sideNav: SideNavStateModel } = {mobile: false, mqAlias: null, sideNav: defaultAppSideNavState}) {
+    }
 }

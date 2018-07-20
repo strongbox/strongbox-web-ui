@@ -54,11 +54,24 @@ a:hover::after {
   text-align: right;
 }
 
+/*.sideNavOpen {
+  .global-container {
+    max-width: 100rem;
+  }
+}*/
+
 .global-container {
-  max-width: 88rem;
+  /*max-width: 88rem;*/
   margin: auto;
-  padding-top: 20px;
+  padding-top: 15px;
   padding-bottom: 140px;
+  transition: max-width 0.3s;
+
+  /*
+  @media screen and(max-width: 1024px) {
+    max-width: 90%;
+  }
+  */
 
   h3 {
     font-weight: 400;
@@ -70,7 +83,6 @@ a:hover::after {
     padding: 25px 24px 8px 24px;
     background: #132530;
   }
-
 }
 
 ::-webkit-scrollbar-button {

@@ -7,11 +7,11 @@
                 <a routerLink="/">Strongbox</a>
             </div>
         </div>
-        <div fxLayout="column" fxLayoutAlign="center center" fxHide.lt-lg *ngIf="(session$ | async).state === 'authenticated'">
+        <div fxLayout="column" fxLayoutAlign="center center" *ngIf="(isAuthenticated$ | async) && !(isMobile$ | async)">
             <div class="menu-button-wrapper" fxLayoutAlign="center">
                 <div fxLayoutAlign="center center">
                     <div class="menu-container">
-                        <a id="toggleSideNav" (click)="sidenav.toggle()" [class.close]="sidenav.opened">
+                        <a id="toggleSideNav" (click)="toggleSideNav()" [class.close]="(sideNavOpened$ | async)">
                             <div class="line top"></div>
                             <div class="line middle"></div>
                             <div class="line bottom"></div>
@@ -30,40 +30,41 @@
         </div>
     </div>
 
+    <!-- Right menu -->
     <div fxLayoutAlign="center center" class="right-container">
         <ul fxLayoutAlign="center center">
-            <li>
+            <li fxHide.lt-xs>
                 <a title="Browse repositories" [routerLink]="['/browse']">
                     <i class="icon ion-md-apps"></i>
                 </a>
             </li>
-            <li *ngIf="(session$ | async).state !== 'authenticated'">
+            <li *ngIf="!(isAuthenticated$ | async)" fxHide.lt-xs>
                 <a title="Login" (click)="openLoginDialog()">
                     <i class="icon ion-md-lock"></i>
                 </a>
             </li>
-            <li *ngIf="(session$ | async).state === 'authenticated'">
+            <li *ngIf="(isAuthenticated$ | async)">
                 <a title="Notifications">
                     <span matBadge="14" matBadgeOverlap="false" matBadgeSize="small" matBadgePosition="after above" matBadgeColor="warn" class="alert">
                         <i class="icon ion-md-notifications"></i>
                     </span>
                 </a>
             </li>
-            <li *ngIf="(session$ | async).state === 'authenticated'">
+            <li *ngIf="(isAuthenticated$ | async)" fxHide.lt-xs>
                 <a title="Profile" [routerLink]="['profile']">
                     <i class="icon ion-md-person"></i> <span fxHide.lt-lg>&nbsp;&nbsp;{{ (session$ | async).user.username }}</span>
                 </a>
             </li>
-            <li *ngIf="(session$ | async).state === 'authenticated'">
+            <li *ngIf="(isAuthenticated$ | async)">
                 <a title="Logout" (click)="auth.logout()">
                     <i class="icon ion-md-log-out"></i>
                 </a>
             </li>
-            <li [fxHide]="!isMobile" *ngIf="(session$ | async).state === 'authenticated'">
+            <li *ngIf="(isAuthenticated$ | async) && (isMobile$ | async)">
                 <div class="menu-button-wrapper" fxLayoutAlign="center">
                     <div fxLayoutAlign="center center">
                         <div class="menu-container">
-                            <a id="toggleMobileSideNav" (click)="toggleSideNav()" [class.close]="(app$ | async).sideNav">
+                            <a id="toggleMobileSideNav" (click)="toggleSideNav()" [class.close]="(sideNavOpened$ | async)">
                                 <div class="line top"></div>
                                 <div class="line middle"></div>
                                 <div class="line bottom"></div>
@@ -76,11 +77,18 @@
     </div>
 </mat-toolbar>
 
-<div fxFill fxLayout="column">
-    <mat-sidenav-container class="main-content">
+<div fxLayout="column">
+    <mat-sidenav-container class="main-content" (backdropClick)="closeSideNavBackdropClick()">
         <mat-drawer-container [hasBackdrop]="false" [autosize]="true"></mat-drawer-container>
 
-        <mat-sidenav [hidden]="(session$ | async).state == 'authenticated'" #sidenav [opened]="(app$ | async).sideNav" class="menu-sidenav" [fixedInViewport]="true" [position]="isMobile ? 'end' : 'start'" [mode]="isMobile ? 'over' : 'side'">
+        <mat-sidenav
+                    #sideNavElement
+                    class="menu-sidenav"
+                    [hidden]="(session$ | async).state == 'authenticated'"
+                    [opened]="(sideNavOpened$ | async)"
+                    [fixedInViewport]="true"
+                    [position]="(sideNav$ | async).position"
+                    [mode]="(sideNav$ | async).mode">
             <ul fxLayout="column" fxLayoutAlign="start" *ngIf="(session$ | async).state == 'authenticated'">
                 <li>
                     <a>Dashboard</a>
@@ -94,7 +102,6 @@
                 <li *ngIf="(session$ | async).user.hasAuthority('ADMIN')">
                     <a href="#">Administration</a>
                     <ul fxLayout="column" fxLayoutAlign="start">
-                        <li><a>Server</a></li>
                         <li><a>Logs</a></li>
                         <li><a>Proxy configuration</a></li>
                         <li>
@@ -103,14 +110,23 @@
                         </li>
                         <li><a>Routing</a></li>
                         <li><a>Security</a></li>
+                        <li><a>Server</a></li>
                         <li><a>Storages</a></li>
+                        <li><a routerLink="admin/users">Users</a></li>
                     </ul>
                 </li>
             </ul>
         </mat-sidenav>
 
-        <mat-sidenav-content>
-            <router-outlet></router-outlet>
+        <mat-sidenav-content [class]="(sideNavOpened$ | async) ? 'sideNavOpen' : ''">
+            <div class="sidenav-content" fxLayout="row" fxLayout.lt-sm="column">
+                <div [fxFlex]="sideNavFlex().left">&nbsp;</div>
+                <div fxFlex="1 1 auto">
+                    <router-outlet></router-outlet>
+                </div>
+                <div [fxFlex]="sideNavFlex().right">&nbsp;</div>
+            </div>
+
         </mat-sidenav-content>
     </mat-sidenav-container>
 </div>

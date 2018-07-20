@@ -15,7 +15,7 @@
     "ci-test": "ng test --browsers FirefoxHeadless",
     "ci-e2e": "ng e2e --port 4201 --protractor-config ./e2e/protractor-ci.conf.js",
     "package": "./node_modules/.bin/rimraf dist/packaging/* && ./node_modules/.bin/webpack --env.configuration=prod",
-    "test": "ng test --watch",
+    "test": "ng test --watch --browsers Chrome,Firefox",
     "lint": "ng lint",
     "e2e": "ng e2e --port 4201",
     "webdriver-update": "webdriver-manager update"

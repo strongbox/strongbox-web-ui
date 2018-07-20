@@ -1,5 +1,5 @@
 import {HttpErrorResponse} from '@angular/common/http';
-import {Action, Selector, State, StateContext, Store} from '@ngxs/store';
+import {Action, createSelector, Selector, State, StateContext, Store} from '@ngxs/store';
 import {Navigate} from '@ngxs/router-plugin';
 import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
@@ -78,6 +78,17 @@ export class SessionState {
         } else {
             return null;
         }
+    }
+
+    @Selector()
+    static hasAuthority(authority: string) {
+        return createSelector([SessionState], (session: SessionStateModel) => {
+            if (session.user) {
+                return session.user.hasAuthority(authority);
+            } else {
+                return false;
+            }
+        });
     }
 
     @Selector()
