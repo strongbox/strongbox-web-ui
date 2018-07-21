@@ -1,10 +1,9 @@
-export class User {
+export class AuthenticatedUser {
     constructor(public username: string = null,
                 public token: string = null,
                 public authorities: UserAuthority[] = null,
                 public roles: string[] = null,
-                public securityTokenKey: string = null,
-                public enabled: boolean = true) {
+                public securityTokenKey: string = null) {
     }
 
     hasAuthority(authority: string): boolean {

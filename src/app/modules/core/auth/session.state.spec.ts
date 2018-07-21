@@ -6,7 +6,7 @@ import {Location} from '@angular/common';
 import {NgxsModule, Store} from '@ngxs/store';
 
 import {defaultSessionState, SessionState} from './session.state';
-import {User, UserAuthority, UserCredentials} from './auth.model';
+import {AuthenticatedUser, UserAuthority, UserCredentials} from './auth.model';
 import {LoginAction, LogoutAction} from './auth.actions';
 import {AuthService} from './auth.service';
 
@@ -18,14 +18,14 @@ describe('SessionState', () => {
             expect(SessionState.token({user: null, token: null, state: 'guest'})).toBe(null);
         });
         it('user should return the username', () => {
-            const user = new User('some-user');
+            const user = new AuthenticatedUser('some-user');
             expect(SessionState.user({user: user, token: '1234', state: 'authenticated'})).toBe(user);
         });
         it('state should return the authentication state', () => {
             expect(SessionState.state({user: null, token: '1234', state: 'authenticated'})).toBe('authenticated');
         });
         it('isAuthenticated should return true', () => {
-            expect(SessionState.isAuthenticated({user: new User('some-user'), token: '1234', state: 'authenticated'})).toBe(true);
+            expect(SessionState.isAuthenticated({user: new AuthenticatedUser('some-user'), token: '1234', state: 'authenticated'})).toBe(true);
         });
         it('isAuthenticated should return false', () => {
             expect(SessionState.isAuthenticated({user: null, token: null, state: 'pending'})).toBe(false);
@@ -61,7 +61,7 @@ describe('SessionState', () => {
 
         it('should handle successful login', () => {
             const credentials = new UserCredentials('my-user', 'my-pass');
-            const user = new User(credentials.username, 'testing-token', [
+            const user = new AuthenticatedUser(credentials.username, 'testing-token', [
                 new UserAuthority('AUTH_1'),
                 new UserAuthority('AUTH_2'),
                 new UserAuthority('AUTH_3')
@@ -126,7 +126,7 @@ describe('SessionState', () => {
 
         it('should handle logout', () => {
             const credentials = new UserCredentials('my-user', 'my-pass');
-            const user = new User(credentials.username, 'testing-token', [
+            const user = new AuthenticatedUser(credentials.username, 'testing-token', [
                 new UserAuthority('AUTH_1'),
                 new UserAuthority('AUTH_2'),
                 new UserAuthority('AUTH_3')

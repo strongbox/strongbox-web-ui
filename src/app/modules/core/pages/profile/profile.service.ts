@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 import {Select} from '@ngxs/store';
 
 
-import {User} from '../../auth/auth.model';
+import {AuthenticatedUser} from '../../auth/auth.model';
 import {ProfileUpdateData} from './profile.model';
 import {SessionState} from '../../auth/session.state';
 
@@ -26,7 +26,7 @@ export class ProfileService {
         } else {
             return this.http.get(`/api/account`).pipe(
                 map((raw: any) => {
-                    return new User(raw.username, null, null, raw.roles, raw.securityTokenKey, raw.enabled);
+                    return new AuthenticatedUser(raw.username, null, null, raw.roles, raw.securityTokenKey);
                 })
             );
         }

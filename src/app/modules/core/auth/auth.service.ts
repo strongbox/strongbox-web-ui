@@ -4,8 +4,8 @@ import {catchError, map, share} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {Select, Store} from '@ngxs/store';
 
-import {User, UserAuthority, UserCredentials} from './auth.model';
-import {SessionState, SessionStateModel} from './session.state';
+import {AuthenticatedUser, UserAuthority, UserCredentials} from './auth.model';
+import {SessionStateModel} from './session.state';
 import {LogoutAction} from './auth.actions';
 
 @Injectable({
@@ -27,7 +27,7 @@ export class AuthService {
             .pipe(
                 map((response: any): SessionStateModel => {
                     if (response.hasOwnProperty('token') && response.token !== null) {
-                        const user = new User(
+                        const user = new AuthenticatedUser(
                             userCredentials.username,
                             response.token,
                             response.authorities.map(name => new UserAuthority(name))

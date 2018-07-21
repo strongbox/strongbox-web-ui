@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatSnackBar} from '@angular/material';
 import {BehaviorSubject, of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 import {Select, Store} from '@ngxs/store';
 import {UpdateFormValue} from '@ngxs/form-plugin';
 
-import {User} from '../../auth/auth.model';
+import {AuthenticatedUser} from '../../auth/auth.model';
 import {ProfileFormValidator} from './profile.form.validator';
 import {ProfileService} from './profile.service';
 import {ProfileUpdateData} from './profile.model';
-import {catchError} from 'rxjs/operators';
 import {SessionState} from '../../auth/session.state';
-import {MatSnackBar} from '@angular/material';
 
 @Component({
     selector: 'app-profile',
@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit {
     @Select(SessionState.roles)
     public roles$;
 
-    public user$: BehaviorSubject<User> = new BehaviorSubject(new User());
+    public user$: BehaviorSubject<AuthenticatedUser> = new BehaviorSubject(new AuthenticatedUser());
 
     public form: FormGroup;
 
@@ -85,7 +85,7 @@ export class ProfileComponent implements OnInit {
             validator: ProfileFormValidator.validate.bind(this)
         });
 
-        this.service.profile().subscribe((user: User) => {
+        this.service.profile().subscribe((user: AuthenticatedUser) => {
             this.user$.next(user);
 
             this.store.dispatch(new UpdateFormValue({

@@ -6,7 +6,7 @@ import {NgxsModule, Store} from '@ngxs/store';
 
 import {AuthService} from './auth.service';
 import {SessionStateModel} from './session.state';
-import {User, UserAuthority, UserCredentials} from './auth.model';
+import {AuthenticatedUser, UserAuthority, UserCredentials} from './auth.model';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 describe('AuthService', () => {
@@ -53,7 +53,7 @@ describe('AuthService', () => {
 
     it('should handle successful login', () => {
         const credentials = new UserCredentials('my-user', 'my-pass');
-        const user = new User(credentials.username, 'testing-token', [
+        const user = new AuthenticatedUser(credentials.username, 'testing-token', [
             new UserAuthority('AUTH_1'),
             new UserAuthority('AUTH_2'),
             new UserAuthority('AUTH_3')

@@ -5,12 +5,12 @@ import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 
 import {CredentialsExpiredAction, LoginAction, LogoutAction} from './auth.actions';
-import {User, UserAuthority} from './auth.model';
+import {AuthenticatedUser, UserAuthority} from './auth.model';
 import {AuthService} from './auth.service';
 import {HideSideNavAction, OpenLoginDialogAction} from '../../../state/app.actions';
 
 export interface SessionStateModel {
-    user: User | null;
+    user: AuthenticatedUser | null;
     token: string | null;
     state: 'authenticated' | 'guest' | 'invalid.credentials' | 'error' | 'pending';
     response?: HttpErrorResponse | string | any;
@@ -30,7 +30,7 @@ if (localStorage.getItem('session') !== '') {
     try {
         const rawSession = JSON.parse(localStorage.getItem('session'));
         session = {
-            user: new User(rawSession.user.username, rawSession.token, rawSession.user.authorities.map(val => new UserAuthority(val.name))),
+            user: new AuthenticatedUser(rawSession.user.username, rawSession.token, rawSession.user.authorities.map(val => new UserAuthority(val.name))),
             token: rawSession.token,
             state: rawSession.state
         };
