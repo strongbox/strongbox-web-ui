@@ -11,6 +11,7 @@ import {ProfileFormValidator} from './profile.form.validator';
 import {ProfileService} from './profile.service';
 import {ProfileUpdateData} from './profile.model';
 import {SessionState} from '../../auth/session.state';
+import {ProfileFormState} from './state/profile.form.state';
 
 @Component({
     selector: 'app-profile',
@@ -19,8 +20,8 @@ import {SessionState} from '../../auth/session.state';
 })
 export class ProfileComponent implements OnInit {
 
-    @Select(state => state.profile.formState)
-    public formState;
+    @Select(ProfileFormState.formState)
+    public formState$;
 
     @Select(SessionState.authorities)
     public authorities$;
@@ -32,8 +33,10 @@ export class ProfileComponent implements OnInit {
 
     public form: FormGroup;
 
-    public loading = false;
-    public result = '';
+    public loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+    public links = ['Account', 'Authorities', 'Access Model'];
+    public activeLink = 0;
 
     constructor(private service: ProfileService,
                 private formBuilder: FormBuilder,
@@ -52,24 +55,27 @@ export class ProfileComponent implements OnInit {
     }
 
     save() {
-        const formState = this.store.selectSnapshot(state => state.profile.formState.model);
+        const model = this.store.selectSnapshot(ProfileFormState.model);
 
         const data: ProfileUpdateData = {
-            password: formState.password,
-            securityTokenKey: formState.securityTokenKey
+            password: model.password,
+            securityTokenKey: model.securityTokenKey
         };
 
-        this.loading = true;
+        this.loading.next(true);
         this.service
             .profile(data)
             .pipe(
                 catchError((err) => {
                     console.log(err);
+                    this.snackBar.open('An error occurred while saving account data!', null, {
+                        duration: 3500
+                    });
                     return of(err);
                 })
             )
             .subscribe((result: any) => {
-                this.loading = false;
+                this.loading.next(false);
                 this.snackBar.open(result.message, null, {
                     duration: 3500
                 });
@@ -78,11 +84,11 @@ export class ProfileComponent implements OnInit {
 
     ngOnInit() {
         this.form = this.formBuilder.group({
-            password: [''],
-            repeatPassword: [''],
+            password: ['', [Validators.nullValidator]],
+            repeatPassword: ['', [Validators.nullValidator]],
             securityTokenKey: ['', [Validators.required]]
         }, {
-            validator: ProfileFormValidator.validate.bind(this)
+            validator: ProfileFormValidator.validate
         });
 
         this.service.profile().subscribe((user: AuthenticatedUser) => {

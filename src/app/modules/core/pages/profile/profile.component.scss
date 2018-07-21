@@ -1,12 +1,14 @@
-.form {
-  display: flex;
-  flex-direction: column;
-}
+ul.profile {
+  padding: 0px 0px 20px 0px;
 
-.form  > * {
-  width: 100%;
-}
+  &:after {
+    clear: both;
+    content: ' ';
+  }
 
-.form mat-form-field {
-  margin-top: 3px;
+  li {
+    float: left;
+    list-style: none;
+    margin-right: 15px;
+  }
 }

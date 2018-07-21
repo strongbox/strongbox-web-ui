@@ -1,62 +1,63 @@
 <div class="global-container">
 
-    <h3>My profile</h3>
+    <mat-card>
+        <mat-card-subtitle>
+            <ul class="profile">
+                <li *ngFor="let link of links; let i = index">
+                    <a [class.active]="activeLink == i" (click)="activeLink=i">{{ link }}</a>
+                </li>
+            </ul>
+        </mat-card-subtitle>
 
-    <mat-accordion>
-        <mat-expansion-panel [expanded]="true">
-            <mat-expansion-panel-header>
-                <mat-panel-title>User details</mat-panel-title>
-            </mat-expansion-panel-header>
+        <mat-card-content>
 
-            <form [formGroup]="form" novalidate ngxsForm="profile.formState" [ngxsFormClearOnDestroy]="true" (submit)="save()">
-
-                <div class="form">
-                    <mat-form-field>
-                        <input matInput placeholder="Username" disabled [value]="(user$ | async).username">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput formControlName="password" placeholder="New password" type="password">
-                        <mat-error *ngIf="hasError('repeatPassword', 'passwordLength')">Password must be at least 8 characters long!</mat-error>
-                        <mat-error *ngIf="hasError('repeatPassword', 'passwordMismatch')">Passwords must match!</mat-error>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput formControlName="repeatPassword" placeholder="Repeat password" type="password">
-                        <mat-error *ngIf="hasError('repeatPassword', 'passwordMismatch')">Passwords must match!</mat-error>
-                    </mat-form-field>
-                    <div fxLayout="row">
-                        <div fxFlex="1 1 auto">
-                            <mat-form-field fxLayout="column">
-                                <input matInput formControlName="securityTokenKey" placeholder="Security Token">
-                                <mat-error *ngIf="hasError('securityTokenKey', 'required')">Security token is required!</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div fxFlex="100px">
-                            <button mat-raised-button color="primary" type="button" (click)="randomString(30)">
-                                <i class="icon ion-md-shuffle"></i> <span fxHide.xs>Generate</span>
-                            </button>
+            <div [hidden]="activeLink !== 0">
+                <form [formGroup]="form" novalidate ngxsForm="profile.formState" [ngxsFormClearOnDestroy]="true" (submit)="save()">
+                    <div fxLayout="column">
+                        <mat-form-field>
+                            <input matInput placeholder="Username" disabled [value]="(user$ | async).username">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput formControlName="password" placeholder="New password" type="password">
+                            <mat-error *ngIf="hasError('repeatPassword', 'passwordLength')">Password must be at least 8 characters long!</mat-error>
+                            <mat-error *ngIf="hasError('repeatPassword', 'passwordMismatch')">Passwords must match!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput formControlName="repeatPassword" placeholder="Repeat password" type="password">
+                            <mat-error *ngIf="hasError('repeatPassword', 'passwordMismatch')">Passwords must match!</mat-error>
+                        </mat-form-field>
+                        <div fxLayout="row">
+                            <div fxFlex="1 1 auto">
+                                <mat-form-field fxLayout="column">
+                                    <input matInput formControlName="securityTokenKey" placeholder="Security Token">
+                                    <mat-error *ngIf="hasError('securityTokenKey', 'required')">Security token is required!</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxFlex="120px">
+                                <button mat-raised-button color="primary" type="button" (click)="randomString(30)">
+                                    <i class="icon ion-md-shuffle"></i><span fxHide.xs>&nbsp;&nbsp;Generate</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!--[disabled]="!form.valid"-->
-                <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || loading">
-                    <mat-progress-spinner color="primary" mode="indeterminate" strokeWidth="2" diameter="18" *ngIf="loading" style="float: left; margin-top: 8px;"></mat-progress-spinner>
-                    Save
-                </button>
+                    <!--[disabled]="!form.valid"-->
+                    <div fxLayoutAlign="center center">
+                        <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || (loading | async)">
+                            <mat-progress-spinner color="primary" mode="indeterminate" strokeWidth="2" diameter="18" *ngIf="(loading | async)" style="float: left; margin-top: 8px;"></mat-progress-spinner>
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div [hidden]="activeLink !== 1">
+                <div *ngFor="let authority of authorities$ | async">{{ authority.name }}</div>
+            </div>
+            <div [hidden]="activeLink !== 2">
+                TODO: show actual access model.
+            </div>
 
-                <div *ngIf="result">
-                    {{ result }}
-                </div>
+        </mat-card-content>
+    </mat-card>
 
-            </form>
-
-        </mat-expansion-panel>
-        <mat-expansion-panel>
-            <mat-expansion-panel-header>
-                <mat-panel-title>Authorities</mat-panel-title>
-            </mat-expansion-panel-header>
-
-            <div *ngFor="let authority of authorities$ | async">{{authority.name}}</div>
-        </mat-expansion-panel>
-    </mat-accordion>
 </div>

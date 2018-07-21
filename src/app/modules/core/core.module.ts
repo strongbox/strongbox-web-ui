@@ -29,6 +29,7 @@ import {AuthGuard} from './auth/auth.guard';
 import {ProfileComponent} from './pages/profile/profile.component';
 import {NgxsFormPluginModule} from '@ngxs/form-plugin';
 import {ProfileService} from './pages/profile/profile.service';
+import {ProfileFormState} from './pages/profile/state/profile.form.state';
 
 @NgModule({
     imports: [
@@ -44,7 +45,8 @@ import {ProfileService} from './pages/profile/profile.service';
         // State management
         NgxsModule.forRoot([
             AppState,
-            SessionState
+            SessionState,
+            ProfileFormState
         ]),
         NgxsRouterPluginModule.forRoot(),
         NgxsFormPluginModule.forRoot(),

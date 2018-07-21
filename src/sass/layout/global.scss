@@ -29,11 +29,11 @@ a {
   display: inline-block;
 }
 
-a.active, a:hover {
+a:not(.mat-tab-link).active, a:not(.mat-tab-link):hover {
   color: $nav-link-hover;
 }
 
-a.active::after, a::after {
+a:not(.mat-tab-link).active::after, a:not(.mat-tab-link)::after {
   content: '';
   display: block;
   width: 0;
@@ -42,7 +42,7 @@ a.active::after, a::after {
   transition: width .2s;
 }
 
-a.active::after, a:hover::after {
+a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
   width: 100%;
 }
 
@@ -61,11 +61,8 @@ a.active::after, a:hover::after {
 }*/
 
 .global-container {
-  /*max-width: 88rem;*/
   margin: auto;
-  padding-top: 20px;
-  padding-bottom: 140px;
-  transition: max-width 0.3s;
+  padding: 18px 20px 100px 20px;
 
   /*
   @media screen and(max-width: 1024px) {
@@ -73,7 +70,7 @@ a.active::after, a:hover::after {
   }
   */
 
-  h3 {
+  > h3 {
     font-weight: 400;
     font-size: 1.2rem;
     margin: 0px 0px 30px 0px;
