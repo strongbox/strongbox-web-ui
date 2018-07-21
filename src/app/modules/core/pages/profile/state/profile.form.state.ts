@@ -1,11 +1,11 @@
-import {State} from '@ngxs/store';
+import {Selector, State} from '@ngxs/store';
 
 export interface ProfileStateModel {
     formState: {
         model: {
-            password?: string;
-            repeatPassword?: string;
-            securityTokenKey?: string
+            password: string;
+            repeatPassword: string;
+            securityTokenKey: string
         },
         dirty?: boolean,
         status?: string,
@@ -18,8 +18,8 @@ export interface ProfileStateModel {
     defaults: {
         formState: {
             model: {
-                password: null,
-                repeatPassword: null,
+                password: '',
+                repeatPassword: '',
                 securityTokenKey: null,
             },
             dirty: false,
@@ -29,4 +29,13 @@ export interface ProfileStateModel {
     }
 })
 export class ProfileFormState {
+    @Selector()
+    static formState(state: ProfileStateModel) {
+        return state.formState;
+    }
+
+    @Selector()
+    static model(state: ProfileStateModel) {
+        return state.formState.model;
+    }
 }
