@@ -1,19 +1,60 @@
 @import '~@angular/material/theming';
-// Plus imports for other components in your app.
+
+//
+// Fonts configuration
+// Make sure to overwrite default paths to fix "Can't resolve ../fonts" errors as relative paths don't work here.
+//
+
+// Open Sans
+// @import '~open-sans-fontface/sass/variables';
+$OpenSansPath: "~open-sans-fontface/fonts" !default;
+$OpenSansVersion: "1.1.0" !default;
+@import '~open-sans-fontface/sass/mixins';
+@import '~open-sans-fontface/sass/Light';
+
+// Raleway
+//@import '~fonts-raleway/scss/variables';
+$raleway-font-path: '~fonts-raleway/fonts/fonts-raleway' !default;
+@import '~fonts-raleway/scss/raleway-thin';
+
+// Ionic icons
+@import '~ionicons/dist/css/ionicons.css';
+
+
+//
+// Material configuration
+//
+
+// Define a custom typography config that overrides the font-family as well as the `headlines` and `body-1` levels, etc.
+$custom-typography: mat-typography-config(
+    $font-family: 'Helvetica, sans-serif',
+    $display-4: mat-typography-level(112px, 112px, 300, 'Open Sans, Helvetica, Arial, sans-serif'),
+    $display-3: mat-typography-level(56px, 56px, 400, 'Open Sans, Helvetica, Arial, sans-serif'),
+    $display-2: mat-typography-level(45px, 48px, 400, 'Open Sans, Helvetica, Arial, sans-serif'),
+    $display-1: mat-typography-level(34px, 40px, 400, 'Open Sans, Helvetica, Arial, sans-serif'),
+    $headline: mat-typography-level(24px, 32px, 400, 'Open Sans, Helvetica, Arial, sans-serif'),
+    $title: mat-typography-level(20px, 32px, 500),
+    $subheading-2: mat-typography-level(16px, 28px, 400),
+    $subheading-1: mat-typography-level(15px, 23px, 400),
+    $body-2: mat-typography-level(15px, 24px, 500),
+    $body-1: mat-typography-level(15px, 20px, 400),
+    $caption: mat-typography-level(13px, 20px, 400),
+    $button: mat-typography-level(15px, 14px, 500)
+);
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat-core();
+@include mat-core($custom-typography);
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
 $strongbox-app-primary: mat-palette($mat-light-blue, A700);
-$strongbox-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$strongbox-app-accent: mat-palette($mat-pink, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$strongbox-app-warn:    mat-palette($mat-red);
+$strongbox-app-warn: mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $strongbox-app-theme: mat-dark-theme($strongbox-app-primary, $strongbox-app-accent, $strongbox-app-warn);

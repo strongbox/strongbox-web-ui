@@ -41,6 +41,9 @@
     "@ngxs/router-plugin": "^3.1.4",
     "@ngxs/store": "^3.1.4",
     "core-js": "^2.5.4",
+    "fonts-raleway": "0.0.4",
+    "ionicons": "^4.2.4",
+    "open-sans-fontface": "^1.4.0",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"
   },
