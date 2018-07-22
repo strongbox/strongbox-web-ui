@@ -15,6 +15,10 @@ export class CreateUserGuard implements CanActivate {
     canActivate(): Observable<boolean> {
         return this.authorities$.pipe(
             map((authorities: UserAuthority[]) => {
+                if (!authorities || authorities.length === 0) {
+                    return false;
+                }
+
                 const filtered = authorities.filter((authority: UserAuthority) => {
                     return (authority.name === 'ADMIN' || authority.name === 'CREATE_USER');
                 });
