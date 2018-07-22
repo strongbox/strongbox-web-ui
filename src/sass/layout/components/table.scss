@@ -1,0 +1,35 @@
+.mat-table-container {
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid #132430;
+}
+
+.mat-table {
+  background: none;
+}
+
+.mat-table thead .mat-header-row {
+  background: #132430;
+}
+
+.mat-table tbody, .mat-table tfoot {
+  background: transparent;
+}
+
+.mat-table tbody tr:hover {
+  background: rgba(255,255,255,0.09);
+  color: #1f3240;
+}
+
+.mat-table tbody tr:active {
+  background: rgba(255,255,255,0.05);
+  color: #1f3240;
+}
+
+tr.mat-header-row {
+  height: 46px !important;
+}
+
+tr.mat-row {
+  height: 40px !important;
+}

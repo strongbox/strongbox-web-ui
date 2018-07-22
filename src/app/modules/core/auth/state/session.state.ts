@@ -84,9 +84,10 @@ export class SessionState implements NgxsOnInit {
 
     @Selector()
     static hasAuthority(authority: string) {
-        return createSelector([SessionState], (session: SessionStateModel) => {
-            if (session.user) {
-                return session.user.hasAuthority(authority);
+        return createSelector(null, (appState: any) => {
+            const user: AuthenticatedUser = appState.session.user;
+            if (user) {
+                return user.hasAuthority(authority);
             } else {
                 return false;
             }

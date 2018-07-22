@@ -13,22 +13,56 @@ import {AuthService} from '../auth.service';
 describe('SessionState', () => {
 
     describe('selectors should work properly', () => {
-        it('token should return a proper value', () => {
+        it('token() should return a proper value', () => {
             expect(SessionState.token({user: null, token: '1234', state: 'guest'})).toBe('1234');
             expect(SessionState.token({user: null, token: null, state: 'guest'})).toBe(null);
         });
-        it('user should return the username', () => {
+
+        it('user() should return the username', () => {
             const user = new AuthenticatedUser('some-user');
             expect(SessionState.user({user: user, token: '1234', state: 'authenticated'})).toBe(user);
         });
-        it('state should return the authentication state', () => {
+
+        it('state() should return the authentication state', () => {
             expect(SessionState.state({user: null, token: '1234', state: 'authenticated'})).toBe('authenticated');
         });
-        it('isAuthenticated should return true', () => {
-            expect(SessionState.isAuthenticated({user: new AuthenticatedUser('some-user'), token: '1234', state: 'authenticated'})).toBe(true);
+
+        it('isAuthenticated() should return true', () => {
+            expect(SessionState.isAuthenticated({
+                user: new AuthenticatedUser('some-user'),
+                token: '1234',
+                state: 'authenticated'
+            })).toBe(true);
         });
-        it('isAuthenticated should return false', () => {
+
+        it('isAuthenticated() should return false', () => {
             expect(SessionState.isAuthenticated({user: null, token: null, state: 'pending'})).toBe(false);
+        });
+
+        it('hasAuthority() should return true', () => {
+            const userAuthority = 'SOME_ROLE';
+            const userSession = {
+                session: {
+                    user: new AuthenticatedUser('authenticated-user', null, [new UserAuthority(userAuthority)]),
+                    token: null,
+                    state: 'authenticated'
+                }
+            };
+
+            expect(SessionState.hasAuthority(userAuthority)(userSession)).toBe(true);
+        });
+
+        it('hasAuthority() should return false', () => {
+            const userAuthority = 'SOME_ROLE';
+            const userSession = {
+                session: {
+                    user: new AuthenticatedUser('authenticated-user', null, [new UserAuthority(userAuthority)]),
+                    token: null,
+                    state: 'authenticated'
+                }
+            };
+
+            expect(SessionState.hasAuthority('1234')(userSession)).toBe(false);
         });
     });
 

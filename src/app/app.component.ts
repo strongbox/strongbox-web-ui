@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
+import {Navigate} from '@ngxs/router-plugin';
 
 import {RepositorySearchService} from './modules/core/pages/search/repository-search.service';
 import {AuthService} from './modules/core/auth/auth.service';
@@ -58,7 +59,11 @@ export class AppComponent implements OnInit {
         }
 
         if (event.code === 'KeyP' && event.altKey === true) {
-            this.router.navigate(['profile']);
+            this.store.dispatch(new Navigate(['profile']));
+        }
+
+        if (event.code === 'KeyU' && event.altKey === true) {
+            this.store.dispatch(new Navigate(['admin/users']));
         }
     }
 
