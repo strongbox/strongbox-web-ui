@@ -7,6 +7,7 @@ import {ListUsersComponent} from './pages/list-users/list-users.component';
 import {UserManagementRouting} from './user-management.routing';
 import {UserManagementService} from './services/user-management.service';
 import {MaterialModule} from '../../shared/material.module';
+import { ViewUserComponent } from './pages/view-user/view-user.component';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {MaterialModule} from '../../shared/material.module';
         UserManagementRouting
     ],
     declarations: [
-        ListUsersComponent
+        ListUsersComponent,
+        ViewUserComponent
     ],
     providers: [
         ViewUserGuard,

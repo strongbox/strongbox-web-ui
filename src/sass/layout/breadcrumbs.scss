@@ -1,0 +1,21 @@
+ul.breadcrumbs {
+  white-space: nowrap;
+  display: inline;
+
+  li {
+    display: inline;
+    float: left;
+    list-style: none;
+    margin-left: 10px;
+  }
+
+  li:first-of-type {
+    margin-left: 0px;
+  }
+
+  li + li:before {
+    content: '  >  ';
+  }
+
+}
+

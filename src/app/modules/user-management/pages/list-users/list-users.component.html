@@ -4,7 +4,7 @@
         <mat-card-title>
             <div fxLayout="row">
                 <div fxFlex="1 auto">
-                    User management
+                    Users
                 </div>
 
                 <div fxFlex="96px">
@@ -24,8 +24,8 @@
                 <ng-container matColumnDef="enabled">
                     <th mat-header-cell *matHeaderCellDef style="width: 150px; text-align: center;">Enabled</th>
                     <td mat-cell *matCellDef="let row" style="text-align: center;">
-                        <span *ngIf="row.enabled" style="color: #4caf50;">Yes</span>
-                        <span *ngIf="!row.enabled" style="color: #f44336;">No</span>
+                        <span *ngIf="row.enabled" class="status-green">Yes</span>
+                        <span *ngIf="!row.enabled" class="status-red">No</span>
                     </td>
                 </ng-container>
 
@@ -34,12 +34,12 @@
                     <td mat-cell *matCellDef="let row">
                         <ul class="actions">
                             <li *ngIf="(hasViewUserAuthority$ | async)">
-                                <a title="View user">
+                                <a title="View user" [routerLink]="[row.username, 'view']">
                                     <i class="icon ion-md-eye"></i>
                                 </a>
                             </li>
                             <li *ngIf="(hasUpdateUserAuthority$ | async)">
-                                <a title="Update user">
+                                <a title="Update user" [routerLink]="[row.username, 'edit']">
                                     <i class="icon ion-md-create"></i>
                                 </a>
                             </li>

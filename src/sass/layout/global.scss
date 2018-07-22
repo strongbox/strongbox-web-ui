@@ -54,6 +54,14 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
   text-align: right;
 }
 
+.status-green {
+  color: #4caf50;
+}
+
+.status-red {
+  color: #f44336;
+}
+
 /*.sideNavOpen {
   .global-container {
     max-width: 100rem;
