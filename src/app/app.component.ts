@@ -47,22 +47,27 @@ export class AppComponent implements OnInit {
     @HostListener('window:keydown', ['$event'])
     onKeyup(event: KeyboardEvent) {
         if (event.code === 'KeyS' && event.altKey === true) {
+            event.preventDefault();
             this.toggleSideNav();
         }
 
         if (event.code === 'KeyL' && event.altKey === true) {
+            event.preventDefault();
             this.openLoginDialog();
         }
 
         if (event.code === 'KeyQ' && event.altKey === true) {
+            event.preventDefault();
             this.store.dispatch(new LogoutAction());
         }
 
         if (event.code === 'KeyP' && event.altKey === true) {
+            event.preventDefault();
             this.store.dispatch(new Navigate(['profile']));
         }
 
         if (event.code === 'KeyU' && event.altKey === true) {
+            event.preventDefault();
             this.store.dispatch(new Navigate(['admin/users']));
         }
     }
