@@ -89,8 +89,8 @@ export class AppComponent implements OnInit {
         const isMobile = this.store.selectSnapshot(AppState.isMobile);
         const isSideNavOpened = this.store.selectSnapshot(AppState.isSideNavOpened);
 
-        let fxFlexLeft = '0.1 0 9vw';
-        let fxFlexRight = '0.1 0 9vw';
+        let fxFlexLeft = '245px';
+        let fxFlexRight = '245px';
 
         if (isMobile) {
             fxFlexLeft = '1px';
@@ -98,7 +98,7 @@ export class AppComponent implements OnInit {
         }
 
         if (!isMobile && isSideNavOpened) {
-            fxFlexLeft = '10px';
+            fxFlexLeft = '5px';
             fxFlexRight = '1px';
         }
 
