@@ -1,15 +1,16 @@
 <div class="global-container">
 
     <mat-card>
-        <mat-card-subtitle>
+        <mat-card-title>
             <ul class="profile">
                 <li *ngFor="let link of links; let i = index">
                     <a [class.active]="activeLink == i" (click)="activeLink=i">{{ link }}</a>
                 </li>
             </ul>
-        </mat-card-subtitle>
+            <div>&nbsp;</div>
+        </mat-card-title>
 
-        <mat-card-content>
+        <mat-card-content style="padding-top: 15px;">
 
             <div [hidden]="activeLink !== 0">
                 <form [formGroup]="form" novalidate ngxsForm="profile.formState" [ngxsFormClearOnDestroy]="true" (submit)="save()">
@@ -50,7 +51,7 @@
                     </div>
                 </form>
             </div>
-            <div [hidden]="activeLink !== 1">
+            <div [hidden]="activeLink !== 1" style="overflow-y: auto">
                 <div *ngFor="let authority of authorities$ | async">{{ authority.name }}</div>
             </div>
             <div [hidden]="activeLink !== 2">

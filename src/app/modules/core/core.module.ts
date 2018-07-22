@@ -32,6 +32,7 @@ import {ProfileComponent} from './pages/profile/profile.component';
 import {ProfileService} from './pages/profile/profile.service';
 import {ProfileFormState} from './pages/profile/state/profile.form.state';
 import {ErrorInterceptor} from './services/interceptors/error.interceptor';
+import {ConfirmDialogComponent} from './dialogs/confirm/confirm.dialog.component';
 
 @NgModule({
     imports: [
@@ -90,18 +91,21 @@ import {ErrorInterceptor} from './services/interceptors/error.interceptor';
         NgProgressModule,
         NgProgressHttpModule,
 
-        LoginDialogComponent
+        LoginDialogComponent,
+        ConfirmDialogComponent
     ],
     declarations: [
         CodeSnippet,
         HomepageComponent,
         LoginDialogComponent,
+        ConfirmDialogComponent,
         RepositorySearchResultsComponent,
         PageNotFoundComponent,
         ProfileComponent
     ],
     entryComponents: [
-        LoginDialogComponent
+        LoginDialogComponent,
+        ConfirmDialogComponent
     ],
     providers: [
         /* Intercept and rewrite requests to point to localhost:48080 when in development */

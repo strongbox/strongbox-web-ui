@@ -34,17 +34,17 @@
                     <td mat-cell *matCellDef="let row">
                         <ul class="actions">
                             <li *ngIf="(hasViewUserAuthority$ | async)">
-                                <a>
+                                <a title="View user">
                                     <i class="icon ion-md-eye"></i>
                                 </a>
                             </li>
                             <li *ngIf="(hasUpdateUserAuthority$ | async)">
-                                <a>
+                                <a title="Update user">
                                     <i class="icon ion-md-create"></i>
                                 </a>
                             </li>
                             <li *ngIf="(hasDeleteUserAuthority$ | async)">
-                                <a>
+                                <a title="Delete user" (click)="confirmDeletion(row)">
                                     <i class="icon ion-md-trash"></i>
                                 </a>
                             </li>

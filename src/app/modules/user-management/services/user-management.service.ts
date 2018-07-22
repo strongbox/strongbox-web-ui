@@ -72,4 +72,8 @@ export class UserManagementService {
             );
     }
 
+    deleteUser(user: User) {
+        return this.http.delete(`/api/users/${user.username}`);
+    }
+
 }

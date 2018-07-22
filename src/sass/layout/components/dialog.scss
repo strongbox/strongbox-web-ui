@@ -1,3 +1,16 @@
 .mat-dialog-container {
   background: #223340;
+
+  .mat-dialog-title {
+    padding: 0px 0px 10px 0px;
+    margin: auto;
+  }
+
+  .mat-dialog-content {
+    padding: 10px 24px 14px 24px;
+  }
+}
+
+.deleteDialog .mat-dialog-container {
+  background: #af2e25;
 }
