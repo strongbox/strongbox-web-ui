@@ -91,6 +91,9 @@ pipeline {
                 }
             }
         }
+        always {
+            junit 'dist/TESTS-*.xml'
+        }
         cleanup {
             script {
                 workspace().clean()
