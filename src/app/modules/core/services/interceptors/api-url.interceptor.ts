@@ -31,7 +31,17 @@ export class ApiURLInterceptor implements HttpInterceptor {
         }
 
         // Some endpoints don't like it when you haven't specified the accept header.
-        request = request.clone({setHeaders: {'Accept': 'application/json'}});
+        let headers = request.headers;
+        if (!headers.has('Accept')) {
+            headers.set('Accept', 'application/json');
+        }
+
+        // X-Requested-With: {@see SB-974}
+        if (!headers.has('X-Requested-With')) {
+            headers.set('X-Requested-With', 'XMLHttpRequest');
+        }
+
+        request = request.clone({headers: headers});
 
         return next.handle(request);
     }

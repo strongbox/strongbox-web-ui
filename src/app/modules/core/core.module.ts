@@ -3,13 +3,15 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {RouterModule} from '@angular/router';
 import {NgProgressModule} from '@ngx-progressbar/core';
 import {NgProgressHttpModule} from '@ngx-progressbar/http';
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
 import {NgxsRouterPluginModule} from '@ngxs/router-plugin';
 import {NgxsModule} from '@ngxs/store';
 import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
-import {RouterModule} from '@angular/router';
+import {NgxsFormPluginModule} from '@ngxs/form-plugin';
+import {ToastrModule} from 'ngx-toastr';
 
 import {MaterialModule} from '../../shared/material.module';
 import {PageNotFoundComponent} from './pages/page-not-found/page-not-found.component';
@@ -20,16 +22,16 @@ import {ApiURLInterceptor} from './services/interceptors/api-url.interceptor';
 import {CodeSnippet} from './pipes/code-snippet.pipe';
 import {RepositorySearchService} from './pages/search/repository-search.service';
 import {CoreRouterResolver} from './core.router.resolver';
-import {SessionState} from './auth/session.state';
+import {SessionState} from './auth/state/session.state';
 import {AuthService} from './auth/auth.service';
 import {LoginDialogComponent} from './dialogs/login/login.dialog.component';
 import {AppState} from '../../state/app.state';
 import {TokenInterceptor} from './services/interceptors/token.interceptor';
 import {AuthGuard} from './auth/auth.guard';
 import {ProfileComponent} from './pages/profile/profile.component';
-import {NgxsFormPluginModule} from '@ngxs/form-plugin';
 import {ProfileService} from './pages/profile/profile.service';
 import {ProfileFormState} from './pages/profile/state/profile.form.state';
+import {ErrorInterceptor} from './services/interceptors/error.interceptor';
 
 @NgModule({
     imports: [
@@ -39,8 +41,19 @@ import {ProfileFormState} from './pages/profile/state/profile.form.state';
         ReactiveFormsModule,
         RouterModule,
 
+        // User Interface (layout, material, etc)
         FlexLayoutModule,
         MaterialModule,
+        ToastrModule.forRoot({
+            autoDismiss: true,
+            disableTimeOut: false,
+            progressBar: true,
+            preventDuplicates: true,
+            progressAnimation: 'decreasing',
+            timeOut: 5000,
+            extendedTimeOut: 2000,
+            positionClass: 'toast-bottom-right'
+        }),
 
         // State management
         NgxsModule.forRoot([
@@ -100,6 +113,11 @@ import {ProfileFormState} from './pages/profile/state/profile.form.state';
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ErrorInterceptor,
             multi: true
         },
         CoreRouterResolver,

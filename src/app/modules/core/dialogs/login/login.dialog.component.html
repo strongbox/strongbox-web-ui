@@ -2,6 +2,7 @@
   <div class="errors">
     <mat-error *ngIf="data.sessionHasExpired">Your session has expired!</mat-error>
     <mat-error *ngIf="data.sessionIsInvalid">Your session is invalid!</mat-error>
+    <mat-error *ngIf="data.unauthorizedAccess">Your current credentials don't have the necessary authorization to access the desired route! <br> Please login with a more privileged account.</mat-error>
     <mat-error *ngIf="form.hasError('wrongCredentials')">Invalid credentials provided!</mat-error>
   </div>
   <form [formGroup]="form" (submit)="login()">

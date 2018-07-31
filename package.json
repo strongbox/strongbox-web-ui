@@ -15,7 +15,7 @@
     "ci-test": "ng test --browsers FirefoxHeadless",
     "ci-e2e": "ng e2e --port 4201 --protractor-config ./e2e/protractor-ci.conf.js",
     "package": "./node_modules/.bin/rimraf dist/packaging/* && ./node_modules/.bin/webpack --env.configuration=prod",
-    "test": "ng test --watch --browsers Chrome,Firefox",
+    "test": "ng test --watch --browsers Chrome",
     "lint": "ng lint",
     "e2e": "ng e2e --port 4201",
     "webdriver-update": "webdriver-manager update"
@@ -43,6 +43,7 @@
     "core-js": "^2.5.4",
     "fonts-raleway": "0.0.4",
     "ionicons": "^4.2.4",
+    "ngx-toastr": "^8.10.0",
     "open-sans-fontface": "^1.4.0",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"

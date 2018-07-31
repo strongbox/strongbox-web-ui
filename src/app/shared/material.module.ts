@@ -2,9 +2,9 @@ import {NgModule} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 
 import {
+    MatBadgeModule,
     MatButtonModule,
     MatCardModule,
-    MatBadgeModule,
     MatDialogModule,
     MatExpansionModule,
     MatIconModule,
@@ -17,7 +17,6 @@ import {
     MatSelectModule,
     MatSidenavModule,
     MatSlideToggleModule,
-    MatSnackBarModule,
     MatTableModule,
     MatTabsModule,
     MatToolbarModule
@@ -44,7 +43,6 @@ const components = [
     MatSelectModule,
     MatSidenavModule,
     MatSlideToggleModule,
-    MatSnackBarModule,
     MatTableModule,
     MatTabsModule,
     MatToolbarModule

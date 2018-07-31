@@ -9,7 +9,8 @@ import {NgxsFormPluginModule} from '@ngxs/form-plugin';
 import {ProfileComponent} from './profile.component';
 import {MaterialModule} from '../../../../shared/material.module';
 import {ProfileService} from './profile.service';
-import {SessionState} from '../../auth/session.state';
+import {SessionState} from '../../auth/state/session.state';
+import {ToastrModule} from 'ngx-toastr';
 
 describe('ProfileComponent', () => {
     let component: ProfileComponent;
@@ -26,6 +27,7 @@ describe('ProfileComponent', () => {
                     SessionState
                 ]),
                 NgxsFormPluginModule.forRoot(),
+                ToastrModule.forRoot(),
                 RouterTestingModule
             ],
             declarations: [ProfileComponent],

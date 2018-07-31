@@ -7,7 +7,7 @@ import {Select} from '@ngxs/store';
 
 import {AuthenticatedUser} from '../../auth/auth.model';
 import {ProfileUpdateData} from './profile.model';
-import {SessionState} from '../../auth/session.state';
+import {SessionState} from '../../auth/state/session.state';
 
 @Injectable({
     providedIn: 'root'

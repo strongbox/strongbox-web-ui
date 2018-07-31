@@ -6,9 +6,9 @@ import {Location} from '@angular/common';
 import {NgxsModule, Store} from '@ngxs/store';
 
 import {defaultSessionState, SessionState} from './session.state';
-import {AuthenticatedUser, UserAuthority, UserCredentials} from './auth.model';
+import {AuthenticatedUser, UserAuthority, UserCredentials} from '../auth.model';
 import {LoginAction, LogoutAction} from './auth.actions';
-import {AuthService} from './auth.service';
+import {AuthService} from '../auth.service';
 
 describe('SessionState', () => {
 

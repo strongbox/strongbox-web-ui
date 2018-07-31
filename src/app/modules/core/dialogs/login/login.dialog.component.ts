@@ -5,8 +5,8 @@ import {Select, Store} from '@ngxs/store';
 import {Observable} from 'rxjs';
 
 import {UserCredentials} from '../../auth/auth.model';
-import {LoginAction} from '../../auth/auth.actions';
-import {SessionState} from '../../auth/session.state';
+import {LoginAction} from '../../auth/state/auth.actions';
+import {SessionState} from '../../auth/state/session.state';
 import {CloseLoginDialogAction} from '../../../../state/app.actions';
 
 @Component({
@@ -25,7 +25,8 @@ export class LoginDialogComponent implements OnInit {
 
     public data = {
         sessionHasExpired: false,
-        sessionIsInvalid: false
+        sessionIsInvalid: false,
+        unauthorizedAccess: false
     };
 
     constructor(private store: Store,
@@ -39,6 +40,10 @@ export class LoginDialogComponent implements OnInit {
         if (data !== null && data.sessionIsInvalid) {
             this.data.sessionIsInvalid = data.sessionIsInvalid;
         }
+
+        if (data !== null && data.unauthorizedAccess) {
+            this.data.unauthorizedAccess = data.unauthorizedAccess;
+        }
     }
 
     login(): void {
@@ -48,6 +53,7 @@ export class LoginDialogComponent implements OnInit {
         );
         this.data.sessionHasExpired = false;
         this.data.sessionIsInvalid = false;
+        this.data.unauthorizedAccess = false;
         this.store.dispatch(new LoginAction(credentials));
     }
 

@@ -4,7 +4,7 @@ import {Select} from '@ngxs/store';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 
-import {SessionState} from './session.state';
+import {SessionState} from './state/session.state';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

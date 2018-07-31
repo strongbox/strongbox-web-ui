@@ -14,7 +14,7 @@ import {
 } from './app.actions';
 
 import {LoginDialogComponent} from '../modules/core/dialogs/login/login.dialog.component';
-import {SideNavStateModel, AppStateModel, defaultAppState, ViewPortStateModel} from './app.state.interfaces';
+import {AppStateModel, defaultAppState, SideNavStateModel, ViewPortStateModel} from './app.state.interfaces';
 
 @State<AppStateModel>({
     name: 'app',

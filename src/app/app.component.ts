@@ -6,10 +6,10 @@ import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
 
 import {RepositorySearchService} from './modules/core/pages/search/repository-search.service';
 import {AuthService} from './modules/core/auth/auth.service';
-import {LogoutAction} from './modules/core/auth/auth.actions';
+import {LogoutAction} from './modules/core/auth/state/auth.actions';
 import {HideSideNavAction, OpenLoginDialogAction, ToggleSideNavAction} from './state/app.actions';
 import {AppState} from './state/app.state';
-import {SessionState} from './modules/core/auth/session.state';
+import {SessionState} from './modules/core/auth/state/session.state';
 
 @Component({
     selector: 'app-strongbox',
