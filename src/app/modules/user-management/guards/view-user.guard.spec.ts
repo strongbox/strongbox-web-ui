@@ -4,7 +4,7 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NgxsModule, Store} from '@ngxs/store';
 
 import {ViewUserGuard} from './view-user.guard';
-import {defaultSessionState, SessionState} from '../../core/auth/session.state';
+import {defaultSessionState, SessionState} from '../../core/auth/state/session.state';
 import {AuthService} from '../../core/auth/auth.service';
 import {AuthenticatedUser, UserAuthority} from '../../core/auth/auth.model';
 

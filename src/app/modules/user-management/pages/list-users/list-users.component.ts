@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef, MatSnackBar} from '@angular/material';
-import {HttpErrorResponse} from '@angular/common/http';
+import {MatDialog, MatDialogRef} from '@angular/material';
 import {BehaviorSubject} from 'rxjs';
 import {Select} from '@ngxs/store';
 
 import {User} from '../../user.model';
 import {UserManagementService} from '../../services/user-management.service';
-import {SessionState} from '../../../core/auth/session.state';
+import {SessionState} from '../../../core/auth/state/session.state';
 import {ConfirmDialogComponent} from '../../../core/dialogs/confirm/confirm.dialog.component';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
     selector: 'app-list-users',
@@ -34,7 +34,7 @@ export class ListUsersComponent implements OnInit {
     isLoadingResults = true;
     deleteLoading = false;
 
-    constructor(private service: UserManagementService, private dialog: MatDialog, private snackBar: MatSnackBar) {
+    constructor(private service: UserManagementService, private dialog: MatDialog, private notify: ToastrService) {
     }
 
     confirmDeletion(user: User) {
@@ -62,14 +62,7 @@ export class ListUsersComponent implements OnInit {
 
                                 ref.close(true);
 
-                                this.snackBar.open('User has been successfully deleted!', null, {
-                                    duration: 3500
-                                });
-                            },
-                            (error: HttpErrorResponse) => {
-                                this.snackBar.open('An error occurred while deleting the user! Please check Strongbox\'s logs!', null, {
-                                    duration: 3500
-                                });
+                                this.notify.success('User has been successfully deleted!');
                             });
 
                     }

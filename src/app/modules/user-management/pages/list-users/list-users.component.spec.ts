@@ -1,6 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {ToastrModule} from 'ngx-toastr';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {ListUsersComponent} from './list-users.component';
 import {MaterialModule} from '../../../../shared/material.module';
@@ -13,8 +15,10 @@ describe('ListUsersComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
+                BrowserAnimationsModule,
                 MaterialModule,
-                HttpClientTestingModule
+                HttpClientTestingModule,
+                ToastrModule.forRoot()
             ],
             declarations: [ListUsersComponent]
         }).compileComponents();

@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NgxsModule, Store} from '@ngxs/store';
 
-import {defaultSessionState, SessionState} from '../../core/auth/session.state';
+import {defaultSessionState, SessionState} from '../../core/auth/state/session.state';
 import {AuthService} from '../../core/auth/auth.service';
 import {AuthenticatedUser, UserAuthority} from '../../core/auth/auth.model';
 import {UpdateUserGuard} from './update-user.guard';

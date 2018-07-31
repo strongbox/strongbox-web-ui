@@ -5,7 +5,7 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ViewUserComponent} from './view-user.component';
 import {MaterialModule} from '../../../../shared/material.module';
 import {NgxsModule} from '@ngxs/store';
-import {SessionState} from '../../../core/auth/session.state';
+import {SessionState} from '../../../core/auth/state/session.state';
 import {NgxsFormPluginModule} from '@ngxs/form-plugin';
 
 describe('ViewUserComponent', () => {

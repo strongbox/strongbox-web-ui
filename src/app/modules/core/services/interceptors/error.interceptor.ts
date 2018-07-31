@@ -22,7 +22,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                     return this.handleAuthError(response);
                 }
 
-                return this.handleGenericError(response);
+                return this.handleGenericError(request, response);
             })
         );
     }
@@ -62,14 +62,11 @@ export class ErrorInterceptor implements HttpInterceptor {
         return of(null);
     }
 
-    private handleGenericError(response: any): Observable<any> {
+    private handleGenericError(request: HttpRequest<any>, response: any): Observable<any> {
         if (response instanceof HttpErrorResponse) {
-            // url can be null in some cases (i.e. forbidden OPTIONS request or super fatal error 500 with no content at all)
-            let url = '';
-
-            if (response.url !== null) {
-                url = response.url.substr(response.url.indexOf('/api'));
-            }
+            // response.url can be null in some cases (i.e. forbidden OPTIONS request or super fatal error 500 with no content at all)
+            // this is why we use request.url instead as it will always have the proper url to the endpoint we're requesting.
+            let url = this.getURI(request);
 
             // same goes for response.error which could be string | ProgressEvent.
             // response.error (angular) != response.error.error (backend)
@@ -89,5 +86,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         }
 
         return of(response);
+    }
+
+    private getURI(request: HttpRequest<any>): string {
+        return request.url.substr(request.url.indexOf('/api'));
     }
 }

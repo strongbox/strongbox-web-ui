@@ -6,7 +6,7 @@ import {Select, Store} from '@ngxs/store';
 
 import {User} from '../../user.model';
 import {UserManagementService} from '../../services/user-management.service';
-import {SessionState} from '../../../core/auth/session.state';
+import {SessionState} from '../../../core/auth/state/session.state';
 
 @Component({
     selector: 'app-view-user',
