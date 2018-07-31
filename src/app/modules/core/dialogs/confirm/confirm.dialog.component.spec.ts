@@ -9,8 +9,7 @@ import {of} from 'rxjs';
 import {MaterialModule} from '../../../../shared/material.module';
 import {ConfirmDialogComponent} from './confirm.dialog.component';
 
-
-describe('Component: ConfirmDialogComponent', () => {
+describe('Dialog: ConfirmDialogComponent', () => {
     let component: ConfirmDialogComponent;
     let fixture: ComponentFixture<ConfirmDialogComponent>;
 

@@ -1,11 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {Select, Store} from '@ngxs/store';
+import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
 import {Observable} from 'rxjs';
 
 import {UserCredentials} from '../../auth/auth.model';
-import {LoginAction} from '../../auth/state/auth.actions';
+import {InvalidCredentialsAction, LoginAction} from '../../auth/state/auth.actions';
 import {SessionState} from '../../auth/state/session.state';
 import {CloseLoginDialogAction} from '../../../../state/app.actions';
 
@@ -16,7 +16,7 @@ import {CloseLoginDialogAction} from '../../../../state/app.actions';
 })
 export class LoginDialogComponent implements OnInit {
     @Select(SessionState.state)
-    public pending$: Observable<string>;
+    public sessionState$: Observable<string>;
 
     public form: FormGroup = this.formBuilder.group({
         username: ['', [Validators.required]],
@@ -29,10 +29,15 @@ export class LoginDialogComponent implements OnInit {
         unauthorizedAccess: false
     };
 
+    private wrongCredentialsFormError: ValidationErrors = {
+        'wrongCredentials': 'true'
+    };
+
     constructor(private store: Store,
                 private dialogRef: MatDialogRef<LoginDialogComponent>,
                 private formBuilder: FormBuilder,
-                @Inject(MAT_DIALOG_DATA) data: any) {
+                @Inject(MAT_DIALOG_DATA) data: any,
+                private actions$: Actions) {
         if (data !== null && data.sessionHasExpired) {
             this.data.sessionHasExpired = true;
         }
@@ -62,16 +67,20 @@ export class LoginDialogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.pending$.subscribe((state: string) => {
+        this.sessionState$.subscribe((state: string) => {
             if (state === 'authenticated') {
                 this.dialogRef.close(null);
             } else if (state === 'invalid.credentials' || state === 'error') {
-                const errors: ValidationErrors = {
-                    'wrongCredentials': 'true'
-                };
-                this.form.setErrors(errors);
+                this.form.setErrors(this.wrongCredentialsFormError);
             }
         });
+
+        this.actions$
+            .pipe(ofActionDispatched(InvalidCredentialsAction))
+            .subscribe(({payload}) => {
+                this.form.setErrors(this.wrongCredentialsFormError);
+            });
+
 
         this.dialogRef.afterClosed().subscribe(() => this.store.dispatch(new CloseLoginDialogAction()));
     }

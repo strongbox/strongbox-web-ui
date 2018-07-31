@@ -18,6 +18,10 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(
             catchError((response: any) => {
+                if (this.isLoginError(response)) {
+                    return this.handleLoginError(response);
+                }
+
                 if (this.isAuthError(response)) {
                     return this.handleAuthError(response);
                 }
@@ -27,6 +31,29 @@ export class ErrorInterceptor implements HttpInterceptor {
         );
     }
 
+    /**
+     * If the response contains login errors
+     *
+     * @param response
+     * @returns {boolean}
+     */
+    private isLoginError(response: any): boolean {
+        // url can be null in some cases (i.e. forbidden OPTIONS request or super fatal error 500 with no content at all)
+        if (response instanceof HttpErrorResponse && response.url !== null) {
+            if (response.url.match(/\/login$/)) {
+                return response.status === 401 || response.status === 403;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * If the response contains authentication errors (expired/invalid token)
+     *
+     * @param response
+     * @returns {boolean}
+     */
     private isAuthError(response: any): boolean {
         // url can be null in some cases (i.e. forbidden OPTIONS request or super fatal error 500 with no content at all)
         if (response instanceof HttpErrorResponse && response.url !== null) {
@@ -41,6 +68,23 @@ export class ErrorInterceptor implements HttpInterceptor {
         return false;
     }
 
+    /**
+     * Handle login errors
+     *
+     * @param {HttpErrorResponse} response
+     * @returns {Observable<any>}
+     */
+    private handleLoginError(response: HttpErrorResponse): Observable<any> {
+        this.store.dispatch(new InvalidCredentialsAction());
+        return of(null);
+    }
+
+    /**
+     * Handle authentication errors (i.e. existing token has expired or is no longer valid)
+     *
+     * @param {HttpErrorResponse} response
+     * @returns {Observable<any>}
+     */
     private handleAuthError(response: HttpErrorResponse): Observable<any> {
         const data = {
             sessionHasExpired: false,
@@ -62,6 +106,13 @@ export class ErrorInterceptor implements HttpInterceptor {
         return of(null);
     }
 
+    /**
+     * Try to handle the error in some sane way, if possible.
+     *
+     * @param {HttpRequest<any>} request
+     * @param response
+     * @returns {Observable<any>}
+     */
     private handleGenericError(request: HttpRequest<any>, response: any): Observable<any> {
         if (response instanceof HttpErrorResponse) {
             // response.url can be null in some cases (i.e. forbidden OPTIONS request or super fatal error 500 with no content at all)
