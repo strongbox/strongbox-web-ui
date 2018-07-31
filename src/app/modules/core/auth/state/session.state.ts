@@ -3,9 +3,10 @@ import {Action, createSelector, NgxsOnInit, Selector, State, StateContext, Store
 import {Navigate} from '@ngxs/router-plugin';
 import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
+import {plainToClass} from 'class-transformer';
 
 import {CheckCredentialsAction, CredentialsExpiredAction, LoginAction, LogoutAction, UnauthorizedAccessAction} from './auth.actions';
-import {AuthenticatedUser, UserAuthority} from '../auth.model';
+import {AuthenticatedUser} from '../auth.model';
 import {AuthService} from '../auth.service';
 import {HideSideNavAction, OpenLoginDialogAction} from '../../../../state/app.actions';
 
@@ -28,11 +29,9 @@ if (localStorage.getItem('session') !== '') {
     let session: SessionStateModel = defaultSessionState;
 
     try {
-        const rawSession = JSON.parse(localStorage.getItem('session'));
+        const rawSession: any = JSON.parse(localStorage.getItem('session'));
         session = {
-            user: new AuthenticatedUser(
-                rawSession.user.username, rawSession.token, rawSession.user.authorities.map(val => new UserAuthority(val.name))
-            ),
+            user: plainToClass(AuthenticatedUser, rawSession) as any as AuthenticatedUser,
             token: rawSession.token,
             state: rawSession.state
         };
@@ -45,7 +44,6 @@ if (localStorage.getItem('session') !== '') {
         initialState = session;
     }
 }
-
 
 @State<SessionStateModel>({
     name: 'session',

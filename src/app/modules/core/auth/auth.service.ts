@@ -4,9 +4,10 @@ import {catchError, map, share} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {Store} from '@ngxs/store';
 
-import {AuthenticatedUser, UserAuthority, UserCredentials} from './auth.model';
+import {AuthenticatedUser, UserCredentials} from './auth.model';
 import {SessionStateModel} from './state/session.state';
 import {LogoutAction} from './state/auth.actions';
+import {plainToClass} from 'class-transformer';
 
 @Injectable({
     providedIn: 'root'
@@ -37,11 +38,9 @@ export class AuthService {
             .pipe(
                 map((response: any): SessionStateModel => {
                     if (response.hasOwnProperty('token') && response.token !== null) {
-                        const user = new AuthenticatedUser(
-                            userCredentials.username,
-                            response.token,
-                            response.authorities.map(name => new UserAuthority(name))
-                        );
+                        let user: AuthenticatedUser = plainToClass(AuthenticatedUser, response) as any as AuthenticatedUser;
+                        user.username = userCredentials.username;
+
                         return {
                             user: user,
                             token: user.token,

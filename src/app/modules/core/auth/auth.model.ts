@@ -1,9 +1,30 @@
+import {Transform, Type} from 'class-transformer';
+
 export class AuthenticatedUser {
-    constructor(public username: string = null,
-                public token: string = null,
-                public authorities: UserAuthority[] = null,
-                public roles: string[] = null,
-                public securityTokenKey: string = null) {
+    username: string = null;
+    token: string = null;
+    roles: string[] = null;
+    securityTokenKey: string = null;
+
+    @Type(() => UserAuthority)
+    @Transform((value) => {
+        if (Array.isArray(value)) {
+            return value.map(str => new UserAuthority(str));
+        }
+        return value;
+    })
+    authorities: UserAuthority[] = [];
+
+    constructor(username: string = null,
+                token: string = null,
+                authorities: UserAuthority[] = null,
+                roles: string[] = null,
+                securityTokenKey: string = null) {
+        this.username = username;
+        this.token = token;
+        this.authorities = authorities;
+        this.roles = roles;
+        this.securityTokenKey = securityTokenKey;
     }
 
     hasAuthority(authority: string): boolean {
