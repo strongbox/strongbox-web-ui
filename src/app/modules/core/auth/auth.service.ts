@@ -2,23 +2,33 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, map, share} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
-import {Select, Store} from '@ngxs/store';
+import {Store} from '@ngxs/store';
 
 import {AuthenticatedUser, UserAuthority, UserCredentials} from './auth.model';
-import {SessionStateModel} from './session.state';
-import {LogoutAction} from './auth.actions';
+import {SessionStateModel} from './state/session.state';
+import {LogoutAction} from './state/auth.actions';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
 
-    @Select() session$;
-
-    @Select(state => state.session.authorities) authorities$;
-
     constructor(private http: HttpClient,
                 private store: Store) {
+    }
+
+    checkCredentials(): Observable<any> {
+        // This is intentionally done because if we use SessionState.isAuthenticated DI is broken!
+        const isAuthenticated = this.store.selectSnapshot(appState => {
+            const session = appState.session;
+            return session.user !== null && session.token !== null && session.state === 'authenticated';
+        });
+
+        if (isAuthenticated) {
+            return this.http.get('/api/ping/token').pipe();
+        }
+
+        return of(null);
     }
 
     login(userCredentials: UserCredentials): Observable<SessionStateModel> {

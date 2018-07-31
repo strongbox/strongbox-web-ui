@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatSnackBar} from '@angular/material';
 import {BehaviorSubject, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {Select, Store} from '@ngxs/store';
 import {UpdateFormValue} from '@ngxs/form-plugin';
+import {ToastrService} from 'ngx-toastr';
 
 import {AuthenticatedUser} from '../../auth/auth.model';
 import {ProfileFormValidator} from './profile.form.validator';
 import {ProfileService} from './profile.service';
 import {ProfileUpdateData} from './profile.model';
-import {SessionState} from '../../auth/session.state';
+import {SessionState} from '../../auth/state/session.state';
 import {ProfileFormState} from './state/profile.form.state';
 
 @Component({
@@ -41,7 +41,7 @@ export class ProfileComponent implements OnInit {
     constructor(private service: ProfileService,
                 private formBuilder: FormBuilder,
                 private store: Store,
-                private snackBar: MatSnackBar) {
+                private toaster: ToastrService) {
     }
 
     hasError(field, error = 'required') {
@@ -65,19 +65,10 @@ export class ProfileComponent implements OnInit {
         this.loading.next(true);
         this.service
             .profile(data)
-            .pipe(
-                catchError((err) => {
-                    console.log(err);
-                    this.snackBar.open('An error occurred while saving account data!', null, {
-                        duration: 3500
-                    });
-                    return of(err);
-                })
-            )
             .subscribe((result: any) => {
                 this.loading.next(false);
-                this.snackBar.open(result.message, null, {
-                    duration: 3500
+                this.toaster.success(result.message, null, {
+                    timeOut: 3500
                 });
             });
     }

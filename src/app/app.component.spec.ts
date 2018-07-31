@@ -11,7 +11,7 @@ import {NgxsModule} from '@ngxs/store';
 import {AppComponent} from './app.component';
 import {MaterialModule} from './shared/material.module';
 import {AuthService} from './modules/core/auth/auth.service';
-import {SessionState} from './modules/core/auth/session.state';
+import {SessionState} from './modules/core/auth/state/session.state';
 import {AppState} from './state/app.state';
 
 describe('AppComponent', () => {

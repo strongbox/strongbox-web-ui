@@ -6,7 +6,7 @@ import {HTTP_INTERCEPTORS, HttpClient} from '@angular/common/http';
 import {environment} from '../../../../../environments/environment';
 
 
-describe('ApiURLInterceptor', () => {
+describe('Interceptor: api-url interceptor', () => {
     let interceptor: ApiURLInterceptor;
     let backend: HttpTestingController;
     let client: HttpClient;

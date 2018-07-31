@@ -1,0 +1,25 @@
+// ngx-toastr
+@import '~ngx-toastr/toastr.css';
+
+.toast-container {
+  font-family: Helvetica,sans-serif;
+
+  .toast {
+    // box-shadow: 0px 0px 8px #D32F2F;
+    box-shadow: 0px 0px 8px rgba(255,255,255, 0.2);
+    -webkit-transition: box-shadow 0.25s;
+    -moz-transition: box-shadow 0.25s;
+    -ms-transition: box-shadow 0.25s;
+    -o-transition: box-shadow 0.25s;
+    transition: box-shadow 0.25s;
+  }
+}
+
+.toast-message {
+  font-size: 0.83rem;
+}
+
+.toast-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+}

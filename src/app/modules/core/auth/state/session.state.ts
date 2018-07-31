@@ -1,13 +1,13 @@
 import {HttpErrorResponse} from '@angular/common/http';
-import {Action, createSelector, Selector, State, StateContext, Store} from '@ngxs/store';
+import {Action, createSelector, NgxsOnInit, Selector, State, StateContext, Store} from '@ngxs/store';
 import {Navigate} from '@ngxs/router-plugin';
 import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 
-import {CredentialsExpiredAction, LoginAction, LogoutAction} from './auth.actions';
-import {AuthenticatedUser, UserAuthority} from './auth.model';
-import {AuthService} from './auth.service';
-import {HideSideNavAction, OpenLoginDialogAction} from '../../../state/app.actions';
+import {CheckCredentialsAction, CredentialsExpiredAction, LoginAction, LogoutAction, UnauthorizedAccessAction} from './auth.actions';
+import {AuthenticatedUser, UserAuthority} from '../auth.model';
+import {AuthService} from '../auth.service';
+import {HideSideNavAction, OpenLoginDialogAction} from '../../../../state/app.actions';
 
 export interface SessionStateModel {
     user: AuthenticatedUser | null;
@@ -30,7 +30,9 @@ if (localStorage.getItem('session') !== '') {
     try {
         const rawSession = JSON.parse(localStorage.getItem('session'));
         session = {
-            user: new AuthenticatedUser(rawSession.user.username, rawSession.token, rawSession.user.authorities.map(val => new UserAuthority(val.name))),
+            user: new AuthenticatedUser(
+                rawSession.user.username, rawSession.token, rawSession.user.authorities.map(val => new UserAuthority(val.name))
+            ),
             token: rawSession.token,
             state: rawSession.state
         };
@@ -49,7 +51,7 @@ if (localStorage.getItem('session') !== '') {
     name: 'session',
     defaults: initialState
 })
-export class SessionState {
+export class SessionState implements NgxsOnInit {
 
     @Selector()
     static token(session: SessionStateModel) {
@@ -103,6 +105,15 @@ export class SessionState {
     constructor(private auth: AuthService, private store: Store) {
     }
 
+    ngxsOnInit(ctx: StateContext<SessionStateModel>) {
+        this.store.dispatch(new CheckCredentialsAction());
+    }
+
+    @Action(CheckCredentialsAction)
+    checkCredentials() {
+        this.auth.checkCredentials().subscribe();
+    }
+
     @Action(LoginAction)
     login(ctx: StateContext<SessionStateModel>, {payload}: LoginAction) {
         ctx.patchState({state: 'pending'});
@@ -134,6 +145,11 @@ export class SessionState {
     @Action(CredentialsExpiredAction)
     expired(ctx: StateContext<SessionStateModel>, {payload}: CredentialsExpiredAction) {
         this.store.dispatch([new LogoutAction(), new OpenLoginDialogAction(payload)]);
+    }
+
+    @Action(UnauthorizedAccessAction)
+    unauthorized(ctx: StateContext<SessionStateModel>, {payload}: UnauthorizedAccessAction) {
+        this.store.dispatch([new OpenLoginDialogAction(payload)]);
     }
 
 

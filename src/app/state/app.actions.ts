@@ -1,4 +1,4 @@
-import {SideNavStateModel, defaultAppSideNavState} from './app.state.interfaces';
+import {defaultAppSideNavState, SideNavStateModel} from './app.state.interfaces';
 
 export class ShowSideNavAction {
     static readonly type = '[App] Show sidenav';

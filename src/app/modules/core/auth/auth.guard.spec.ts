@@ -5,7 +5,7 @@ import {NgxsModule, Store} from '@ngxs/store';
 
 import {AuthGuard} from './auth.guard';
 import {AuthService} from './auth.service';
-import {defaultSessionState, SessionState} from './session.state';
+import {defaultSessionState, SessionState} from './state/session.state';
 
 describe('AuthGuard should', () => {
     let authGuard: AuthGuard;

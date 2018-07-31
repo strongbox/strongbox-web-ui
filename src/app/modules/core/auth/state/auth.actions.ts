@@ -1,4 +1,4 @@
-import {UserCredentials} from './auth.model';
+import {UserCredentials} from '../auth.model';
 
 export class LoginAction {
     static readonly type = '[Auth] Login';
@@ -24,6 +24,13 @@ export class CredentialsExpiredAction {
 
 export class InvalidCredentialsAction {
     static readonly type = '[Auth] Invalid credentials';
+
+    constructor(public payload: any = null) {
+    }
+}
+
+export class UnauthorizedAccessAction {
+    static readonly type = '[Auth] Unauthorized access';
 
     constructor(public payload: any = null) {
     }

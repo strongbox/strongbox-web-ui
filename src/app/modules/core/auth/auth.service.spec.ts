@@ -5,7 +5,7 @@ import {HttpClientTestingModule, HttpTestingController} from '@angular/common/ht
 import {NgxsModule, Store} from '@ngxs/store';
 
 import {AuthService} from './auth.service';
-import {SessionStateModel} from './session.state';
+import {SessionStateModel} from './state/session.state';
 import {AuthenticatedUser, UserAuthority, UserCredentials} from './auth.model';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
