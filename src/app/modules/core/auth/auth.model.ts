@@ -7,13 +7,22 @@ export class AuthenticatedUser {
     securityTokenKey: string = null;
 
     @Type(() => UserAuthority)
-    @Transform((value) => {
-        if (Array.isArray(value)) {
-            return value.map(str => new UserAuthority(str));
-        }
-        return value;
+    @Transform((incoming) => {
+        return incoming.map((value) => {
+            if (typeof value === 'string') {
+                return new UserAuthority(value);
+            } else if (value instanceof UserAuthority) {
+                return value;
+            } else {
+                console.error(value);
+                throw new Error('Could not transform UserAuthority because it contained non-transformable value!');
+            }
+
+        });
     })
     authorities: UserAuthority[] = [];
+
+    private cache = {};
 
     constructor(username: string = null,
                 token: string = null,
@@ -28,10 +37,20 @@ export class AuthenticatedUser {
     }
 
     hasAuthority(authority: string): boolean {
+        authority = authority ? authority.toUpperCase() : '';
+
+        if (this.cache.hasOwnProperty(authority)) {
+            return this.cache[authority];
+        }
+
         if (this.authorities) {
-            return this.authorities.filter((val: UserAuthority) => {
-                return val.name === authority;
+            const hasAuthority = this.authorities.filter((val: UserAuthority) => {
+                return val.name.toUpperCase() === authority;
             }).length > 0;
+
+            this.cache[authority] = hasAuthority;
+
+            return hasAuthority;
         } else {
             return false;
         }
