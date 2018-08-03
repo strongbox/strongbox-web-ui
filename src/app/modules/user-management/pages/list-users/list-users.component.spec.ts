@@ -7,7 +7,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ListUsersComponent} from './list-users.component';
 import {MaterialModule} from '../../../../shared/material.module';
 
-describe('ListUsersComponent', () => {
+describe('Component: ListUsersComponent', () => {
     let component: ListUsersComponent;
     let fixture: ComponentFixture<ListUsersComponent>;
 

@@ -13,3 +13,8 @@ ul.actions {
     list-style: none;
   }
 }
+
+
+td.mat-cell:first-of-type a {
+  color: rgba(255,255,255,0.8);
+}

@@ -18,7 +18,7 @@
             <table mat-table [dataSource]="data" multiTemplateDataRows>
                 <ng-container matColumnDef="username">
                     <th mat-header-cell *matHeaderCellDef>Username</th>
-                    <td mat-cell *matCellDef="let row">{{row.username}}</td>
+                    <td mat-cell *matCellDef="let row"><a [routerLink]="[row.username, 'view']">{{row.username}}</a></td>
                 </ng-container>
 
                 <ng-container matColumnDef="enabled">
