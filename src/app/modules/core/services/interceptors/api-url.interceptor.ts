@@ -23,7 +23,7 @@ export class ApiURLInterceptor implements HttpInterceptor {
             if (this.protocolMatcher.test(environment.strongboxUrl)) {
                 protocol = environment.strongboxUrl.match(this.protocolMatcher)[1];
             } else {
-                protocol = document.location.protocol.startsWith('http') ? 'http' : 'https';
+                protocol = document.location.protocol.match(this.protocolMatcher)[1];
             }
 
             const url = protocol + '://' + environment.strongboxUrl + '/' + request.url.replace(/^\//, '');
