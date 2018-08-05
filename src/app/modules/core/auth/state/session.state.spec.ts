@@ -10,7 +10,7 @@ import {AuthenticatedUser, UserAuthority, UserCredentials} from '../auth.model';
 import {LoginAction, LogoutAction} from './auth.actions';
 import {AuthService} from '../auth.service';
 
-describe('SessionState', () => {
+describe('State: SessionState', () => {
 
     describe('selectors should work properly', () => {
         it('token() should return a proper value', () => {
