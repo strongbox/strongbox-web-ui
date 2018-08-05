@@ -1,11 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
+import {Actions, Select, Store} from '@ngxs/store';
 import {Observable} from 'rxjs';
 
 import {UserCredentials} from '../../auth/auth.model';
-import {InvalidCredentialsAction, LoginAction} from '../../auth/state/auth.actions';
+import {LoginAction} from '../../auth/state/auth.actions';
 import {SessionState} from '../../auth/state/session.state';
 import {CloseLoginDialogAction} from '../../../../state/app.actions';
 
@@ -66,23 +66,22 @@ export class LoginDialogComponent implements OnInit {
         return this.form.get(field).hasError(error);
     }
 
+    close(): void {
+        this.store.dispatch(new CloseLoginDialogAction(this.dialogRef));
+    }
+
     ngOnInit(): void {
         this.sessionState$.subscribe((state: string) => {
             if (state === 'authenticated') {
-                this.dialogRef.close(null);
+                this.close();
             } else if (state === 'invalid.credentials' || state === 'error') {
                 this.form.setErrors(this.wrongCredentialsFormError);
             }
         });
 
-        this.actions$
-            .pipe(ofActionDispatched(InvalidCredentialsAction))
-            .subscribe(({payload}) => {
-                this.form.setErrors(this.wrongCredentialsFormError);
-            });
-
-
-        this.dialogRef.afterClosed().subscribe(() => this.store.dispatch(new CloseLoginDialogAction()));
+        this.dialogRef.afterClosed().subscribe(() => {
+            this.close();
+        });
     }
 
 }

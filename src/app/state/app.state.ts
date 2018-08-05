@@ -15,6 +15,7 @@ import {
 
 import {LoginDialogComponent} from '../modules/core/dialogs/login/login.dialog.component';
 import {AppStateModel, defaultAppState, SideNavStateModel, ViewPortStateModel} from './app.state.interfaces';
+import {MatDialogRef} from '@angular/material';
 
 @State<AppStateModel>({
     name: 'app',
@@ -48,6 +49,11 @@ export class AppState implements NgxsOnInit {
     @Selector()
     static viewport(state: AppStateModel): ViewPortStateModel {
         return state.viewPort;
+    }
+
+    @Selector()
+    static isLoginModalOpened(state: AppStateModel) {
+        return state.loginModalOpened;
     }
 
     constructor(private dialog: MatDialog,
@@ -131,9 +137,13 @@ export class AppState implements NgxsOnInit {
     }
 
     @Action(CloseLoginDialogAction)
-    closeLoginDialogAction(ctx: StateContext<AppStateModel>) {
+    closeLoginDialogAction(ctx: StateContext<AppStateModel>, {payload}) {
         if (ctx.getState().loginModalOpened) {
             ctx.patchState({loginModalOpened: false});
+        }
+
+        if (payload instanceof MatDialogRef) {
+            payload.close(null);
         }
     }
 

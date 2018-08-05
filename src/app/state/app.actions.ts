@@ -1,4 +1,5 @@
 import {defaultAppSideNavState, SideNavStateModel} from './app.state.interfaces';
+import {ApiResponse} from '../modules/core/core.model';
 
 export class ShowSideNavAction {
     static readonly type = '[App] Show sidenav';
@@ -21,6 +22,9 @@ export class OpenLoginDialogAction {
 
 export class CloseLoginDialogAction {
     static readonly type = '[App] Closing login dialog';
+
+    constructor(public payload: any) {
+    }
 }
 
 export class SetViewPortAction {
