@@ -10,6 +10,7 @@ import {LoginDialogComponent} from './login.dialog.component';
 import {MaterialModule} from '../../../../shared/material.module';
 import {InvalidCredentialsAction} from '../../auth/state/auth.actions';
 import {AppState} from '../../../../state/app.state';
+import {SessionState} from '../../auth/state/session.state';
 
 
 describe('Dialog: LoginDialogComponent', () => {
@@ -23,7 +24,7 @@ describe('Dialog: LoginDialogComponent', () => {
                 NoopAnimationsModule,
                 MaterialModule,
                 HttpClientTestingModule,
-                NgxsModule.forRoot([AppState]),
+                NgxsModule.forRoot([AppState, SessionState]),
                 ReactiveFormsModule
             ],
             declarations: [LoginDialogComponent],

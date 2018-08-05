@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {Actions, Select, Store} from '@ngxs/store';
+import {Select, Store} from '@ngxs/store';
 import {Observable} from 'rxjs';
 
 import {UserCredentials} from '../../auth/auth.model';
@@ -36,8 +36,7 @@ export class LoginDialogComponent implements OnInit {
     constructor(private store: Store,
                 private dialogRef: MatDialogRef<LoginDialogComponent>,
                 private formBuilder: FormBuilder,
-                @Inject(MAT_DIALOG_DATA) data: any,
-                private actions$: Actions) {
+                @Inject(MAT_DIALOG_DATA) data: any) {
         if (data !== null && data.sessionHasExpired) {
             this.data.sessionHasExpired = true;
         }
