@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -49,9 +49,9 @@ import {ConfirmDialogComponent} from './dialogs/confirm/confirm.dialog.component
             autoDismiss: true,
             disableTimeOut: false,
             progressBar: true,
-            preventDuplicates: true,
+            preventDuplicates: false,
             progressAnimation: 'decreasing',
-            timeOut: 5000,
+            timeOut: 3500,
             extendedTimeOut: 2000,
             positionClass: 'toast-bottom-right'
         }),
@@ -132,4 +132,10 @@ import {ConfirmDialogComponent} from './dialogs/confirm/confirm.dialog.component
     ]
 })
 export class CoreModule {
+    /* make sure CoreModule is imported only by one NgModule the AppModule */
+    constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
+        if (parentModule) {
+            throw new Error('CoreModule is already loaded. Import only in AppModule');
+        }
+    }
 }
