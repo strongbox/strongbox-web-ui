@@ -2,12 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {BehaviorSubject} from 'rxjs';
 import {Select} from '@ngxs/store';
+import {ToastrService} from 'ngx-toastr';
 
 import {User} from '../../user.model';
 import {UserManagementService} from '../../services/user-management.service';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {ConfirmDialogComponent} from '../../../core/dialogs/confirm/confirm.dialog.component';
-import {ToastrService} from 'ngx-toastr';
 
 @Component({
     selector: 'app-list-users',

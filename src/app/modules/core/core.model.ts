@@ -2,6 +2,9 @@ import {of} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Exclude, Expose, plainToClass, Type} from 'class-transformer';
 import {FormGroup, ValidationErrors} from '@angular/forms';
+import {Navigate} from '@ngxs/router-plugin';
+import {ToastrService} from 'ngx-toastr';
+import {Store} from '@ngxs/store';
 
 @Exclude()
 export class ApiResponse {
@@ -47,4 +50,11 @@ export function catchApiError(error: any) {
     }
 
     return of(error);
+}
+
+export function handle404error(error: ApiResponse, redirect, notify: ToastrService, store: Store) {
+    if (error.errorResponse.status === 404) {
+        notify.error(error.message);
+        store.dispatch(new Navigate(redirect));
+    }
 }
