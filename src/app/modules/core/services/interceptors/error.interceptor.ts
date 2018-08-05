@@ -4,8 +4,11 @@ import {Observable, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 import {Store} from '@ngxs/store';
+import {plainToClass} from 'class-transformer';
 
 import {CredentialsExpiredAction, InvalidCredentialsAction} from '../../auth/state/auth.actions';
+import {FormErrorAction} from '../../../../state/app.actions';
+import {ApiResponse} from '../../core.model';
 
 @Injectable({
     providedIn: 'root'
@@ -24,6 +27,10 @@ export class ErrorInterceptor implements HttpInterceptor {
 
                 if (this.isAuthError(response)) {
                     return this.handleAuthError(response);
+                }
+
+                if (this.isFormError(response)) {
+                    return this.handleFormError(response);
                 }
 
                 return this.handleGenericError(request, response);
@@ -68,6 +75,10 @@ export class ErrorInterceptor implements HttpInterceptor {
         return false;
     }
 
+    private isFormError(response: any): boolean {
+        return response instanceof HttpErrorResponse && response.status === 400 && response.error.hasOwnProperty('errors');
+    }
+
     /**
      * Handle login errors
      *
@@ -103,6 +114,13 @@ export class ErrorInterceptor implements HttpInterceptor {
             throw new Error('handleAuthError cannot handle the received response!');
         }
 
+        return of(null);
+    }
+
+    private handleFormError(response: HttpErrorResponse): Observable<any> {
+        let apiResponse: ApiResponse = plainToClass(ApiResponse, response.error, {groups: ['error']}) as any;
+        apiResponse.errorResponse = response;
+        this.store.dispatch(new FormErrorAction(apiResponse));
         return of(null);
     }
 
