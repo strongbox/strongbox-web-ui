@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 import {Store} from '@ngxs/store';
@@ -21,6 +21,12 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(
             catchError((response: any) => {
+                if (this.is404Error(response)) {
+                    let apiResponse: ApiResponse = plainToClass(ApiResponse, response.error, {groups: ['error']}) as any;
+                    apiResponse.errorResponse = response;
+                    return throwError(apiResponse);
+                }
+
                 if (this.isLoginError(response)) {
                     return this.handleLoginError(response);
                 }
@@ -36,6 +42,10 @@ export class ErrorInterceptor implements HttpInterceptor {
                 return this.handleGenericError(request, response);
             })
         );
+    }
+
+    private is404Error(response: any): boolean {
+        return response instanceof HttpErrorResponse && response.status === 404;
     }
 
     /**
