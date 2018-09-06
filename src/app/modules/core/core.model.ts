@@ -1,10 +1,10 @@
 import {of} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
-import {Exclude, Expose, plainToClass, Type} from 'class-transformer';
 import {FormGroup, ValidationErrors} from '@angular/forms';
 import {Navigate} from '@ngxs/router-plugin';
-import {ToastrService} from 'ngx-toastr';
 import {Store} from '@ngxs/store';
+import {Exclude, Expose, plainToClass, Type} from 'class-transformer';
+import {ToastrService} from 'ngx-toastr';
 
 @Exclude()
 export class ApiResponse {
@@ -22,14 +22,25 @@ export class ApiResponse {
         return typeof this.errorResponse === 'undefined' || this.errorResponse === null;
     }
 
-    errorsToForm(path: string, form: FormGroup) {
+    errorsToForm(form: FormGroup) {
         if (this.errors && this.errors.length > 0) {
             this.errors.forEach((error: ApiFormError, index) => {
                 let field = form.get(error.name);
                 field.setErrors(error);
+                field.markAsDirty();
             });
         }
     }
+}
+
+export abstract class ApiFormDataValuesResponse extends ApiResponse {
+    @Type(() => FormDataValue)
+    formDataValues: FormDataValue[];
+}
+
+export abstract class FormDataValue {
+    name: string;
+    values: any[];
 }
 
 export class ApiFormError implements ValidationErrors {

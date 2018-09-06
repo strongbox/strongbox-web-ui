@@ -1,6 +1,6 @@
 import {UserManagementModule} from './user-management.module';
 
-describe('UserManagementModule', () => {
+describe('Module: UserManagementModule', () => {
     let userManagementModule: UserManagementModule;
 
     beforeEach(() => {

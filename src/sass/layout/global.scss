@@ -2,7 +2,7 @@ $nav-background: #13232f;
 $nav-link-color: rgba(255, 255, 255, 0.45);
 $nav-link-hover: rgba(255, 255, 255, 0.90);
 
-* {
+*:not(button) {
   padding: 0px;
   margin: 0px;
 }
@@ -46,6 +46,10 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
   width: 100%;
 }
 
+.text-center {
+  text-align: center;
+}
+
 .text-left {
   text-align: left;
 }
@@ -55,28 +59,19 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
 }
 
 .status-green {
-  color: #4caf50;
+  color: #3ccd42;
 }
 
 .status-red {
   color: #f44336;
 }
 
-/*.sideNavOpen {
-  .global-container {
-    max-width: 100rem;
-  }
-}*/
-
 .global-container {
   margin: auto;
   padding: 18px 20px 100px 20px;
 
-  /*
-  @media screen and(max-width: 1024px) {
-    max-width: 90%;
-  }
-  */
+  // temporary fix.
+  max-width: 70vw;
 
   > h3 {
     font-weight: 400;
@@ -87,6 +82,16 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
   > .page {
     padding: 25px 24px 8px 24px;
     background: #132530;
+  }
+
+  .no-records {
+    padding: 30px 24px 24px 24px;
+    text-align: center;
+
+    button {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
   }
 }
 

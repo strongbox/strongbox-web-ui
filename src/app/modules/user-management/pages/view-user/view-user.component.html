@@ -26,7 +26,7 @@
                 <mat-spinner [strokeWidth]="5"></mat-spinner>
             </div>
         </mat-card-content>
-        <mat-card-content *ngIf="!(loading$ | async)" fxLayout="column">
+        <mat-card-content *ngIf="!(loading$ | async)" fxLayout="column" [formGroup]="userForm">
 
             <div class="userDetails" fxLayout="row" fxLayoutGap="10%">
                 <div class="row">
@@ -55,80 +55,66 @@
                 </div>
             </div>
 
-            <div class="userDetails" fxLayout="row" fxLayoutGap="10%">
-                <div class="row">
-                    <span class="column">Roles:</span>
-                    <div class="value">
-                        <span *ngFor="let role of (user$ | async)?.roles">{{ role.name }}</span>
-                    </div>
-                </div>
-            </div>
-
             <mat-tab-group fxLayout="column" fxFlex="1 1 auto" style="margin-top: 10px;" [dynamicHeight]="true">
-                <mat-tab label="Authorities">
-                    <div class="tabContent">
-                        TODO: return authorities in controller.
+                <mat-tab label="Roles">
+                    <mat-selection-list formControlName="roles" *ngIf="(user$ | async)?.roles.length > 0">
+                        <mat-list-option *ngFor="let role of (user$ | async)?.roles"
+                                         checkboxPosition="before"
+                                         [value]="role.name"
+                                         [selected]="true"
+                        >
+                            {{ role }}
+                        </mat-list-option>
+                    </mat-selection-list>
+
+                    <div class="no-records" *ngIf="(user$ | async)?.roles.length === 0">
+                        No roles have been assigned to this user yet.<br/>
                     </div>
                 </mat-tab>
-                <mat-tab label="Repository privileges" [disabled]="(user$ | async)?.accessModel.repositoryPrivileges.length == 0">
+                <mat-tab label="Repository privileges"
+                         [disabled]="(user$ | async)?.accessModel.isRepositoryPrivilegesEmpty()">
+                    <app-user-access-model-listing type="repositoryPrivileges"
+                                                   [parentForm]="userForm"
+                                                   [assignablePrivileges]="null">
+                    </app-user-access-model-listing>
+                </mat-tab>
+                <mat-tab label="URL privileges" [disabled]="(user$ | async)?.accessModel.isUrlToPrivilegesEmpty()">
                     <div class="tabContent">
-                        <div *ngIf="(user$ | async)?.accessModel.repositoryPrivileges.length > 0">
-                            <mat-accordion>
-                                <mat-expansion-panel *ngFor="let userAccess of (user$ | async)?.accessModel.repositoryPrivileges">
+                        <mat-accordion>
+                            <mat-expansion-panel
+                                    *ngFor="let userAccess of (user$ | async)?.accessModel.urlToPrivileges">
 
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title>{{ userAccess.path }}</mat-panel-title>
-                                    </mat-expansion-panel-header>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>{{ userAccess.path }}</mat-panel-title>
+                                </mat-expansion-panel-header>
 
-                                    <div *ngFor="let privilege of userAccess.privileges">{{ privilege }} </div>
+                                <div *ngFor="let privilege of userAccess.privileges">{{ privilege }}</div>
 
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
                     </div>
                 </mat-tab>
-                <mat-tab label="URL privileges" [disabled]="(user$ | async)?.accessModel.urlToPrivilegesMap.length == 0">
+                <mat-tab label="Wildcard privileges"
+                         [disabled]="(user$ | async)?.accessModel.isWildCardPrivilegesEmpty()">
                     <div class="tabContent">
-                        <div *ngIf="(user$ | async)?.accessModel.urlToPrivilegesMap.length > 0">
-                            <mat-accordion>
-                                <mat-expansion-panel *ngFor="let userAccess of (user$ | async)?.accessModel.urlToPrivilegesMap">
+                        <mat-accordion>
+                            <mat-expansion-panel
+                                    *ngFor="let userAccess of (user$ | async)?.accessModel.wildCardPrivileges">
 
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title>{{ userAccess.path }}</mat-panel-title>
-                                    </mat-expansion-panel-header>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>{{ userAccess.path }}</mat-panel-title>
+                                </mat-expansion-panel-header>
 
-                                    <div *ngFor="let privilege of userAccess.privileges">{{ privilege }} </div>
+                                <div *ngFor="let privilege of userAccess.privileges">{{ privilege }}</div>
 
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </div>
-                    </div>
-                </mat-tab>
-                <mat-tab label="Wildcard privileges">
-                    <div class="tabContent">
-                        <span *ngIf="(user$ | async)?.accessModel.wildCardPrivilegesMap.length == 0">
-                            No wildcard privileges have been assigned.
-                        </span>
-
-                        <div *ngIf="(user$ | async)?.accessModel.wildCardPrivilegesMap.length > 0">
-                            <mat-accordion>
-                                <mat-expansion-panel *ngFor="let userAccess of (user$ | async)?.accessModel.wildCardPrivilegesMap">
-
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title>{{ userAccess.path }}</mat-panel-title>
-                                    </mat-expansion-panel-header>
-
-                                    <div *ngFor="let privilege of userAccess.privileges">{{ privilege }} </div>
-
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
                     </div>
                 </mat-tab>
             </mat-tab-group>
             <div>&nbsp;</div>
 
-            <div fxLayoutAlign="center center" *ngIf="(hasUpdateUserAuthority$ | async)">
+            <div fxLayoutAlign="center center" *ngIf="(hasUpdateUserAuthority$ | async)" class="formSubmitButtons">
                 <button mat-button [routerLink]="['/admin/users']" style="margin-right: 10px;">
                     Back
                 </button>

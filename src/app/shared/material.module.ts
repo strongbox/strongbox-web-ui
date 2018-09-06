@@ -5,10 +5,12 @@ import {
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatExpansionModule,
     MatIconModule,
     MatInputModule,
+    MatListModule,
     MatMenuModule,
     MatPaginatorModule,
     MatProgressBarModule,
@@ -18,6 +20,7 @@ import {
     MatSidenavModule,
     MatSlideToggleModule,
     MatTableModule,
+    MatSortModule,
     MatTabsModule,
     MatToolbarModule
 } from '@angular/material';
@@ -31,9 +34,11 @@ const components = [
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatInputModule,
     MatIconModule,
+    MatListModule,
     MatExpansionModule,
     MatMenuModule,
     MatPaginatorModule,
@@ -44,6 +49,7 @@ const components = [
     MatSidenavModule,
     MatSlideToggleModule,
     MatTableModule,
+    MatSortModule,
     MatTabsModule,
     MatToolbarModule
 ];

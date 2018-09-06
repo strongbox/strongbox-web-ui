@@ -1,6 +1,6 @@
 import {MaterialModule} from './material.module';
 
-describe('MaterialModule', () => {
+describe('Module: MaterialModule', () => {
     let materialModule: MaterialModule;
 
     beforeEach(() => {

@@ -3,7 +3,7 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 import {UserManagementService} from './user-management.service';
 
-describe('UserManagementService', () => {
+describe('Service: UserManagementService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [

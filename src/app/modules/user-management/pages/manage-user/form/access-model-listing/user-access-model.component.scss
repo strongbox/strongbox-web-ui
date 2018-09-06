@@ -1,0 +1,64 @@
+@import '../../../../../../../sass/layout/global';
+@import '../../../../../../../sass/layout/components/table';
+
+.access-model-container {
+  position: relative;
+
+  > table {
+    width: 100%;
+  }
+}
+
+.managePathPrivilege {
+  background: $table-row-color;
+}
+
+.actions {
+  width: 100px;
+
+  $icon-size: 30px;
+  ::ng-deep .mat-icon-button {
+    width: $icon-size;
+    height: $icon-size;
+    line-height: $icon-size;
+  }
+}
+
+.tab-actions {
+  margin-right: -10px;
+  z-index: 100;
+  transition: opacity 0.3s;
+
+  $icon-size: 30px;
+  .mat-icon-button {
+    width: $icon-size;
+    height: $icon-size;
+    line-height: $icon-size;
+    color: $nav-link-color;
+    transition: color 0.2s;
+  }
+
+  .mat-icon-button:hover:not([disabled]) {
+    color: $nav-link-hover;
+  }
+
+  .mat-icon-button[disabled] {
+    position: relative;
+    color: rgba(255,255,255,0.25);
+
+    &:after {
+      content: "";
+      position: absolute;
+      border-top: 1px solid #c7cbcd;
+      width: 18px;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(-45deg);
+      -webkit-transform-origin: 0% 0%;
+      -ms-transform-origin: 0% 0%;
+      transform-origin: 0% 0%;
+      left: 8px;
+      top: 21px;
+    }
+  }
+}

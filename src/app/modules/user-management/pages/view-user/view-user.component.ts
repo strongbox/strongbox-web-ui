@@ -1,14 +1,16 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap} from '@angular/router';
+import {FormGroup} from '@angular/forms';
 import {BehaviorSubject} from 'rxjs';
 import {Navigate} from '@ngxs/router-plugin';
 import {Select, Store} from '@ngxs/store';
 import {ToastrService} from 'ngx-toastr';
 
-import {User, UserResponse} from '../../user.model';
+import {User, UserForm, UserOperations, UserResponse} from '../../user.model';
 import {UserManagementService} from '../../services/user-management.service';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {handle404error} from '../../../core/core.model';
+import {plainToClass} from 'class-transformer';
 
 @Component({
     selector: 'app-view-user',
@@ -24,6 +26,9 @@ export class ViewUserComponent implements OnInit {
     loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
     user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
+    // Necessary to generate the app-user-access-model-listing
+    userForm: FormGroup;
+
     constructor(private service: UserManagementService,
                 private route: ActivatedRoute,
                 private store: Store,
@@ -38,8 +43,11 @@ export class ViewUserComponent implements OnInit {
                     .getUser(username)
                     .subscribe(
                         (response: UserResponse) => {
-                            this.user$.next(response.user);
+                            const user: User = plainToClass(User, response.user) as any;
+                            this.user$.next(user);
                             this.loading$.next(false);
+                            this.userForm = new UserForm(UserOperations.VIEW, user).getForm();
+                            console.log('is disabled', this.userForm.disabled);
                         },
                         (e) => {
                             handle404error(e, ['/admin/users'], this.notify, this.store);

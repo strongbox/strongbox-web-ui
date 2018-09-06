@@ -1,0 +1,123 @@
+<div class="global-container">
+
+    <mat-card>
+        <mat-card-title *ngIf="!(loading$ | async)">
+            <div fxLayout="row">
+                <div fxFlex="1 auto">
+                    <ul class="breadcrumbs">
+                        <li>
+                            <a routerLink="/admin/users">Users</a>
+                        </li>
+                        <li>
+                            <span class="active" *ngIf="isCreate()">New user</span>
+                            <a class="active" (click)="false" *ngIf="isUpdate()">
+                                {{ username }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </mat-card-title>
+        <mat-card-content *ngIf="(loading$ | async)">
+            <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 1 auto">
+                <mat-spinner [strokeWidth]="5"></mat-spinner>
+            </div>
+        </mat-card-content>
+        <mat-card-content *ngIf="!(loading$ | async)" fxLayout="column">
+
+            <form fxLayout="column"
+                  [formGroup]="userForm"
+                  (submit)="save()">
+
+                <div class="userDetails" fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
+                    <mat-form-field>
+                        <input matInput
+                               placeholder="Username"
+                               formControlName="username"
+                               #username
+                        >
+                        <mat-error *ngIf="userForm.get('username').invalid">
+                            <form-field-errors [field]="userForm.get('username')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput placeholder="Password" formControlName="password" type="password">
+                        <mat-error *ngIf="userForm.get('password').invalid">
+                            <form-field-errors [field]="userForm.get('password')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-select placeholder="State" formControlName="enabled">
+                            <mat-option [value]="true">Enabled</mat-option>
+                            <mat-option [value]="false">Disabled</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <div>&nbsp;</div>
+                </div>
+                <div>&nbsp;</div>
+
+                <div style="position:relative;">
+                    <mat-tab-group style="margin-top: 10px;"
+                                   [dynamicHeight]="true"
+                                   [selectedIndex]="0"
+                                   #tabGroup
+                    >
+                        <mat-tab label="Roles">
+                            <div class="tabContent">
+                                <mat-selection-list formControlName="roles" [compareWith]="compareSelectedRoles">
+                                    <mat-list-option *ngFor="let role of (assignableRoles$ | async)"
+                                                     checkboxPosition="before"
+                                                     [value]="role.name"
+                                    >
+                                        {{ role.name }}
+                                        <small>{{ role.description }}</small>
+                                    </mat-list-option>
+                                </mat-selection-list>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Repository privileges">
+                            <app-user-access-model-listing [type]="userAccessModelEnums.repositoryPrivileges"
+                                                           [parentForm]="userForm"
+                                                           [assignablePrivileges]="assignablePrivileges">
+                            </app-user-access-model-listing>
+                        </mat-tab>
+                        <mat-tab label="URL privileges">
+                            <app-user-access-model-listing [type]="userAccessModelEnums.urlToPrivileges"
+                                                           [parentForm]="userForm"
+                                                           [assignablePrivileges]="assignablePrivileges">
+                            </app-user-access-model-listing>
+                        </mat-tab>
+                        <mat-tab label="Wildcard privileges">
+                            <app-user-access-model-listing [type]="userAccessModelEnums.wildCardPrivileges"
+                                                           [parentForm]="userForm"
+                                                           [assignablePrivileges]="assignablePrivileges">
+                            </app-user-access-model-listing>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+
+                <div fxLayoutAlign="center center"
+                     *ngIf="(hasUpdateUserAuthority$ | async) || (hasCreateUserAuthority$ | async)"
+                     class="formSubmitButtons">
+                    <button mat-button routerLink="/admin/users" type="button">
+                        Back
+                    </button>
+
+                    <button mat-raised-button
+                            color="primary"
+                            type="submit"
+                            [disabled]="!userForm.valid">
+                        Save
+                    </button>
+                </div>
+                <div>&nbsp;</div>
+
+            </form>
+
+        </mat-card-content>
+    </mat-card>
+
+</div>

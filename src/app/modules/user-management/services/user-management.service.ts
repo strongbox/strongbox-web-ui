@@ -1,89 +1,64 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
+import {plainToClass} from 'class-transformer';
 
-import {User, UserAccessModel, UserAccessUrlPrivilege, UserListAPIResponse, UserRole} from '../user.model';
+import {AssignableRole, AssignableRolesResponse, User, UserListResponse, UserOperations, UserResponse} from '../user.model';
+import {ApiResponse} from '../../core/core.model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserManagementService {
+
     constructor(private http: HttpClient) {
     }
 
-    getUser(username: string): Observable<User> {
+    getUser(username: string, assignableRoles: boolean = false): Observable<UserResponse> {
         return this.http
-            .get(`/api/users/${username}`)
-            .pipe(
-                map(rawUser => this.convertToUser(rawUser))
-            );
+            .get<UserResponse>(`/api/users/${username}?assignableRoles=${assignableRoles}`)
+            .pipe(map(r => plainToClass(UserResponse, r)));
     }
 
     getUsers(): Observable<User[]> {
         return this.http
-            .get<UserListAPIResponse>('/api/users')
+            .get<UserListResponse>('/api/users')
+            .pipe(map((r: UserListResponse) => plainToClass(User, r.users)));
+    }
+
+    getAssignableRoles(): Observable<AssignableRole[] | any> {
+        return this.http
+            .get<AssignableRolesResponse>('/api/formData/assignableRoles')
             .pipe(
-                map((results: UserListAPIResponse): User[] => {
-                    return results.users.map(rawUser => this.convertToUser(rawUser));
+                map((r: AssignableRolesResponse) => {
+                    const response = plainToClass(AssignableRolesResponse, r);
+                    const assignableRoles = response.formDataValues.find(v => v.name === 'assignableRoles');
+                    return assignableRoles ? assignableRoles.values : throwError('Could not retrieve assignable roles!');
                 })
             );
     }
 
-    deleteUser(user: User) {
-        return this.http.delete(`/api/users/${user.username}`);
+    /**
+     * Manage an existing user or create a new one.
+     *
+     * @param {User} user
+     * @param operation whether we're creating a new user or updating an existing one
+     */
+    manageUser(user: User, operation: UserOperations = UserOperations.CREATE): Observable<any> {
+        let url = '/api/users';
+
+        if (operation === UserOperations.UPDATE) {
+            url += `/${user.username}`;
+        }
+
+        return this.http
+            .put(url, user)
+            .pipe(map(r => plainToClass(ApiResponse, r)));
     }
 
-    private convertToUser(rawUser: any) {
-        let user = new User();
-        user.username = rawUser.username;
-        user.enabled = rawUser.enabled;
-        user.roles = <UserRole[]> rawUser.roles.map(rawRole => {
-            return <UserRole> {
-                name: rawRole
-            };
-        });
-        user.securityTokenKey = rawUser.securityTokenKey;
-
-        let repositoryPrivileges = [];
-
-        const repoPrivilegesKeys: any[] = Object.keys(rawUser.accessModel.repositoryPrivileges);
-        const repoPrivilegesVals: any[] = Object.values(rawUser.accessModel.repositoryPrivileges);
-        if (repoPrivilegesKeys.length > 0) {
-            repositoryPrivileges = repoPrivilegesKeys.map((path, index) => {
-                return new UserAccessUrlPrivilege(path, repoPrivilegesVals[index]);
-            });
-        }
-
-        let urlToPrivilegesMap = [];
-
-        const urlToPrivilegesMapKeys: any[] = Object.keys(rawUser.accessModel.urlToPrivilegesMap);
-        const urlToPrivilegesMapVals: any[] = Object.values(rawUser.accessModel.urlToPrivilegesMap);
-        if (urlToPrivilegesMapKeys.length > 0) {
-            urlToPrivilegesMap = urlToPrivilegesMapKeys.map((path, index) => {
-                return new UserAccessUrlPrivilege(path, urlToPrivilegesMapVals[index]);
-            });
-        }
-
-
-        let wildCardPrivilegesMap = [];
-
-        const wildCardPrivilegesMapKeys: any[] = Object.keys(rawUser.accessModel.wildCardPrivilegesMap);
-        const wildCardPrivilegesMapVals: any[] = Object.values(rawUser.accessModel.wildCardPrivilegesMap);
-        if (wildCardPrivilegesMapKeys.length > 0) {
-            wildCardPrivilegesMap = wildCardPrivilegesMapKeys.map((path, index) => {
-                return new UserAccessUrlPrivilege(path, wildCardPrivilegesMapVals[index]);
-            });
-        }
-
-        let accessModel = new UserAccessModel();
-        accessModel.repositoryPrivileges = repositoryPrivileges;
-        accessModel.urlToPrivilegesMap = urlToPrivilegesMap;
-        accessModel.wildCardPrivilegesMap = wildCardPrivilegesMap;
-
-        user.accessModel = accessModel;
-
-        return user;
+    deleteUser(user: User): Observable<any> {
+        return this.http.delete(`/api/users/${user.username}`);
     }
 
 }

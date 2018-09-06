@@ -6,6 +6,9 @@ import {CoreRouterResolver} from '../core/core.router.resolver';
 import {ListUsersComponent} from './pages/list-users/list-users.component';
 import {ViewUserGuard} from './guards/view-user.guard';
 import {ViewUserComponent} from './pages/view-user/view-user.component';
+import {ManageUserComponent} from './pages/manage-user/manage-user.component';
+import {UpdateUserGuard} from './guards/update-user.guard';
+import {CreateUserGuard} from './guards/create-user.guard';
 
 const routes: Routes = [
     {
@@ -15,6 +18,12 @@ const routes: Routes = [
         canActivate: [AuthGuard, ViewUserGuard]
     },
     {
+        path: 'create',
+        component: ManageUserComponent,
+        resolve: {crisis: CoreRouterResolver},
+        canActivate: [AuthGuard, CreateUserGuard]
+    },
+    {
         path: ':username/view',
         component: ViewUserComponent,
         resolve: {crisis: CoreRouterResolver},
@@ -22,14 +31,13 @@ const routes: Routes = [
     },
     {
         path: ':username/edit',
-        component: ListUsersComponent,
+        component: ManageUserComponent,
         resolve: {crisis: CoreRouterResolver},
-        canActivate: [AuthGuard, ViewUserGuard]
+        canActivate: [AuthGuard, UpdateUserGuard]
     },
 ];
 
 @NgModule({
-    // TODO Preload modules to which we actually have access to.
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })

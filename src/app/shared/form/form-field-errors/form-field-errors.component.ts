@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
 import {ApiFormError} from '../../../modules/core/core.model';
@@ -7,25 +7,20 @@ import {ApiFormError} from '../../../modules/core/core.model';
 @Component({
     selector: 'form-field-errors',
     templateUrl: './form-field-errors.component.html',
-    styleUrls: ['./form-field-errors.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./form-field-errors.component.scss']
 })
 export class FormFieldErrorsComponent implements OnInit {
 
     @Input()
-    form: FormGroup = null;
-
-    @Input()
-    name: string = null;
+    field: FormGroup = null;
 
     constructor() {
     }
 
     getApiErrors() {
-        if (this.form !== null && this.form.get(this.name)) {
-            const field = this.form.get(this.name);
-            if (field.errors && field.errors instanceof ApiFormError) {
-                return field.errors.messages;
+        if (this.field !== null) {
+            if (this.field.errors && this.field.errors instanceof ApiFormError) {
+                return this.field.errors.messages;
             }
         }
 
@@ -33,13 +28,12 @@ export class FormFieldErrorsComponent implements OnInit {
     }
 
     getFormErrors() {
-        if (this.form !== null && this.form.get(this.name)) {
-            const field = this.form.get(this.name);
-            if (field.errors && !(field.errors instanceof ApiFormError)) {
+        if (this.field !== null) {
+            if (this.field.errors && !(this.field.errors instanceof ApiFormError)) {
                 let errors = [];
 
-                Object.keys(field.errors).forEach((key) => {
-                    const error = field.errors[key];
+                Object.keys(this.field.errors).forEach((key) => {
+                    const error = this.field.errors[key];
                     if (key === 'required') {
                         errors.push('This field is required!');
                         return;
@@ -50,7 +44,7 @@ export class FormFieldErrorsComponent implements OnInit {
                         errors.push('This field requires less than ' + error.requiredLength + ' characters');
                         return;
                     } else {
-                        console.error(field.errors[key]);
+                        console.error(this.field.errors[key]);
                     }
                 });
 

@@ -1,0 +1,160 @@
+<div fxFlexFill="1 1 auto" class="access-model-container">
+    <table mat-table
+           matSort
+           [dataSource]="dataSource"
+           *ngIf="dataSource.data.length > 0 && !showEditForm"
+    >
+
+        <!-- Select all Column -->
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef style="width: 70px;">
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()"
+                              [disabled]="dataSource.data.length === 0"
+                              color="primary">
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let pathPrivilege">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(pathPrivilege) : null"
+                              [checked]="selection.isSelected(pathPrivilege)"
+                              color="primary">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <!-- Path Column -->
+        <ng-container matColumnDef="path">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="path">Path</th>
+            <td mat-cell *matCellDef="let pathPrivilege"> {{pathPrivilege.path}}</td>
+        </ng-container>
+
+        <!-- Privileges Column -->
+        <ng-container matColumnDef="privileges">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Privileges</th>
+            <td mat-cell *matCellDef="let pathPrivilege"> {{ pathPrivilege.privileges.length }}</td>
+        </ng-container>
+
+        <!-- Actions column -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="actions">
+                <button mat-icon-button type="button" *ngIf="!isFormDisabled()">
+                    <i class="ion-md-add" (click)="showForm()"></i>
+                </button>
+                <button mat-icon-button
+                        [disabled]="!isSomeSelected()"
+                        (click)="deleteSelected()"
+                        title="Delete selected items"
+                        type="button" *ngIf="!isFormDisabled()">
+                    <i class="ion-md-trash"></i>
+                </button>
+            </th>
+            <td mat-cell *matCellDef="let pathPrivilege; let index = index" class="actions">
+                <button mat-icon-button type="button" title="Edit" (click)="showForm(pathPrivilege, index)">
+                    <i class="ion-md-eye" *ngIf="isFormDisabled()"></i>
+                    <i class="ion-md-create" *ngIf="!isFormDisabled()"></i>
+                </button>
+
+                <button mat-icon-button (click)="delete(index)" type="button" *ngIf="!isFormDisabled()">
+                    <i class="ion-md-trash"></i>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="blue-bottom-border"></tr>
+        <tr mat-row *matRowDef="let pathPrivilege; columns: displayedColumns;"></tr>
+
+        <!--
+                Not possible because of https://github.com/angular/material2/issues/9527
+
+                <ng-container matColumnDef="managePermission">
+                    <td mat-cell *matCellDef="let element; let index = index" colspan="4">
+                        <div>
+                            <app-access-model-path-privilege [pathPrivilege]="editPath"
+                                                             [index]="editPathIndex">
+                            </app-access-model-path-privilege>
+
+                            <button (click)="editPath = null">reset</button>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-row
+                    *matRowDef="let row; columns: ['managePermission']; when: isEditingRow;"></tr>
+        -->
+
+    </table>
+
+    <div class="no-records" *ngIf="dataSource.data.length == 0 && !showEditForm">
+        <div @fadeInOutOverlap>
+            No records have been added yet.<br/>
+            <button mat-raised-button color="primary" (click)="showForm()" type="button">Add privilege</button>
+        </div>
+    </div>
+
+    <ng-container *ngIf="showEditForm">
+        <div style="border: 1px solid #2c82bc; padding: 10px; margin-top: 10px; margin-bottom: 10px;" @fadeInOutOverlap>
+            <div [formGroup]="privilegeForm">
+                <div fxLayout="row" fxLayoutGap="2%">
+                    <div fxFlex="1 0 auto">
+                        <mat-form-field style="width: 100%;">
+                            <input matInput placeholder="Path" formControlName="path" autocomplete="no"/>
+                            <mat-error *ngIf="privilegeForm.getError('required', ['path'])">
+                                Path field is required.
+                            </mat-error>
+                            <mat-error *ngIf="privilegeForm.getError('pattern', ['path']) && isRepositoryType()">
+                                The path <span style="font-weight: bold;">must</span> follow the pattern
+                                {{'/storages/{storageId}/{repositoryId}/' }}!<br>
+                            </mat-error>
+                            <mat-error *ngIf="privilegeForm.getError('pattern', ['path']) && (isUrlType() || isWildcardType())">
+                                The path <span style="font-weight: bold;">must</span> follow the pattern
+                                {{'/storages/{storageId}/{repositoryId}/path/to/somewhere/' }}!<br>
+                            </mat-error>
+                            <mat-error *ngIf="privilegeForm.getError('unique', ['path'])">
+                                This path has already been added!<br>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div fxLayout="column">
+                    <ng-container *ngIf="!isFormDisabled()">
+                        <mat-selection-list formControlName="privileges" [compareWith]="compareSelected">
+                            <mat-list-option *ngFor="let privilege of assignablePrivileges; let index = index"
+                                             checkboxPosition="before"
+                                             [value]="privilege"
+                            >
+                                {{ privilege }}
+                            </mat-list-option>
+                        </mat-selection-list>
+                    </ng-container>
+                    <ng-container *ngIf="isFormDisabled()">
+                        <mat-selection-list formControlName="privileges">
+                            <mat-list-option *ngFor="let privilege of privilegeFormPrivileges(); let index = index"
+                                             checkboxPosition="before"
+                                             [value]="privilege"
+                            >
+                                {{ privilege }}
+                            </mat-list-option>
+                        </mat-selection-list>
+                    </ng-container>
+                </div>
+
+                <div fxLayoutAlign="center center" class="formSubmitButtons">
+                    <button mat-raised-button color="primary" type="button" (click)="save()" *ngIf="!isFormDisabled()" [disabled]="privilegeForm.invalid">
+                        Save
+                    </button>
+                    <button mat-raised-button color="warn" type="button" (click)="delete()" *ngIf="!isFormDisabled()">
+                        Delete
+                    </button>
+                    <button mat-button type="button" (click)="resetState()">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </ng-container>
+
+</div>
