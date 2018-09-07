@@ -15,6 +15,7 @@ pipeline {
         }
     }
     parameters {
+        booleanParam(defaultValue: true, description: 'Trigger strongbox-webapp?', name: 'TRIGGER_WEBAPP')
         booleanParam(defaultValue: true, description: 'Send email notification?', name: 'NOTIFY_EMAIL')
     }
     options {
@@ -70,6 +71,13 @@ pipeline {
         }
     }
     post {
+        success {
+            script {
+                if(params.TRIGGER_WEBAPP && params.BRANCH == "master") {
+                    build job: 'strongbox/strongbox-webapp/master', wait: false
+                }
+            }
+        }
         failure {
             script {
                 if(params.NOTIFY_EMAIL) {
