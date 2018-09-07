@@ -11,6 +11,7 @@ import {MaterialModule} from '../../../../shared/material.module';
 import {FormHelperModule} from '../../../../shared/form-helper.module';
 import {ManageUserComponent} from './manage-user.component';
 import {AppState} from '../../../../state/app.state';
+import {UserAccessModelComponent} from './form/access-model-listing/user-access-model.component';
 
 describe('Component: ManageUserComponent', () => {
     let component: ManageUserComponent;
@@ -30,7 +31,7 @@ describe('Component: ManageUserComponent', () => {
                 NgxsModule.forRoot([AppState]),
                 NgxsFormPluginModule
             ],
-            declarations: [ManageUserComponent]
+            declarations: [ManageUserComponent, UserAccessModelComponent]
         }).compileComponents();
     }));
 
