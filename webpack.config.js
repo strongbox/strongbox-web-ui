@@ -35,7 +35,7 @@ module.exports = {
     },
     plugins: [
         new CompressionPlugin({
-            test: /\.(js|css|woff(2)?|ttf|svg)$/,
+            test: /\.(js|css|woff|woff2|ttf|svg|eot)$/,
             minRatio: 0.8,
             threshold: 20000 // in bytes = 20kb
         }),

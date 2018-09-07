@@ -23,7 +23,7 @@ export class ApiURLInterceptor implements HttpInterceptor {
             if (this.protocolMatcher.test(environment.strongboxUrl)) {
                 protocol = environment.strongboxUrl.match(this.protocolMatcher)[1];
             } else {
-                protocol = document.location.protocol.startsWith('http') ? 'http' : 'https';
+                protocol = document.location.protocol.match(this.protocolMatcher)[1];
             }
 
             const url = protocol + '://' + environment.strongboxUrl + '/' + request.url.replace(/^\//, '');
@@ -33,12 +33,12 @@ export class ApiURLInterceptor implements HttpInterceptor {
         // Some endpoints don't like it when you haven't specified the accept header.
         let headers = request.headers;
         if (!headers.has('Accept')) {
-            headers.set('Accept', 'application/json');
+            headers = headers.set('Accept', 'application/json');
         }
 
         // X-Requested-With: {@see SB-974}
         if (!headers.has('X-Requested-With')) {
-            headers.set('X-Requested-With', 'XMLHttpRequest');
+            headers = headers.set('X-Requested-With', 'XMLHttpRequest');
         }
 
         request = request.clone({headers: headers});

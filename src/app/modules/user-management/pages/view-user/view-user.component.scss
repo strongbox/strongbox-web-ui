@@ -1,0 +1,61 @@
+.userDetails {
+
+  padding: 0px 0px 12px 12px;
+
+  &:first-of-type {
+    padding: 22px 0px 12px 12px;
+    height: 70px;
+  }
+
+  .row {
+    padding: 0px 0px 0px 0px;
+
+    &:after {
+      clear: both;
+      content: ' ';
+      display: block;
+    }
+
+    .column {
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.45);
+
+      &:after {
+        clear: both;
+        content: ' ';
+        display: block;
+      }
+    }
+
+    .value {
+      font-weight: 300;
+    }
+  }
+
+}
+
+.tabContent {
+  min-height: 100px;
+  padding: 10px 12px 10px 12px
+}
+
+.mat-expansion-panel,
+.mat-expansion-panel-header.mat-expanded:focus {
+  background: #1f3240;
+}
+
+.mat-expansion-panel-body {
+  padding: 10px 24px 16px !important;
+}
+
+.mat-tab-group {
+  border-top: 1px solid rgb(44, 130, 188);
+}
+
+::ng-deep .mat-tab-header {
+  border-bottom: 1px solid rgb(44, 130, 188);
+}
+
+::ng-deep .mat-list-item-disabled {
+  background: transparent;
+}

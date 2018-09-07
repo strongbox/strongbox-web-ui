@@ -16,7 +16,7 @@ import {CloseLoginDialogAction} from '../../../../state/app.actions';
 })
 export class LoginDialogComponent implements OnInit {
     @Select(SessionState.state)
-    public pending$: Observable<string>;
+    public sessionState$: Observable<string>;
 
     public form: FormGroup = this.formBuilder.group({
         username: ['', [Validators.required]],
@@ -27,6 +27,10 @@ export class LoginDialogComponent implements OnInit {
         sessionHasExpired: false,
         sessionIsInvalid: false,
         unauthorizedAccess: false
+    };
+
+    private wrongCredentialsFormError: ValidationErrors = {
+        'wrongCredentials': 'true'
     };
 
     constructor(private store: Store,
@@ -61,19 +65,22 @@ export class LoginDialogComponent implements OnInit {
         return this.form.get(field).hasError(error);
     }
 
+    close(): void {
+        this.store.dispatch(new CloseLoginDialogAction(this.dialogRef));
+    }
+
     ngOnInit(): void {
-        this.pending$.subscribe((state: string) => {
+        this.sessionState$.subscribe((state: string) => {
             if (state === 'authenticated') {
-                this.dialogRef.close(null);
+                this.close();
             } else if (state === 'invalid.credentials' || state === 'error') {
-                const errors: ValidationErrors = {
-                    'wrongCredentials': 'true'
-                };
-                this.form.setErrors(errors);
+                this.form.setErrors(this.wrongCredentialsFormError);
             }
         });
 
-        this.dialogRef.afterClosed().subscribe(() => this.store.dispatch(new CloseLoginDialogAction()));
+        this.dialogRef.afterClosed().subscribe(() => {
+            this.close();
+        });
     }
 
 }

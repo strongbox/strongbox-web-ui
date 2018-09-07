@@ -1,13 +1,13 @@
 import {TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpErrorResponse} from '@angular/common/http';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {NgxsModule, Store} from '@ngxs/store';
 
 import {AuthService} from './auth.service';
 import {SessionStateModel} from './state/session.state';
 import {AuthenticatedUser, UserAuthority, UserCredentials} from './auth.model';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 describe('AuthService', () => {
     let store: Store;

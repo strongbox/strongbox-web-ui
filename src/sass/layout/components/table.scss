@@ -1,0 +1,97 @@
+@import "../global";
+
+$table-row-color: #132430;
+
+.mat-table-container {
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid $table-row-color;
+}
+
+.mat-table {
+  background: none;
+
+  thead .mat-header-row {
+    background: $table-row-color;
+  }
+
+  thead .mat-header-row.blue-bottom-border {
+    .mat-header-cell {
+      border-bottom: 1px solid rgb(44, 130, 188);
+    }
+  }
+
+  tbody, tfoot {
+    background: transparent;
+  }
+
+  tbody tr:hover {
+    background: rgba(255, 255, 255, 0.09);
+    color: #1f3240;
+  }
+
+  tbody tr:active {
+    background: rgba(255, 255, 255, 0.05);
+    color: #1f3240;
+  }
+
+  tr.mat-header-row {
+    height: 46px !important;
+  }
+
+  tr.mat-row {
+    height: 40px !important;
+  }
+
+  th .mat-checkbox-inner-container, td .mat-checkbox-inner-container {
+    width: 16px;
+    height: 16px;
+
+    .mat-checkbox-frame {
+      border-width: 1px;
+    }
+  }
+
+  // necessary to align the action icons to the right.
+  .mat-cell.actions {
+    padding-right: 0px;
+  }
+
+  th.actions, td.actions {
+    width: 90px;
+    text-align: center;
+
+    $icon-size: 30px;
+    .mat-icon-button {
+      width: $icon-size;
+      height: $icon-size;
+      line-height: $icon-size;
+      color: $nav-link-color;
+      transition: color 0.2s;
+    }
+
+    .mat-icon-button:hover:not([disabled]) {
+      color: $nav-link-hover;
+    }
+
+    .mat-icon-button[disabled] {
+      position: relative;
+      color: rgba(255,255,255,0.25);
+
+      &:after {
+        content: "";
+        position: absolute;
+        border-top: 1px solid #c7cbcd;
+        width: 18px;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(-45deg);
+        -webkit-transform-origin: 0% 0%;
+        -ms-transform-origin: 0% 0%;
+        transform-origin: 0% 0%;
+        left: 8px;
+        top: 21px;
+      }
+    }
+  }
+}

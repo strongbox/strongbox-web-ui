@@ -123,7 +123,7 @@ describe('Interceptor: error interceptor', () => {
         expect(toastrSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should expired authentication errors (401)', () => {
+    it('should dispatch CredentialsExpiredAction when credentials have expired or are invalid (401)', () => {
         const errorResponse = new HttpErrorResponse({
             status: 401,
             error: {
@@ -153,7 +153,7 @@ describe('Interceptor: error interceptor', () => {
         expect(toastrSpy).toHaveBeenCalledTimes(0);
     });
 
-    it('should unauthorized access (403)', () => {
+    it('should dispatch UnauthorizedAccessAction when credentials lack the authority to execute an action (403)', () => {
         const errorResponse = new HttpErrorResponse({
             status: 403,
             error: {
@@ -177,6 +177,31 @@ describe('Interceptor: error interceptor', () => {
             expect(payload).toBeTruthy();
             expect(payload instanceof UnauthorizedAccessAction).toBe(true);
         });
+
+        backend.expectOne(route).flush({}, errorResponse);
+
+        expect(toastrSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('should NOT show toaster when login actions fail (401)', () => {
+        const errorResponse = new HttpErrorResponse({
+            status: 401,
+            error: {
+                error: 'expired/invalid'
+            },
+            statusText: '401 Unauthenticated'
+        });
+
+        const route = '/api/login';
+        client.get(route).subscribe(
+            (response) => {
+                expect(response).toBeFalsy();
+            },
+            (error) => {
+                expect(error).toBeTruthy();
+                expect(error.error).toBe('unauthenticated');
+            }
+        );
 
         backend.expectOne(route).flush({}, errorResponse);
 

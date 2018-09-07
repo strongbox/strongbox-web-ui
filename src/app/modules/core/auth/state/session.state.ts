@@ -3,9 +3,17 @@ import {Action, createSelector, NgxsOnInit, Selector, State, StateContext, Store
 import {Navigate} from '@ngxs/router-plugin';
 import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
+import {plainToClass} from 'class-transformer';
 
-import {CheckCredentialsAction, CredentialsExpiredAction, LoginAction, LogoutAction, UnauthorizedAccessAction} from './auth.actions';
-import {AuthenticatedUser, UserAuthority} from '../auth.model';
+import {
+    CheckCredentialsAction,
+    CredentialsExpiredAction,
+    InvalidCredentialsAction,
+    LoginAction,
+    LogoutAction,
+    UnauthorizedAccessAction
+} from './auth.actions';
+import {AuthenticatedUser} from '../auth.model';
 import {AuthService} from '../auth.service';
 import {HideSideNavAction, OpenLoginDialogAction} from '../../../../state/app.actions';
 
@@ -19,37 +27,38 @@ export interface SessionStateModel {
 export const defaultSessionState: SessionStateModel = {
     user: null,
     token: null,
-    state: 'guest',
-    response: null
+    state: 'guest'
 };
 
-let initialState: SessionStateModel = defaultSessionState;
-if (localStorage.getItem('session') !== '') {
-    let session: SessionStateModel = defaultSessionState;
+function initialSessionState() {
+    let state: SessionStateModel = defaultSessionState;
 
-    try {
-        const rawSession = JSON.parse(localStorage.getItem('session'));
-        session = {
-            user: new AuthenticatedUser(
-                rawSession.user.username, rawSession.token, rawSession.user.authorities.map(val => new UserAuthority(val.name))
-            ),
-            token: rawSession.token,
-            state: rawSession.state
-        };
-    } catch (e) {
-        console.warn('Invalid session found in localStorage.');
-        session = defaultSessionState;
+    if (localStorage.getItem('session') !== '') {
+        let session: SessionStateModel = defaultSessionState;
+
+        try {
+            const rawSession: any = JSON.parse(localStorage.getItem('session'));
+            session = {
+                user: plainToClass(AuthenticatedUser, rawSession.user) as any as AuthenticatedUser,
+                token: rawSession.token,
+                state: rawSession.state
+            };
+        } catch (e) {
+            console.warn('Invalid session found in localStorage.');
+            session = defaultSessionState;
+        }
+
+        if (session !== null && session.token !== '') {
+            state = session;
+        }
     }
 
-    if (session !== null && session.token !== '') {
-        initialState = session;
-    }
+    return state;
 }
-
 
 @State<SessionStateModel>({
     name: 'session',
-    defaults: initialState
+    defaults: initialSessionState()
 })
 export class SessionState implements NgxsOnInit {
 
@@ -84,9 +93,10 @@ export class SessionState implements NgxsOnInit {
 
     @Selector()
     static hasAuthority(authority: string) {
-        return createSelector([SessionState], (session: SessionStateModel) => {
-            if (session.user) {
-                return session.user.hasAuthority(authority);
+        return createSelector(null, (appState: any) => {
+            const user: AuthenticatedUser = appState.session.user;
+            if (user) {
+                return user.hasAuthority(authority);
             } else {
                 return false;
             }
@@ -152,5 +162,9 @@ export class SessionState implements NgxsOnInit {
         this.store.dispatch([new OpenLoginDialogAction(payload)]);
     }
 
+    @Action(InvalidCredentialsAction)
+    invalidCredentialsSessionState(ctx: StateContext<SessionStateModel>) {
+        ctx.patchState({state: 'invalid.credentials'});
+    }
 
 }

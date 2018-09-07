@@ -1,0 +1,12 @@
+// This is necessary for the search results tabs.
+::ng-deep .mat-tab-body-content {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  height: unset!important;
+}
+
+::ng-deep .mat-tab-label {
+  height: 40px !important;
+  padding: 0px 20px !important;
+  min-width: 120px !important;
+}

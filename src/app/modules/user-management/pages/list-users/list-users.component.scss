@@ -1,0 +1,20 @@
+table {
+  width: 100%;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+ul.actions {
+  li {
+    float: left;
+    margin-right: 10px;
+    list-style: none;
+  }
+}
+
+
+td.mat-cell:first-of-type a {
+  color: rgba(255,255,255,0.8);
+}

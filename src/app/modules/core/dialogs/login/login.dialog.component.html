@@ -16,6 +16,6 @@
       <mat-error *ngIf="hasError('password', 'required')">Please enter a password.</mat-error>
     </mat-form-field>
     <div class="spacer">&nbsp;</div>
-    <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || (pending$ | async ) == 'pending' || (pending$ | async) == 'authenticated'">Login</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || (sessionState$ | async ) == 'pending' || (sessionState$ | async) == 'authenticated'">Login</button>
   </form>
 </div>

@@ -126,8 +126,7 @@
                         <li><a>Storages</a></li>
                         <li>
                             <a routerLink="admin/users"
-                               routerLinkActive="active"
-                               [routerLinkActiveOptions]="{exact: true}">
+                               routerLinkActive="active">
                                 Users
                             </a>
                         </li>
@@ -142,7 +141,7 @@
                 <div fxFlex="1 1 auto">
                     <router-outlet></router-outlet>
                 </div>
-                <div [fxFlex]="sideNavFlex().right">&nbsp;</div>
+                <div [fxFlex]="sideNavFlex().right" style="transition: all 0.3s">&nbsp;</div>
             </div>
 
         </mat-sidenav-content>

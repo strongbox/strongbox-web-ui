@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {Select} from '@ngxs/store';
+import {plainToClass} from 'class-transformer';
 
 
 import {AuthenticatedUser} from '../../auth/auth.model';
@@ -26,7 +27,7 @@ export class ProfileService {
         } else {
             return this.http.get(`/api/account`).pipe(
                 map((raw: any) => {
-                    return new AuthenticatedUser(raw.username, null, null, raw.roles, raw.securityTokenKey);
+                    return plainToClass(AuthenticatedUser, raw);
                 })
             );
         }

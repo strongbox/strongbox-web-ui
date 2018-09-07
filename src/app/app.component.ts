@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
+import {Navigate} from '@ngxs/router-plugin';
 
 import {RepositorySearchService} from './modules/core/pages/search/repository-search.service';
 import {AuthService} from './modules/core/auth/auth.service';
@@ -46,19 +47,28 @@ export class AppComponent implements OnInit {
     @HostListener('window:keydown', ['$event'])
     onKeyup(event: KeyboardEvent) {
         if (event.code === 'KeyS' && event.altKey === true) {
+            event.preventDefault();
             this.toggleSideNav();
         }
 
         if (event.code === 'KeyL' && event.altKey === true) {
+            event.preventDefault();
             this.openLoginDialog();
         }
 
         if (event.code === 'KeyQ' && event.altKey === true) {
+            event.preventDefault();
             this.store.dispatch(new LogoutAction());
         }
 
         if (event.code === 'KeyP' && event.altKey === true) {
-            this.router.navigate(['profile']);
+            event.preventDefault();
+            this.store.dispatch(new Navigate(['profile']));
+        }
+
+        if (event.code === 'KeyU' && event.altKey === true) {
+            event.preventDefault();
+            this.store.dispatch(new Navigate(['admin/users']));
         }
     }
 
@@ -84,8 +94,8 @@ export class AppComponent implements OnInit {
         const isMobile = this.store.selectSnapshot(AppState.isMobile);
         const isSideNavOpened = this.store.selectSnapshot(AppState.isSideNavOpened);
 
-        let fxFlexLeft = '0.1 0 9vw';
-        let fxFlexRight = '0.1 0 9vw';
+        let fxFlexLeft = '245px';
+        let fxFlexRight = '245px';
 
         if (isMobile) {
             fxFlexLeft = '1px';
@@ -93,7 +103,7 @@ export class AppComponent implements OnInit {
         }
 
         if (!isMobile && isSideNavOpened) {
-            fxFlexLeft = '10px';
+            fxFlexLeft = '5px';
             fxFlexRight = '1px';
         }
 

@@ -1,0 +1,131 @@
+<div class="global-container">
+
+    <mat-card>
+        <mat-card-title *ngIf="!(loading$ | async)">
+            <div fxLayout="row">
+                <div fxFlex="1 auto">
+                    <ul class="breadcrumbs">
+                        <li>
+                            <a routerLink="../../">Users</a>
+                        </li>
+                        <li>
+                            <a class="active" (click)="false">{{ (user$ | async)?.username }}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div fxFlex="150px">
+                    Status:
+                    <span *ngIf="(user$ | async).enabled" class="status-green">Enabled</span>
+                    <span *ngIf="!(user$ | async).enabled" class="status-red">Disabled</span>
+                </div>
+            </div>
+        </mat-card-title>
+        <mat-card-content *ngIf="(loading$ | async)">
+            <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 1 auto">
+                <mat-spinner [strokeWidth]="5"></mat-spinner>
+            </div>
+        </mat-card-content>
+        <mat-card-content *ngIf="!(loading$ | async)" fxLayout="column" [formGroup]="userForm">
+
+            <div class="userDetails" fxLayout="row" fxLayoutGap="10%">
+                <div class="row">
+                    <span class="column">Username:</span>
+                    <span class="value">{{ (user$ | async).username }}</span>
+                </div>
+
+                <div class="row">
+                    <span class="column">First name:</span>
+                    <span class="value">N/A</span>
+                </div>
+
+                <div class="row">
+                    <span class="column">Last name:</span>
+                    <span class="value">N/A</span>
+                </div>
+
+                <div class="row">
+                    <span class="column">Email:</span>
+                    <span class="value">N/A</span>
+                </div>
+
+                <div class="row">
+                    <span class="column">Last active:</span>
+                    <span class="value">N/A</span>
+                </div>
+            </div>
+
+            <mat-tab-group fxLayout="column" fxFlex="1 1 auto" style="margin-top: 10px;" [dynamicHeight]="true">
+                <mat-tab label="Roles">
+                    <mat-selection-list formControlName="roles" *ngIf="(user$ | async)?.roles.length > 0">
+                        <mat-list-option *ngFor="let role of (user$ | async)?.roles"
+                                         checkboxPosition="before"
+                                         [value]="role.name"
+                                         [selected]="true"
+                        >
+                            {{ role }}
+                        </mat-list-option>
+                    </mat-selection-list>
+
+                    <div class="no-records" *ngIf="(user$ | async)?.roles.length === 0">
+                        No roles have been assigned to this user yet.<br/>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Repository privileges"
+                         [disabled]="(user$ | async)?.accessModel.isRepositoryPrivilegesEmpty()">
+                    <app-user-access-model-listing type="repositoryPrivileges"
+                                                   [parentForm]="userForm"
+                                                   [assignablePrivileges]="null">
+                    </app-user-access-model-listing>
+                </mat-tab>
+                <mat-tab label="URL privileges" [disabled]="(user$ | async)?.accessModel.isUrlToPrivilegesEmpty()">
+                    <div class="tabContent">
+                        <mat-accordion>
+                            <mat-expansion-panel
+                                    *ngFor="let userAccess of (user$ | async)?.accessModel.urlToPrivileges">
+
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>{{ userAccess.path }}</mat-panel-title>
+                                </mat-expansion-panel-header>
+
+                                <div *ngFor="let privilege of userAccess.privileges">{{ privilege }}</div>
+
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Wildcard privileges"
+                         [disabled]="(user$ | async)?.accessModel.isWildCardPrivilegesEmpty()">
+                    <div class="tabContent">
+                        <mat-accordion>
+                            <mat-expansion-panel
+                                    *ngFor="let userAccess of (user$ | async)?.accessModel.wildCardPrivileges">
+
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>{{ userAccess.path }}</mat-panel-title>
+                                </mat-expansion-panel-header>
+
+                                <div *ngFor="let privilege of userAccess.privileges">{{ privilege }}</div>
+
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+            <div>&nbsp;</div>
+
+            <div fxLayoutAlign="center center" *ngIf="(hasUpdateUserAuthority$ | async)" class="formSubmitButtons">
+                <button mat-button [routerLink]="['/admin/users']" style="margin-right: 10px;">
+                    Back
+                </button>
+
+                <button mat-raised-button color="primary" routerLink="../edit">
+                    Edit
+                </button>
+            </div>
+            <div>&nbsp;</div>
+
+        </mat-card-content>
+    </mat-card>
+
+</div>

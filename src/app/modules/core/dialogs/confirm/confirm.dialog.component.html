@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content>{{ data.message }}</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="center center">
+    <button mat-button mat-dialog-close style="margin-right: 10px;">No</button>
+    <button mat-button (click)="confirmAction()">Yes</button>
+</mat-dialog-actions>
