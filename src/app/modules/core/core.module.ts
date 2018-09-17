@@ -108,12 +108,11 @@ import {ConfirmDialogComponent} from './dialogs/confirm/confirm.dialog.component
         ConfirmDialogComponent
     ],
     providers: [
-        /* Intercept and rewrite requests to point to localhost:48080 when in development */
-        (environment.strongboxUrl === null ? [] : {
+        {
             provide: HTTP_INTERCEPTORS,
             useClass: ApiURLInterceptor,
             multi: true
-        }),
+        },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInterceptor,
