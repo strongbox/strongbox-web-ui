@@ -10,6 +10,7 @@
     "build-prod-source-map": "npm run clean-dist && ng build --prod --aot --source-map && ./node_modules/.bin/source-map-explorer dist/strongbox-web-ui/main.*.js",
     "clean-dist": "./node_modules/.bin/rimraf dist/packaging dist/strongbox-web-ui",
     "clean-install": "./node_modules/.bin/rimraf node_modules && npm install",
+    "postinstall": "npm run webdriver-update",
     "ci-build": "npm run clean-dist && npm run build-prod && npm run package",
     "ci-build-stage": "npm run clean-dist && npm run build-prod-stage && npm run package",
     "ci-test": "ng test --browsers FirefoxHeadless",
