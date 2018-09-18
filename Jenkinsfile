@@ -33,7 +33,6 @@ pipeline {
         {
             steps {
                 sh "npm install"
-                sh "npm run webdriver-update"
             }
         }
         stage('Build')
@@ -73,7 +72,7 @@ pipeline {
     post {
         success {
             script {
-                if(params.TRIGGER_WEBAPP && params.BRANCH == "master") {
+                if(params.TRIGGER_WEBAPP && BRANCH_NAME == "master") {
                     build job: 'strongbox/strongbox-webapp/master', wait: false
                 }
             }

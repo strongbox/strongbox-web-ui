@@ -13,7 +13,7 @@
     "postinstall": "npm run webdriver-update",
     "ci-build": "npm run clean-dist && npm run build-prod && npm run package",
     "ci-build-stage": "npm run clean-dist && npm run build-prod-stage && npm run package",
-    "ci-test": "ng test --browsers FirefoxHeadless",
+    "ci-test": "ng test --browsers ChromeHeadless",
     "ci-e2e": "ng e2e --port 4201 --protractor-config ./e2e/protractor-ci.conf.js",
     "package": "./node_modules/.bin/rimraf dist/packaging/* && ./node_modules/.bin/webpack --env.configuration=prod",
     "test": "ng test --watch --browsers Chrome --source-map=false",
