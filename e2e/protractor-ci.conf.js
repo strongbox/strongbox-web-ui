@@ -1,25 +1,31 @@
+process.env.CHROME_BIN = require('puppeteer').executablePath();
+
 const protractor = require('./protractor.conf');
 
-const capabilities = {
-    'browserName': 'firefox',
+// Currently can't be used:
+//  WebDriverError: invalid argument: can't kill an exited process
+//  From: Task: WebDriver.createSession()
+const firefox = {
+    browserName: 'firefox',
     'moz:firefoxOptions': {
-        args: ['-headless']
+        args: ["--no-sandbox", '--headless']
+    }
+};
+
+const chrome = {
+    browserName: 'chrome',
+    chromeOptions: {
+        args: ["--no-sandbox", "--headless", "--disable-gpu", "--disable-software-rasterizer", "--disable-dev-shm-usage", "--window-size=800,600"]
     }
 };
 
 const multiCapabilities = [
-    capabilities,
-    {
-        'browserName': 'chrome',
-        chromeOptions: {
-            args: ["--headless", "--disable-gpu", "--window-size=800,600"]
-
-        }
-    }
+    chrome,
+    firefox
 ];
 
 let config = Object.assign({}, protractor.config);
-config.capabilities = capabilities;
+config.capabilities = chrome;
 //config.multiCapabilities = multiCapabilities;
 
 exports.config = config;
