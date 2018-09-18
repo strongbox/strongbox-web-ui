@@ -1,5 +1,3 @@
-process.env.CHROME_BIN = require('puppeteer').executablePath();
-
 const protractor = require('./protractor.conf');
 
 // Currently can't be used:
@@ -8,14 +6,14 @@ const protractor = require('./protractor.conf');
 const firefox = {
     browserName: 'firefox',
     'moz:firefoxOptions': {
-        args: ["--no-sandbox", '--headless']
+        args: ['--headless']
     }
 };
 
 const chrome = {
     browserName: 'chrome',
     chromeOptions: {
-        args: ["--no-sandbox", "--headless", "--disable-gpu", "--disable-software-rasterizer", "--disable-dev-shm-usage", "--window-size=800,600"]
+        args: ["--no-sandbox", "--headless", "--disable-gpu"]
     }
 };
 

@@ -1,8 +1,6 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
-process.env.CHROME_BIN = require('puppeteer').executablePath();
-
 module.exports = function (config) {
     config.set({
         basePath: '',
@@ -26,7 +24,7 @@ module.exports = function (config) {
             fixWebpackSourcePaths: true
         },
         //reporters: ['progress', 'kjhtml'],
-        reporters: ['junit', 'summary', 'kjhtml'],
+        reporters: ['junit', 'kjhtml', 'summary'],
         // the default configuration
         junitReporter: {
             outputDir: '../dist/', // results will be saved as $outputDir/$browserName.xml
@@ -50,9 +48,17 @@ module.exports = function (config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['ChromeHeadless', 'Chrome', 'FirefoxHeadless', 'Firefox'],
+        browsers: ['HeadlessChrome', 'Chrome', 'HeadlessFirefox', 'Firefox'],
         customLaunchers: {
-            FirefoxHeadless: {
+            // This is necessary because of a bug:
+            // https://github.com/karma-runner/karma-chrome-launcher/issues/154#issuecomment-334524420
+            HeadlessChrome: {
+                base: 'ChromeHeadless',
+                flags: [
+                    '--no-sandbox', '--headless', '--disable-gpu'
+                ]
+            },
+            HeadlessFirefox: {
                 base: 'Firefox',
                 flags: [
                     '-headless'

@@ -32,7 +32,11 @@ pipeline {
         stage('Install dependencies')
         {
             steps {
-                sh "npm install"
+                script {
+                    def npmCachePath = workspace().getNPMCachePath()
+                    sh "npm config set cache ${npmCachePath}"
+                    sh "npm install"
+                }
             }
         }
         stage('Build')
@@ -41,11 +45,20 @@ pipeline {
                 sh "npm run ci-build"
             }
         }
-        stage('Test')
+        stage('Tests')
         {
-            steps {
-                sh "npm run ci-test"
-                sh "npm run ci-e2e"
+            parallel {
+                stage('ci-test') {
+                    steps {
+                        sh "npm run ci-test"
+                    }
+                }
+
+                stage('ci-e2e') {
+                    steps {
+                        sh "npm run ci-e2e"
+                    }
+                }
             }
         }
         stage('Deploy') {
