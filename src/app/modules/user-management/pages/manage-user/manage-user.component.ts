@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {BehaviorSubject} from 'rxjs';
@@ -8,7 +8,7 @@ import {ToastrService} from 'ngx-toastr';
 import {plainToClass} from 'class-transformer';
 
 import {FormErrorAction} from '../../../../state/app.actions';
-import {AssignableRole, User, UserAccessModelComponentEnums, UserForm, UserOperations, UserResponse} from '../../user.model';
+import {User, UserForm, UserFormFieldsData, UserOperations, UserPrivilege, UserResponse, UserRole} from '../../user.model';
 import {UserManagementService} from '../../services/user-management.service';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {ApiResponse, handle404error} from '../../../core/core.model';
@@ -18,6 +18,7 @@ import {FADE_IN_OUT_OVERLAP} from '../../../../shared/animations';
     selector: 'app-manage-user',
     templateUrl: './manage-user.component.html',
     styleUrls: ['../view-user/view-user.component.scss', './manage-user.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
         FADE_IN_OUT_OVERLAP
     ]
@@ -32,15 +33,8 @@ export class ManageUserComponent implements OnInit {
 
     public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
     public user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-    public assignableRoles$: BehaviorSubject<AssignableRole[]> = new BehaviorSubject<AssignableRole[]>([]);
-
-    public assignablePrivileges = [
-        'ARTIFACTS_RESOLVE',
-        'ARTIFACTS_COPY',
-        'ARTIFACTS_DEPLOY',
-        'ARTIFACTS_DELETE',
-        'ARTIFACTS_VIEW'
-    ];
+    public assignableRoles$: BehaviorSubject<UserRole[]> = new BehaviorSubject<UserRole[]>([]);
+    public assignablePrivileges$: BehaviorSubject<UserPrivilege[]> = new BehaviorSubject<UserPrivilege[]>([]);
 
     public operation: UserOperations = UserOperations.CREATE;
 
@@ -49,8 +43,6 @@ export class ManageUserComponent implements OnInit {
     public ngxsFormPath = 'userManagementForm.formState';
 
     public userForm: FormGroup;
-
-    public userAccessModelEnums = UserAccessModelComponentEnums;
 
     public compareSelectedRoles = (val1: string, val2: string) => val1 === val2;
 
@@ -92,8 +84,9 @@ export class ManageUserComponent implements OnInit {
             if (!username) {
                 this.operation = UserOperations.CREATE;
                 this.userForm = new UserForm(this.operation).getForm();
-                this.service.getAssignableRoles().subscribe((roles: AssignableRole[]) => {
-                    this.assignableRoles$.next(roles);
+                this.service.getUserFormFields().subscribe((fields: UserFormFieldsData) => {
+                    this.assignableRoles$.next(fields.assignableRoles);
+                    this.assignablePrivileges$.next(fields.assignablePrivileges.filter(v => v.name.indexOf('ARTIFACTS_') > -1));
                     this.loading$.next(false);
                 });
 
@@ -107,6 +100,7 @@ export class ManageUserComponent implements OnInit {
                         (response: UserResponse) => {
                             this.user$.next(response.user);
                             this.assignableRoles$.next(response.assignableRoles);
+                            this.assignablePrivileges$.next(response.assignablePrivileges.filter(v => v.name.indexOf('ARTIFACTS_') > -1));
                             this.loading$.next(false);
                             this.userForm = new UserForm(this.operation, response.user).getForm();
                         },

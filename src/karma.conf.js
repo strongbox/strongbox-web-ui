@@ -24,7 +24,7 @@ module.exports = function (config) {
             fixWebpackSourcePaths: true
         },
         //reporters: ['progress', 'kjhtml'],
-        reporters: ['junit', 'kjhtml', 'summary'],
+        reporters: ['progress', 'kjhtml', 'junit', 'summary'],
         // the default configuration
         junitReporter: {
             outputDir: '../dist/', // results will be saved as $outputDir/$browserName.xml

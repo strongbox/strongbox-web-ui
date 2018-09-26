@@ -68,7 +68,7 @@
                         <mat-tab label="Roles">
                             <div class="tabContent">
                                 <mat-selection-list formControlName="roles" [compareWith]="compareSelectedRoles">
-                                    <mat-list-option *ngFor="let role of (assignableRoles$ | async)"
+                                    <mat-list-option *ngFor="let role of assignableRoles$ | async"
                                                      checkboxPosition="before"
                                                      [value]="role.name"
                                     >
@@ -79,21 +79,8 @@
                             </div>
                         </mat-tab>
                         <mat-tab label="Repository privileges">
-                            <app-user-access-model-listing [type]="userAccessModelEnums.repositoryPrivileges"
-                                                           [parentForm]="userForm"
-                                                           [assignablePrivileges]="assignablePrivileges">
-                            </app-user-access-model-listing>
-                        </mat-tab>
-                        <mat-tab label="URL privileges">
-                            <app-user-access-model-listing [type]="userAccessModelEnums.urlToPrivileges"
-                                                           [parentForm]="userForm"
-                                                           [assignablePrivileges]="assignablePrivileges">
-                            </app-user-access-model-listing>
-                        </mat-tab>
-                        <mat-tab label="Wildcard privileges">
-                            <app-user-access-model-listing [type]="userAccessModelEnums.wildCardPrivileges"
-                                                           [parentForm]="userForm"
-                                                           [assignablePrivileges]="assignablePrivileges">
+                            <app-user-access-model-listing [parentForm]="userForm"
+                                                           [assignablePrivileges]="assignablePrivileges$ | async">
                             </app-user-access-model-listing>
                         </mat-tab>
                     </mat-tab-group>

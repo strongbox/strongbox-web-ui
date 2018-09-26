@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {Observable, throwError} from 'rxjs';
+import {Observable} from 'rxjs';
 import {plainToClass} from 'class-transformer';
 
-import {AssignableRole, AssignableRolesResponse, User, UserListResponse, UserOperations, UserResponse} from '../user.model';
-import {ApiResponse} from '../../core/core.model';
+import {UserRole, User, UserFormFieldsData, UserListResponse, UserOperations, UserResponse} from '../user.model';
+import {ApiFormDataValuesResponse, ApiResponse} from '../../core/core.model';
 
 @Injectable({
     providedIn: 'root'
@@ -15,9 +15,9 @@ export class UserManagementService {
     constructor(private http: HttpClient) {
     }
 
-    getUser(username: string, assignableRoles: boolean = false): Observable<UserResponse> {
+    getUser(username: string, formFields: boolean = false): Observable<UserResponse> {
         return this.http
-            .get<UserResponse>(`/api/users/${username}?assignableRoles=${assignableRoles}`)
+            .get<UserResponse>(`/api/users/${username}?formFields=${formFields}`)
             .pipe(map(r => plainToClass(UserResponse, r)));
     }
 
@@ -27,14 +27,29 @@ export class UserManagementService {
             .pipe(map((r: UserListResponse) => plainToClass(User, r.users)));
     }
 
-    getAssignableRoles(): Observable<AssignableRole[] | any> {
+    getUserFormFields(): Observable<UserRole[] | any> {
         return this.http
-            .get<AssignableRolesResponse>('/api/formData/assignableRoles')
+            .get('/api/formData/userFields')
             .pipe(
-                map((r: AssignableRolesResponse) => {
-                    const response = plainToClass(AssignableRolesResponse, r);
-                    const assignableRoles = response.formDataValues.find(v => v.name === 'assignableRoles');
-                    return assignableRoles ? assignableRoles.values : throwError('Could not retrieve assignable roles!');
+                map((r: ApiFormDataValuesResponse): UserFormFieldsData => {
+                    const response = plainToClass(ApiFormDataValuesResponse, r);
+
+                    const assignableRoles = response.formDataValues
+                        .find(v => v.name === 'assignableRoles')
+                        .values
+                        .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+
+                    const assignablePrivileges = response.formDataValues
+                        .find(v => v.name === 'assignablePrivileges')
+                        .values
+                        .sort();
+
+                    let userFormFields = {
+                        assignableRoles: assignableRoles,
+                        assignablePrivileges: assignablePrivileges
+                    };
+
+                    return plainToClass(UserFormFieldsData, userFormFields);
                 })
             );
     }

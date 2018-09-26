@@ -36,15 +36,14 @@ export class FormFieldErrorsComponent implements OnInit {
                     const error = this.field.errors[key];
                     if (key === 'required') {
                         errors.push('This field is required!');
-                        return;
                     } else if (key === 'minlength') {
                         errors.push('This field requires more than ' + error.requiredLength + ' characters');
-                        return;
                     } else if (key === 'maxlength') {
                         errors.push('This field requires less than ' + error.requiredLength + ' characters');
-                        return;
+                    } else if (key === 'pattern') {
+                        errors.push('This field requires the following pattern ' + error.requiredPattern + ' but got ' + error.actualValue);
                     } else {
-                        console.error(this.field.errors[key]);
+                        errors.push(this.field.errors[key]);
                     }
                 });
 

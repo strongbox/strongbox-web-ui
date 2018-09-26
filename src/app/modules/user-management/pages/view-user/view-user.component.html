@@ -72,44 +72,10 @@
                     </div>
                 </mat-tab>
                 <mat-tab label="Repository privileges"
-                         [disabled]="(user$ | async)?.accessModel.isRepositoryPrivilegesEmpty()">
-                    <app-user-access-model-listing type="repositoryPrivileges"
-                                                   [parentForm]="userForm"
-                                                   [assignablePrivileges]="null">
+                         [disabled]="(user$ | async)?.accessModel.isRepositoriesAccessEmpty()">
+                    <app-user-access-model-listing [parentForm]="userForm"
+                                                   [assignablePrivileges]="(assignablePrivileges$ | async)">
                     </app-user-access-model-listing>
-                </mat-tab>
-                <mat-tab label="URL privileges" [disabled]="(user$ | async)?.accessModel.isUrlToPrivilegesEmpty()">
-                    <div class="tabContent">
-                        <mat-accordion>
-                            <mat-expansion-panel
-                                    *ngFor="let userAccess of (user$ | async)?.accessModel.urlToPrivileges">
-
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>{{ userAccess.path }}</mat-panel-title>
-                                </mat-expansion-panel-header>
-
-                                <div *ngFor="let privilege of userAccess.privileges">{{ privilege }}</div>
-
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </div>
-                </mat-tab>
-                <mat-tab label="Wildcard privileges"
-                         [disabled]="(user$ | async)?.accessModel.isWildCardPrivilegesEmpty()">
-                    <div class="tabContent">
-                        <mat-accordion>
-                            <mat-expansion-panel
-                                    *ngFor="let userAccess of (user$ | async)?.accessModel.wildCardPrivileges">
-
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>{{ userAccess.path }}</mat-panel-title>
-                                </mat-expansion-panel-header>
-
-                                <div *ngFor="let privilege of userAccess.privileges">{{ privilege }}</div>
-
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </div>
                 </mat-tab>
             </mat-tab-group>
             <div>&nbsp;</div>

@@ -6,11 +6,10 @@ import {Navigate} from '@ngxs/router-plugin';
 import {Select, Store} from '@ngxs/store';
 import {ToastrService} from 'ngx-toastr';
 
-import {User, UserForm, UserOperations, UserResponse} from '../../user.model';
+import {UserPrivilege, UserRole, User, UserForm, UserOperations, UserResponse} from '../../user.model';
 import {UserManagementService} from '../../services/user-management.service';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {handle404error} from '../../../core/core.model';
-import {plainToClass} from 'class-transformer';
 
 @Component({
     selector: 'app-view-user',
@@ -25,6 +24,8 @@ export class ViewUserComponent implements OnInit {
 
     loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
     user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+    public assignableRoles$: BehaviorSubject<UserRole[]> = new BehaviorSubject<UserRole[]>([]);
+    public assignablePrivileges$: BehaviorSubject<UserPrivilege[]> = new BehaviorSubject<UserPrivilege[]>([]);
 
     // Necessary to generate the app-user-access-model-listing
     userForm: FormGroup;
@@ -40,14 +41,14 @@ export class ViewUserComponent implements OnInit {
             const username = params.get('username');
             if (username) {
                 this.service
-                    .getUser(username)
+                    .getUser(username, true)
                     .subscribe(
                         (response: UserResponse) => {
-                            const user: User = plainToClass(User, response.user) as any;
-                            this.user$.next(user);
+                            this.user$.next(response.user);
+                            this.assignableRoles$.next(response.assignableRoles);
+                            this.assignablePrivileges$.next(response.assignablePrivileges.filter(v => v.name.indexOf('ARTIFACTS_') > -1));
                             this.loading$.next(false);
-                            this.userForm = new UserForm(UserOperations.VIEW, user).getForm();
-                            console.log('is disabled', this.userForm.disabled);
+                            this.userForm = new UserForm(UserOperations.VIEW, response.user).getForm();
                         },
                         (e) => {
                             handle404error(e, ['/admin/users'], this.notify, this.store);

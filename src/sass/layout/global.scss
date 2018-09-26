@@ -2,7 +2,7 @@ $nav-background: #13232f;
 $nav-link-color: rgba(255, 255, 255, 0.45);
 $nav-link-hover: rgba(255, 255, 255, 0.90);
 
-*:not(button) {
+*:not(button):not(mat-option) {
   padding: 0px;
   margin: 0px;
 }
@@ -95,6 +95,12 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
   }
 }
 
+div.blue-border {
+  height: 1px;
+  background: #2c82bc;
+  margin: 10px 0px 10px 0px;
+}
+
 ::-webkit-scrollbar-button {
   display: none;
 }
@@ -113,5 +119,5 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }

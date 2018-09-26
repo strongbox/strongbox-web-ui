@@ -9,6 +9,7 @@ import {ViewUserComponent} from './view-user.component';
 import {MaterialModule} from '../../../../shared/material.module';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {UserAccessModelComponent} from '../manage-user/form/access-model-listing/user-access-model.component';
+import {FormHelperModule} from '../../../../shared/form/form-helper.module';
 
 describe('Component: ViewUserComponent', () => {
     let component: ViewUserComponent;
@@ -20,6 +21,7 @@ describe('Component: ViewUserComponent', () => {
                 RouterTestingModule,
                 MaterialModule,
                 FormsModule,
+                FormHelperModule,
                 ReactiveFormsModule,
                 HttpClientTestingModule,
                 NgxsModule.forRoot([
