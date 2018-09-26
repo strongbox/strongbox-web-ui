@@ -1,10 +1,26 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {FormArray, FormGroup} from '@angular/forms';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
+import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatSort, MatTableDataSource} from '@angular/material';
+import {Observable, Subject} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 import {FADE_IN_OUT_OVERLAP, FADE_OUT} from '../../../../../../shared/animations';
-import {AssignablePrivilege, PathPrivilege, UserAccessModelComponentEnums, UserForm} from '../../../../user.model';
+import {PathPrivilege, UserForm, UserPrivilege} from '../../../../user.model';
+import {FormDataService} from '../../../../../../shared/form/services/form-data.service';
+import {AutocompleteDataSource, AutocompleteOption} from '../../../../../../shared/form/search-autocomplete/search-autocomplete.component';
 
 @Component({
     selector: 'app-user-access-model-listing',
@@ -16,30 +32,19 @@ import {AssignablePrivilege, PathPrivilege, UserAccessModelComponentEnums, UserF
         FADE_IN_OUT_OVERLAP,
     ]
 })
-export class UserAccessModelComponent implements AfterViewInit, OnChanges {
+export class UserAccessModelComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
     @Input()
     public parentForm: FormGroup;
 
     @Input()
-    public assignablePrivileges: AssignablePrivilege[] = [];
-
-    private _type: any;
-
-    @Input('type')
-    set type(value) {
-        this._type = value;
-    }
-
-    get type() {
-        return UserAccessModelComponentEnums[this._type];
-    }
+    public assignablePrivileges: UserPrivilege[] = [];
 
     /**
      * Table variables
      */
-    public readonly displayAllColumns: string[] = ['select', 'path', 'privileges', 'actions'];
-    public readonly displayViewColumns: string[] = ['path', 'privileges', 'actions'];
+    public readonly displayAllColumns: string[] = ['select', 'storageId', 'repositoryId', 'path', 'privileges', 'wildcard', 'actions'];
+    public readonly displayViewColumns: string[] = ['storageId', 'repositoryId', 'path', 'privileges', 'wildcard', 'actions'];
     public displayedColumns: string[] = this.displayAllColumns;
     public dataSource: MatTableDataSource<PathPrivilege> = new MatTableDataSource<PathPrivilege>();
     public selection = new SelectionModel<PathPrivilege>(true, []);
@@ -52,16 +57,51 @@ export class UserAccessModelComponent implements AfterViewInit, OnChanges {
 
     public showEditForm = false;
 
-    constructor() {
+    storageField: FormControl;
+    repositoryField: FormControl;
+
+    storageSearchDataSource;
+    repositorySearchDataSource;
+
+    private destroy = new Subject();
+
+    constructor(private cdr: ChangeDetectorRef, private formDataService: FormDataService) {
     }
 
-    public compareSelected = (val1: string, val2: string) => val1 === val2;
+    compareSelected = (val1: string, val2: string) => val1 === val2;
 
     @ViewChild(MatSort) set content(content: ElementRef) {
         this.sort = content;
         if (this.sort) {
             this.dataSource.sort = this.sort;
         }
+    }
+
+    // tslint:disable:semicolon
+    storageAutocompleteService = (search: string): Observable<AutocompleteOption[]> => {
+        return this
+            .formDataService
+            .findStorages(search)
+            .pipe(
+                map((a: string[]) => a.map(v => new AutocompleteOption(v, v)))
+            );
+    };
+
+    repositoryAutocompleteService = (search: string): Observable<AutocompleteOption[]> => {
+        return this
+            .formDataService
+            .findRepositoriesByStorage(this.storageField.value, search)
+            .pipe(
+                map((a: string[]) => a.map(v => new AutocompleteOption(v, v)))
+            );
+    };
+
+    ngOnInit() {
+    }
+
+    ngOnDestroy() {
+        this.destroy.next();
+        this.destroy.complete();
     }
 
     ngAfterViewInit() {
@@ -79,22 +119,22 @@ export class UserAccessModelComponent implements AfterViewInit, OnChanges {
     }
 
     private updateDataSource() {
-        this.dataSource = new MatTableDataSource(this.collection().getRawValue());
+        this.dataSource = new MatTableDataSource(this.repositories().getRawValue());
     }
 
-    collection(): FormArray {
-        return this.parentForm.get('accessModel').get(this.type) as FormArray;
+    repositories(): FormArray {
+        return this.parentForm.get('accessModel').get('repositoriesAccess') as FormArray;
     }
 
     updateCollection(form): void {
         const value = form.value;
         if (this.privilegeIndex !== null) {
-            this.collection().at(this.privilegeIndex).setValue(value);
+            this.repositories().at(this.privilegeIndex).setValue(value);
             this.dataSource.data.splice(this.privilegeIndex, 1);
         } else {
             // We need to push a NEW form with the values from the old one into the parent because of
             // weird issues. https://github.com/angular/angular/issues/25814
-            this.collection().push(UserForm.generateAccessModelPathForm(value, this._type, this.parentForm));
+            this.repositories().push(UserForm.generateAccessModelPathForm(value));
             this.dataSource.data.push(value);
         }
 
@@ -108,13 +148,21 @@ export class UserAccessModelComponent implements AfterViewInit, OnChanges {
             this.privilegeIndex = index;
         }
 
-        this.privilegeForm = UserForm.generateAccessModelPathForm(privilege, this._type, this.parentForm);
+        this.privilegeForm = UserForm.generateAccessModelPathForm(privilege);
 
-        if (this.isFormDisabled()) {
+        if (this.isParentFormDisabled()) {
             this.privilegeForm.disable();
         }
 
+        this.storageField = this.privilegeForm.get('storageId') as FormControl;
+        this.repositoryField = this.privilegeForm.get('repositoryId') as FormControl;
+
+        this.storageSearchDataSource = new AutocompleteDataSource(null, this.storageAutocompleteService);
+        this.repositorySearchDataSource = new AutocompleteDataSource(null, this.repositoryAutocompleteService);
+
+        // we need to show the form, so that @ViewChild will be able to pickup the element and then force change detection.
         this.showEditForm = true;
+        this.cdr.detectChanges();
     }
 
     resetState() {
@@ -130,8 +178,12 @@ export class UserAccessModelComponent implements AfterViewInit, OnChanges {
     }
 
     delete(index = null) {
+        if (index === null && this.privilegeIndex !== null) {
+            index = this.privilegeIndex;
+        }
+
         if (index !== null) {
-            this.collection().removeAt(index);
+            this.repositories().removeAt(index);
             this.updateDataSource();
 
             if (this.dataSource.data.length === 0) {
@@ -139,16 +191,16 @@ export class UserAccessModelComponent implements AfterViewInit, OnChanges {
             }
         }
 
-        this.showEditForm = false;
+        this.resetState();
     }
 
     deleteSelected() {
         const selected = this.selection.selected.map((s) => s.path.trim());
 
         selected.forEach((p) => {
-            this.collection().getRawValue().forEach((v: PathPrivilege, i) => {
+            this.repositories().getRawValue().forEach((v: PathPrivilege, i) => {
                 if (selected.indexOf(v.path.trim()) > -1) {
-                    this.collection().removeAt(i);
+                    this.repositories().removeAt(i);
                     return;
                 }
             });
@@ -176,23 +228,8 @@ export class UserAccessModelComponent implements AfterViewInit, OnChanges {
             this.dataSource.data.forEach(row => this.selection.select(row));
     }
 
-    privilegeFormPrivileges() {
-        return this.privilegeForm.get('privileges').value || [];
-    }
-
-    isFormDisabled() {
+    isParentFormDisabled() {
         return this.parentForm ? this.parentForm.disabled : false;
     }
 
-    isRepositoryType() {
-        return this.type === UserAccessModelComponentEnums.repositoryPrivileges;
-    }
-
-    isUrlType() {
-        return this.type === UserAccessModelComponentEnums.urlToPrivileges;
-    }
-
-    isWildcardType() {
-        return this.type === UserAccessModelComponentEnums.wildCardPrivileges;
-    }
 }

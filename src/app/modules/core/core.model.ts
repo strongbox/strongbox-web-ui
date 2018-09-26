@@ -33,12 +33,12 @@ export class ApiResponse {
     }
 }
 
-export abstract class ApiFormDataValuesResponse extends ApiResponse {
+export class ApiFormDataValuesResponse extends ApiResponse {
     @Type(() => FormDataValue)
     formDataValues: FormDataValue[];
 }
 
-export abstract class FormDataValue {
+export class FormDataValue {
     name: string;
     values: any[];
 }

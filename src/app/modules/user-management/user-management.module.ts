@@ -15,8 +15,9 @@ import {UserManagementService} from './services/user-management.service';
 import {MaterialModule} from '../../shared/material.module';
 import {ViewUserComponent} from './pages/view-user/view-user.component';
 import {ManageUserComponent} from './pages/manage-user/manage-user.component';
-import {FormHelperModule} from '../../shared/form-helper.module';
+import {FormHelperModule} from '../../shared/form/form-helper.module';
 import {UserAccessModelComponent} from './pages/manage-user/form/access-model-listing/user-access-model.component';
+import {FormDataService} from '../../shared/form/services/form-data.service';
 
 @NgModule({
     imports: [
@@ -43,7 +44,8 @@ import {UserAccessModelComponent} from './pages/manage-user/form/access-model-li
         UpdateUserGuard,
         DeleteUserGuard,
         CreateUserGuard,
-        UserManagementService
+        UserManagementService,
+        FormDataService
     ]
 })
 export class UserManagementModule {

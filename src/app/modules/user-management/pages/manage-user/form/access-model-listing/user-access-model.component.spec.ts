@@ -9,9 +9,9 @@ import {ToastrModule} from 'ngx-toastr';
 
 import {UserAccessModelComponent} from './user-access-model.component';
 import {MaterialModule} from '../../../../../../shared/material.module';
-import {FormHelperModule} from '../../../../../../shared/form-helper.module';
+import {FormHelperModule} from '../../../../../../shared/form/form-helper.module';
 import {AppState} from '../../../../../../state/app.state';
-import {UserAccessModelComponentEnums, UserForm} from '../../../../user.model';
+import {UserForm} from '../../../../user.model';
 
 describe('Component: UserAccessModelComponent', () => {
     let component: UserAccessModelComponent;
@@ -39,7 +39,6 @@ describe('Component: UserAccessModelComponent', () => {
         fixture = TestBed.createComponent(UserAccessModelComponent);
         component = fixture.componentInstance;
         component.parentForm = new UserForm().getForm();
-        component.type = UserAccessModelComponentEnums.repositoryPrivileges;
         fixture.detectChanges();
     });
 

@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 
 import {
+    MatAutocompleteModule,
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
@@ -30,7 +31,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 const components = [
     CdkTableModule,
     FlexLayoutModule,
-    MatIconModule,
+    MatAutocompleteModule,
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,

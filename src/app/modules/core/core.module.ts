@@ -33,6 +33,7 @@ import {ProfileService} from './pages/profile/profile.service';
 import {ProfileFormState} from './pages/profile/state/profile.form.state';
 import {ErrorInterceptor} from './services/interceptors/error.interceptor';
 import {ConfirmDialogComponent} from './dialogs/confirm/confirm.dialog.component';
+import {FormHelperModule} from '../../shared/form/form-helper.module';
 
 @NgModule({
     imports: [
@@ -83,7 +84,7 @@ import {ConfirmDialogComponent} from './dialogs/confirm/confirm.dialog.component
         ReactiveFormsModule,
 
         MaterialModule,
-        FlexLayoutModule,
+        FormHelperModule,
 
         NgxsModule,
         NgxsRouterPluginModule,
@@ -127,7 +128,7 @@ import {ConfirmDialogComponent} from './dialogs/confirm/confirm.dialog.component
         AuthService,
         AuthGuard,
         ProfileService,
-        RepositorySearchService
+        RepositorySearchService,
     ]
 })
 export class CoreModule {

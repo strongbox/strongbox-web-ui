@@ -3,6 +3,7 @@
 
 .access-model-container {
   position: relative;
+  display: inline;
 
   > table {
     width: 100%;
@@ -10,7 +11,14 @@
 }
 
 .managePathPrivilege {
-  background: $table-row-color;
+  border: 1px solid #2c82bc;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  mat-form-field {
+    width: 100%;
+  }
 }
 
 .actions {
@@ -62,3 +70,11 @@
     }
   }
 }
+
+/*
+.wildcard-checkbox {
+  ::ng-deep .mat-checkbox-label {
+    margin-top: 17px;
+    line-height: 15px;
+  }
+}*/

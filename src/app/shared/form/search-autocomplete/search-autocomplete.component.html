@@ -1,0 +1,29 @@
+<mat-form-field [style.width]="width">
+    <mat-spinner *ngIf="loading | async" [diameter]="20" [strokeWidth]="5"></mat-spinner>
+    <input type="search"
+           [placeholder]="placeholder"
+           [attr.aria-label]="placeholder"
+           spellcheck="false"
+           matInput
+           [formControl]="searchControl"
+           [errorStateMatcher]="searchControlErrorState"
+           #searchInput
+           [matAutocomplete]="autoComplete"
+           (click)="trackInputCursor($event)"
+           (keyup)="trackInputCursor($event)"
+           (blur)="onTouched()"
+    >
+    <mat-autocomplete #autoComplete="matAutocomplete"
+                      [autoActiveFirstOption]="autoActiveFirstOption"
+                      [panelWidth]="panelWidth"
+                      [displayWith]="displayWith"
+    >
+        <mat-option *ngFor="let option of options | async" [value]="option.value">
+            {{ option.display }}
+        </mat-option>
+    </mat-autocomplete>
+
+    <mat-error *ngIf="!searchControl.valid">
+        <form-field-errors [field]="searchControl"></form-field-errors>
+    </mat-error>
+</mat-form-field>
