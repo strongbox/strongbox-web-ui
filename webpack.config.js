@@ -1,33 +1,68 @@
 const path = require('path');
 const glob = require('glob');
 
-const appName = 'strongbox-web-ui';
-
 const CompressionPlugin = require('compression-webpack-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
 
-const distPath = path.resolve(__dirname, 'dist');
-const distAngularPath = path.resolve(distPath, appName);
-const packagingRootPath = path.resolve(distPath, 'packaging');
-const packagingTempPath = path.resolve(packagingRootPath, 'tmp');
-const packagingAppPath = path.resolve(packagingRootPath, appName);
+const angularJson = require('./angular');
+const appName = angularJson.defaultProject;
+
+const targetPath = (appendPath) => {
+    if (!appendPath) appendPath = '';
+    return path.resolve(__dirname, 'dist', appendPath);
+};
+
+const assetsRootPath = () => {
+    return appName + '/';
+};
+
+const assetsStaticPath = (appendPath) => {
+    if(!appendPath) appendPath = '';
+    return (assetsRootPath() + '/static/' + appendPath).replace(/(\/+){2,}/g, '/');
+};
+
+const originalPackagePath = targetPath(appName);
+const newPackagingRootPath = targetPath('packaging');
+const newPackagingTempPath = targetPath('packaging/tmp');
+const newPackageAppPath = targetPath('packaging/' + appName);
+
+console.log('');
+console.log('Original angular package path: ', originalPackagePath);
+console.log('New packaging root path: ', newPackagingRootPath);
+console.log('New packaging temp path: ', newPackagingTempPath);
+console.log('New packaging app path: ', newPackageAppPath);
+console.log('');
 
 module.exports = {
     mode: 'production',
-    entry: toObject(glob.sync(distAngularPath + '/*.*')),
+    entry: [
+        ...glob.sync(originalPackagePath + '/*.*'),
+        ...glob.sync(originalPackagePath + '/static/assets/*.*'),
+    ],
     output: {
-        path: packagingTempPath,
+        path: newPackagingTempPath,
         filename: '[name]'
     },
     module: {
         rules: [
             {
                 test: /.*/,
+                exclude: [/\.html/],
                 use: [{
                     loader: 'file-loader',
                     options: {
                         name: '[name].[ext]',
-                        outputPath: appName + '/'
+                        outputPath: assetsStaticPath('assets')
+                    }
+                }]
+            },
+            {
+                test: /\.html/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]',
+                        outputPath: assetsRootPath()
                     }
                 }]
             }
@@ -41,14 +76,16 @@ module.exports = {
         }),
         new FileManagerPlugin({
             onEnd: {
-                move: [{
-                    source: packagingTempPath + "/" + appName,
-                    destination: packagingRootPath + "/" + appName
-                }],
-                delete: [packagingTempPath],
+                move: [
+                    {
+                        source: newPackagingTempPath + "/" + appName,
+                        destination: newPackageAppPath
+                    }
+                ],
+                delete: [newPackagingTempPath],
                 archive: [{
-                    source: packagingAppPath,
-                    destination: packagingRootPath + '/' + appName + '.zip',
+                    source: newPackageAppPath,
+                    destination: newPackagingRootPath + '/' + appName + '.zip',
                     format: 'zip',
                     options: {
                         zlib: {
@@ -60,16 +97,3 @@ module.exports = {
         })
     ]
 };
-
-function toObject(paths) {
-    var ret = {};
-
-    paths.forEach(function (path) {
-        ret[path.split('/').slice(-1)[0]] = path;
-    });
-
-    console.log("Paths to repackage: ");
-    console.log(ret);
-
-    return ret;
-}
