@@ -1,6 +1,8 @@
 # Strongbox Web UI
 [![Master Build Status](https://dev.carlspring.org/jenkins/buildStatus/icon?job=strongbox/strongbox-web-ui/master)](https://dev.carlspring.org/jenkins/blue/organizations/jenkins/strongbox%2Fstrongbox-web-ui/activity/?branch=master)
 [![RocketChat.Community.Channel](https://chat.carlspring.org/images/join-chat.svg)](https://chat.carlspring.org/channel/community)
+[![dependencies Status](https://david-dm.org/strongbox/strongbox-web-ui/status.svg)](https://david-dm.org/strongbox/strongbox-web-ui)
+[![devDependencies Status](https://david-dm.org/strongbox/strongbox-web-ui/dev-status.svg)](https://david-dm.org/strongbox/strongbox-web-ui?type=dev)
 
 This is the UI module for the Strongbox artifact repository manager.
 
