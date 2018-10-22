@@ -2,8 +2,8 @@
 
 def ARTIFACT_ID = 'strongbox-web-ui'
 def SERVER_ID  = 'carlspring-oss-snapshots'
-def DEPLOY_SERVER_URL = 'https://dev.carlspring.org/nexus/content/repositories/carlspring-oss-snapshots/'
-def PR_SERVER_URL = 'https://dev.carlspring.org/nexus/content/repositories/carlspring-oss-pull-requests/'
+def DEPLOY_SERVER_URL = 'https://repo.carlspring.org/content/repositories/carlspring-oss-snapshots/'
+def PR_SERVER_URL = 'https://repo.carlspring.org/content/repositories/carlspring-oss-pull-requests/'
 
 // Notification settings for "master" and "branch/pr"
 def notifyMaster = [notifyAdmins: true, recipients: [culprits(), requestor()]]
