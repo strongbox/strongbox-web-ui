@@ -102,13 +102,6 @@ pipeline {
         }
     }
     post {
-        success {
-            script {
-                if(params.TRIGGER_WEBAPP && BRANCH_NAME == "master") {
-                    build job: 'strongbox/strongbox-webapp/master', wait: false
-                }
-            }
-        }
         failure {
             script {
                 if(params.NOTIFY_EMAIL) {
