@@ -4,7 +4,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {MaterialModule} from '../material.module';
 import {FormFieldErrorsComponent} from './form-field-errors/form-field-errors.component';
-import {SearchAutocompleteComponent} from './search-autocomplete/search-autocomplete.component';
+import {AqlAutocompleteComponent} from './autocomplete/aql-autocomplete/aql-autocomplete.component';
+import {SelectAutocompleteComponent} from './autocomplete/select-autocomplete/select-autocomplete.component';
 import {FormDataService} from './services/form-data.service';
 
 @NgModule({
@@ -16,11 +17,13 @@ import {FormDataService} from './services/form-data.service';
     ],
     exports: [
         FormFieldErrorsComponent,
-        SearchAutocompleteComponent
+        AqlAutocompleteComponent,
+        SelectAutocompleteComponent
     ],
     declarations: [
         FormFieldErrorsComponent,
-        SearchAutocompleteComponent
+        SelectAutocompleteComponent,
+        AqlAutocompleteComponent
     ],
     providers: [
         FormDataService

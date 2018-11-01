@@ -111,31 +111,29 @@
                         <div class="clearfix">&nbsp;</div>
                         <div fxLayout="row" fxLayoutGap="2%">
                             <div fxFlex="1 0 auto">
-
-                                <search-autocomplete
+                                <select-autocomplete
                                         placeholder="Storage"
                                         [searchControl]="privilegeForm.get('storageId')"
-                                        [autoActiveFirstOption]="true"
-                                        [forceSelection]="true"
                                         [dataSource]="storageSearchDataSource"
+                                        [forceSelection]="true"
+                                        [required]="true"
                                         width="100%"
                                 >
-                                </search-autocomplete>
+                                </select-autocomplete>
                             </div>
                         </div>
                         <div fxLayout="row" fxLayoutGap="2%">
                             <div fxFlex="1 0 auto">
-
-                                <search-autocomplete
+                                <select-autocomplete
                                         placeholder="Repository"
-                                        [autoActiveFirstOption]="true"
-                                        [forceSelection]="true"
-                                        [dataSource]="repositorySearchDataSource"
                                         [searchControl]="privilegeForm.get('repositoryId')"
+                                        [dataSource]="repositorySearchDataSource"
+                                        [forceSelection]="true"
+                                        [required]="true"
                                         [dependsOn]="privilegeForm.get('storageId')"
                                         width="100%"
                                 >
-                                </search-autocomplete>
+                                </select-autocomplete>
                             </div>
                         </div>
                         <div fxLayout="row" fxLayoutGap="2%">

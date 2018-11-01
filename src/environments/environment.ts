@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    strongboxUrl: 'localhost:48080'
-//    strongboxUrl: 'strongbox-snapshot.carlspring.org'
+//    strongboxUrl: 'localhost:48080'
+    strongboxUrl: 'strongbox-snapshot.carlspring.org'
 };
 
 /*

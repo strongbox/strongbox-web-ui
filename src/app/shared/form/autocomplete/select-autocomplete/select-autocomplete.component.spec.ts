@@ -3,12 +3,12 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CommonModule} from '@angular/common';
 
-import {SearchAutocompleteComponent} from './search-autocomplete.component';
-import {FormHelperModule} from '../form-helper.module';
+import {SelectAutocompleteComponent} from './select-autocomplete.component';
+import {FormHelperModule} from '../../form-helper.module';
 
-describe('SearchAutocompleteComponent', () => {
-    let component: SearchAutocompleteComponent;
-    let fixture: ComponentFixture<SearchAutocompleteComponent>;
+describe('SelectAutocompleteComponent', () => {
+    let component: SelectAutocompleteComponent;
+    let fixture: ComponentFixture<SelectAutocompleteComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -23,7 +23,7 @@ describe('SearchAutocompleteComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(SearchAutocompleteComponent);
+        fixture = TestBed.createComponent(SelectAutocompleteComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
