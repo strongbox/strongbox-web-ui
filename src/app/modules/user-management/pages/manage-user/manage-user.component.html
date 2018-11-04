@@ -49,7 +49,7 @@
                     </mat-form-field>
 
                     <mat-form-field>
-                        <mat-select placeholder="State" formControlName="enabled">
+                        <mat-select placeholder="State" formControlName="enabled" [disableOptionCentering]="true">
                             <mat-option [value]="true">Enabled</mat-option>
                             <mat-option [value]="false">Disabled</mat-option>
                         </mat-select>

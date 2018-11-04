@@ -3,6 +3,7 @@ const glob = require('glob');
 
 const CompressionPlugin = require('compression-webpack-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 
 const angularJson = require('./angular');
 const appName = angularJson.defaultProject;
@@ -74,12 +75,42 @@ module.exports = {
             minRatio: 0.8,
             threshold: 20000 // in bytes = 20kb
         }),
+        new ManifestPlugin({
+            /**
+             * https://github.com/danethurber/webpack-manifest-plugin/blob/1.x/README.md#hooks-options
+             * {
+             *      path: string,
+             *      chunk: Chunk,
+             *      name: string|null,
+             *      isInitial: boolean,
+             *      isAsset: boolean,
+             *      isModuleAsset: boolean
+             * }
+             */
+            map: (data) => {
+                return {
+                    path: data.path.replace(/^strongbox-web-ui/i, '').replace('/index.html', '/'),
+                    name: path.basename(data.name),
+                    isInitial: data.isInitial,
+                    isChunk: data.chunk,
+                    isAsset: data.isAsset,
+                    isModuleAsset: data.isModuleAsset
+                }
+            },
+            filter: (data) => {
+                return data.name !== 'main.main'
+            }
+        }),
         new FileManagerPlugin({
             onEnd: {
                 move: [
                     {
                         source: newPackagingTempPath + "/" + appName,
                         destination: newPackageAppPath
+                    },
+                    {
+                        source: newPackagingTempPath + "/manifest.json",
+                        destination: newPackageAppPath + "/assets-manifest.json"
                     }
                 ],
                 delete: [newPackagingTempPath],

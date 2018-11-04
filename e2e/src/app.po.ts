@@ -1,11 +1,11 @@
-import { browser, by, element } from 'protractor';
+import {browser, by, element} from 'protractor';
 
 export class AppPage {
-  navigateTo() {
-    return browser.get('/');
-  }
+    navigateTo(path = '/') {
+        return browser.get(path);
+    }
 
-  getParagraphText() {
-    return element(by.css('.logo-text a')).getText();
-  }
+    getLogo() {
+        return element(by.id('logo'));
+    }
 }

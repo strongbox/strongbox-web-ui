@@ -1,16 +1,24 @@
-import {ChangeDetectionStrategy, Component, HostListener, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {BehaviorSubject} from 'rxjs';
-import {debounceTime} from 'rxjs/operators';
 import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
 import {Navigate} from '@ngxs/router-plugin';
+import {distinctUntilChanged} from 'rxjs/operators';
 
-import {RepositorySearchService} from './modules/core/pages/search/repository-search.service';
 import {AuthService} from './modules/core/auth/auth.service';
 import {LogoutAction} from './modules/core/auth/state/auth.actions';
-import {HideSideNavAction, OpenLoginDialogAction, ToggleSideNavAction} from './state/app.actions';
+import {
+    SearchQuerySubmitAction,
+    SearchQueryValueUpdateAction,
+    HideSideNavAction,
+    OpenLoginDialogAction,
+    ToggleSideNavAction
+} from './state/app.actions';
 import {AppState} from './state/app.state';
 import {SessionState} from './modules/core/auth/state/session.state';
+import {AqlAutocompleteService} from './shared/form/services/aql-autocomplete.service';
+import {AbstractAutocompleteDataSource} from './shared/form/autocomplete/autocomplete.model';
+import {AqlAutocompleteDataSource} from './shared/form/autocomplete/aql-autocomplete/aql-autocomplete.data-source';
+import {AqlAutocompleteComponent} from './shared/form/autocomplete/aql-autocomplete/aql-autocomplete.component';
 
 @Component({
     selector: 'app-strongbox',
@@ -35,13 +43,19 @@ export class AppComponent implements OnInit {
     @Select(AppState.isMobile)
     public isMobile$;
 
-    public searchQuery: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+    @Select(AppState.aqlQuery)
+    public aqlQuery$;
+
+    public aqlDataSource: AbstractAutocompleteDataSource;
+
+    @ViewChild('aqlSearch')
+    private aqlSearch: AqlAutocompleteComponent;
 
     constructor(public router: Router,
                 public auth: AuthService,
+                private aqlService: AqlAutocompleteService,
                 private actions: Actions,
-                private store: Store,
-                private repositorySearchService: RepositorySearchService) {
+                private store: Store) {
     }
 
     @HostListener('window:keydown', ['$event'])
@@ -84,10 +98,8 @@ export class AppComponent implements OnInit {
         this.store.dispatch(new ToggleSideNavAction());
     }
 
-    submitSearchRequest() {
-        if (this.searchQuery.getValue() != null) {
-            this.router.navigate(['search', this.searchQuery.getValue()]);
-        }
+    submitSearchRequest(searchQuery = '') {
+        this.store.dispatch(new SearchQuerySubmitAction(searchQuery));
     }
 
     sideNavFlex() {
@@ -114,15 +126,16 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.searchQuery = this.repositorySearchService.getQueryObservable();
-        this.searchQuery.pipe(debounceTime(850)).subscribe((query) => {
-            if (query) {
-                this.router.navigate(['search', query]);
-            }
-        });
+        this.aqlDataSource = new AqlAutocompleteDataSource(
+            null,
+            (search, cursorPosition) => this.aqlService.search(search, cursorPosition)
+        );
 
-        this.actions.pipe(ofActionDispatched(LogoutAction)).subscribe(() => {
-            this.router.navigate(['/']);
-        });
+        // set aql search input value
+        this.actions
+            .pipe(ofActionDispatched(SearchQueryValueUpdateAction), distinctUntilChanged())
+            .subscribe(({payload: value}) => {
+                this.aqlSearch.setInputValue(value);
+            });
     }
 }

@@ -4,7 +4,7 @@
     <div class="logo-container" fxLayout="row" fxLayoutGap="10%">
         <div fxLayout="column" fxLayoutAlign="center center">
             <div class="logo-text">
-                <a routerLink="/">Strongbox</a>
+                <a routerLink="/" id="logo">Strongbox</a>
             </div>
         </div>
         <div fxLayout="column" fxLayoutAlign="center center" *ngIf="(isAuthenticated$ | async) && !(isMobile$ | async)">
@@ -24,13 +24,13 @@
 
     <!-- This fills the remaining space of the current row -->
     <div fxFlex="1 1 auto" class="search-container">
-        <div class="search" fxHide.lt-sm fxLayout="column">
-            <input type="text"
-                   placeholder="Search query"
-                   [ngModel]="searchQuery | async"
-                   (ngModelChange)="this.searchQuery.next($event)"
-                   (keyup.enter)="submitSearchRequest()"/>
-            <i class="icon ion-md-search"></i>
+        <div class="test" fxHide.lt-sm fxLayout="column">
+            <aql-autocomplete #aqlSearch
+                              width="100%"
+                              placeholder="Search query"
+                              [dataSource]="aqlDataSource"
+                              (submit)="submitSearchRequest($event)"
+            ></aql-autocomplete>
         </div>
     </div>
 

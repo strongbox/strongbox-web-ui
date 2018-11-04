@@ -13,7 +13,7 @@ export interface ViewPortStateModel {
 
 export interface AppStateModel {
     sideNav: SideNavStateModel;
-    query: string | null;
+    aqlQuery: string | null;
     loginModalOpened: boolean;
     viewPort: ViewPortStateModel;
 }
@@ -26,7 +26,7 @@ export const defaultAppSideNavState: SideNavStateModel = {
 
 export const defaultAppState: AppStateModel = {
     sideNav: defaultAppSideNavState,
-    query: null,
+    aqlQuery: null,
     loginModalOpened: false,
     viewPort: {
         mobile: false,

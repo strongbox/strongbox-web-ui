@@ -20,7 +20,8 @@ import {map} from 'rxjs/operators';
 import {FADE_IN_OUT_OVERLAP, FADE_OUT} from '../../../../../../shared/animations';
 import {PathPrivilege, UserForm, UserPrivilege} from '../../../../user.model';
 import {FormDataService} from '../../../../../../shared/form/services/form-data.service';
-import {AutocompleteDataSource, AutocompleteOption} from '../../../../../../shared/form/search-autocomplete/search-autocomplete.component';
+import {AutocompleteOption} from '../../../../../../shared/form/autocomplete/autocomplete.model';
+import {DefaultAutocompleteDataSource} from '../../../../../../shared/form/autocomplete/default-autocomplete.data-source';
 
 @Component({
     selector: 'app-user-access-model-listing',
@@ -78,21 +79,21 @@ export class UserAccessModelComponent implements OnInit, AfterViewInit, OnChange
     }
 
     // tslint:disable:semicolon
-    storageAutocompleteService = (search: string): Observable<AutocompleteOption[]> => {
+    storageAutocompleteService = (search: string): Observable<AutocompleteOption<any>[]> => {
         return this
             .formDataService
             .findStorages(search)
             .pipe(
-                map((a: string[]) => a.map(v => new AutocompleteOption(v, v)))
+                map((a: string[]) => a.map(v => new AutocompleteOption<any>(v, v)))
             );
     };
 
-    repositoryAutocompleteService = (search: string): Observable<AutocompleteOption[]> => {
+    repositoryAutocompleteService = (search: string): Observable<AutocompleteOption<any>[]> => {
         return this
             .formDataService
             .findRepositoriesByStorage(this.storageField.value, search)
             .pipe(
-                map((a: string[]) => a.map(v => new AutocompleteOption(v, v)))
+                map((a: string[]) => a.map(v => new AutocompleteOption<any>(v, v)))
             );
     };
 
@@ -157,8 +158,8 @@ export class UserAccessModelComponent implements OnInit, AfterViewInit, OnChange
         this.storageField = this.privilegeForm.get('storageId') as FormControl;
         this.repositoryField = this.privilegeForm.get('repositoryId') as FormControl;
 
-        this.storageSearchDataSource = new AutocompleteDataSource(null, this.storageAutocompleteService);
-        this.repositorySearchDataSource = new AutocompleteDataSource(null, this.repositoryAutocompleteService);
+        this.storageSearchDataSource = new DefaultAutocompleteDataSource(null, this.storageAutocompleteService, true);
+        this.repositorySearchDataSource = new DefaultAutocompleteDataSource(null, this.repositoryAutocompleteService, true);
 
         // we need to show the form, so that @ViewChild will be able to pickup the element and then force change detection.
         this.showEditForm = true;

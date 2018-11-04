@@ -38,6 +38,26 @@ export class SetViewPortAction {
     }
 }
 
+/**
+ * This is used to "submit" the query to the server
+ */
+export class SearchQuerySubmitAction {
+    static readonly type = '[App] Search query submitted';
+
+    constructor(public payload: string = '') {
+    }
+}
+
+/**
+ * This is used to "update" the query (i.e. when you are directly landing at localhost/search/my-aql-query
+ */
+export class SearchQueryValueUpdateAction {
+    static readonly type = '[App] Search query value updated';
+
+    constructor(public payload: string = '') {
+    }
+}
+
 export class FormErrorAction {
     static readonly type = '[App] Form error message received';
 
