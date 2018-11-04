@@ -1,9 +1,9 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CommonModule} from '@angular/common';
 
 import {SelectAutocompleteComponent} from './select-autocomplete.component';
+import {MaterialModule} from '../../../material.module';
 import {FormHelperModule} from '../../form-helper.module';
 
 describe('SelectAutocompleteComponent', () => {
@@ -15,8 +15,7 @@ describe('SelectAutocompleteComponent', () => {
             imports: [
                 CommonModule,
                 BrowserAnimationsModule,
-                FormsModule,
-                ReactiveFormsModule,
+                MaterialModule,
                 FormHelperModule
             ]
         }).compileComponents();

@@ -6,13 +6,14 @@
   -webkit-box-shadow: 0px -4px 11px 3px rgba(0, 0, 0, 0.65);
   -moz-box-shadow: 0px -4px 11px 3px rgba(0, 0, 0, 0.65);
   box-shadow: 0px -4px 11px 3px rgba(0, 0, 0, 0.65);
+  height: 70px;
 
   &.transparent {
     background: transparent !important;
   }
 
   .logo-container {
-    @include logo-text(1.8rem, -7px 0px 0px 0px);
+    @include logo-text(2.1rem, -2px 0px 0px 0px);
   }
 
   .menu-button-wrapper {
@@ -24,7 +25,7 @@
       /*display: inline;*/
       display: block;
       padding: 2px 7px 10px 7px;
-      margin-top: 10px;
+      margin-top: 14px;
     }
 
     .menu-container {
@@ -74,7 +75,7 @@
 
   .search-container {
     .search {
-      position: relative;
+      margin-top: 20px;
 
       input {
         padding: 8px 32px 8px 8px;
@@ -108,6 +109,60 @@
         color: #1d435a;
       }
     }
+
+    .test {
+      input {
+        font: 400 19px/26px 'Open Sans', Helvetica, sans-serif;
+        color: #EAEAEA;
+      }
+
+      .mat-form-field-wrapper {
+        padding-bottom: 0px;
+      }
+
+      .mat-form-field-flex {
+        padding: 0;
+        margin-top: 20px;
+        background-color: #1a2f3e;
+        border-radius: 10px;
+        border: 1px solid #233d4c;
+        transition: all 0.2s ease;
+      }
+
+      @include input-placeholder(rgba(255, 255, 255, 0.85), #1a2f3e);
+
+      .mat-form-field-infix {
+        border-top: none;
+        padding: .31em 0 0.31em 0.5em;
+      }
+
+      .mat-form-field-underline {
+        display: none;
+      }
+
+      .mat-form-field-prefix {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 15px;
+        margin-left: 10px;
+        margin-right: -4px;
+      }
+
+      .mat-focused {
+        .mat-form-field-flex {
+          background-color: rgba(255, 255, 255, .9);
+        }
+
+        @include input-placeholder(rgba(255, 255, 255, 0.85), #1a2f3e);
+
+        input {
+          color: #323232;
+        }
+
+        .mat-form-field-prefix {
+          color: #323232;
+        }
+      }
+    }
   }
 
   .right-container {
@@ -132,13 +187,12 @@
       li {
         list-style: none;
         float: left;
-        margin-top: 4px;
+        margin-top: 6px;
         //margin-right: 20px;
         text-align: center;
         display: inline-flex;
         align-items: center;
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 300;
+        font: 400 22px 'Open Sans', sans-serif;
       }
 
       li > i {
@@ -166,7 +220,7 @@
 .main-content {
   width: 100vw;
   height: 100vh;
-  padding-top: 65px;
+  padding-top: 85px;
 
   &.mat-drawer-container {
     background-color: transparent;
@@ -186,11 +240,11 @@
     background-color: rgba(13, 23, 31, 0.68);
   }
 
-/*  .sidenav-content {
-    > div {
-      transition: all 0.3s linear;
-    }
-  }*/
+  /*  .sidenav-content {
+      > div {
+        transition: all 0.3s linear;
+      }
+    }*/
 
 }
 

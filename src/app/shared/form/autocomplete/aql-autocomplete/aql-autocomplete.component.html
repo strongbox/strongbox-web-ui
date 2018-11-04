@@ -1,19 +1,20 @@
-<mat-form-field [style.width]="width">
+<mat-form-field [style.width]="width" appearance="fill">
     <mat-spinner *ngIf="loading | async" [diameter]="20" [strokeWidth]="5"></mat-spinner>
+    <mat-icon matPrefix="" class="ion-md-search"></mat-icon>
     <input type="search"
            [placeholder]="placeholder"
            [attr.aria-label]="placeholder"
            spellcheck="false"
            matInput
            [formControl]="searchControl"
-           [errorStateMatcher]="searchControlErrorState"
            #searchInput
-           [matAutocomplete]="autoComplete"
-           (click)="trackInputCursor($event)"
-           (keyup)="trackInputCursor($event)"
+           [matAutocomplete]="autoCompleteRef"
+           (click)="_inputCursorPositionTracking($event)"
+           (keyup)="_inputCursorPositionTracking($event)"
            (blur)="onTouched()"
+           (keyup.enter)="_sendSubmitEmitter()"
     >
-    <mat-autocomplete #autoComplete="matAutocomplete"
+    <mat-autocomplete #autoCompleteRef="matAutocomplete"
                       [autoActiveFirstOption]="autoActiveFirstOption"
                       [panelWidth]="panelWidth"
                       [displayWith]="displayWith"
@@ -22,8 +23,4 @@
             {{ option.display }}
         </mat-option>
     </mat-autocomplete>
-
-    <mat-error *ngIf="!searchControl.status">
-        <form-field-errors [field]="searchControl"></form-field-errors>
-    </mat-error>
 </mat-form-field>

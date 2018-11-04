@@ -79,21 +79,21 @@ export class UserAccessModelComponent implements OnInit, AfterViewInit, OnChange
     }
 
     // tslint:disable:semicolon
-    storageAutocompleteService = (search: string): Observable<AutocompleteOption[]> => {
+    storageAutocompleteService = (search: string): Observable<AutocompleteOption<any>[]> => {
         return this
             .formDataService
             .findStorages(search)
             .pipe(
-                map((a: string[]) => a.map(v => new AutocompleteOption(v, v)))
+                map((a: string[]) => a.map(v => new AutocompleteOption<any>(v, v)))
             );
     };
 
-    repositoryAutocompleteService = (search: string): Observable<AutocompleteOption[]> => {
+    repositoryAutocompleteService = (search: string): Observable<AutocompleteOption<any>[]> => {
         return this
             .formDataService
             .findRepositoriesByStorage(this.storageField.value, search)
             .pipe(
-                map((a: string[]) => a.map(v => new AutocompleteOption(v, v)))
+                map((a: string[]) => a.map(v => new AutocompleteOption<any>(v, v)))
             );
     };
 

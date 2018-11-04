@@ -1,9 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
+import {Store} from '@ngxs/store';
 
 import {RepositorySearchService} from './repository-search.service';
 import {CodeSnippet, SearchResponse, SearchResult} from './search-result-interfaces';
+import {SearchQueryValueUpdateAction} from '../../../../state/app.actions';
+import {Navigate} from '@ngxs/router-plugin';
 
 @Component({
     selector: 'app-repository-search-results',
@@ -14,9 +17,12 @@ export class RepositorySearchResultsComponent implements OnInit {
 
     results$: BehaviorSubject<SearchResponse> = new BehaviorSubject(null);
 
+    loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
+
     constructor(private route: ActivatedRoute,
                 private router: Router,
-                private searchService: RepositorySearchService
+                private searchService: RepositorySearchService,
+                private store: Store
     ) {
     }
 
@@ -34,17 +40,13 @@ export class RepositorySearchResultsComponent implements OnInit {
 
         if (type === 'download') {
             return result.url;
-        }
-        else if (type === 'other-versions') {
+        } else if (type === 'other-versions') {
             params.push('groupId:' + coordinates.groupId + ' artifactId:' + coordinates.artifactId);
-        }
-        else if (type === 'artifact') {
+        } else if (type === 'artifact') {
             params.push('artifactId:' + coordinates.artifactId);
-        }
-        else if (type === 'group') {
+        } else if (type === 'group') {
             params.push('groupId:' + coordinates.groupId);
-        }
-        else {
+        } else {
             params.push(
                 'groupId:' + coordinates.groupId +
                 ' artifactId:' + coordinates.artifactId +
@@ -72,11 +74,18 @@ export class RepositorySearchResultsComponent implements OnInit {
         this.route.paramMap.subscribe((params: ParamMap) => {
             const query = params.get('query');
             if (query) {
-                this.searchService.find(query).subscribe((response: SearchResponse) => {
-                    this.results$.next(response);
-                });
+                this.store.dispatch(new SearchQueryValueUpdateAction(params.get('query') || ''));
+
+                this.loading$.next(true);
+
+                this.searchService
+                    .find(query)
+                    .subscribe((response: SearchResponse) => {
+                        this.loading$.next(false);
+                        this.results$.next(response);
+                    });
             } else {
-                this.results$.next(null);
+                this.store.dispatch(new Navigate(['/']));
             }
         });
     }

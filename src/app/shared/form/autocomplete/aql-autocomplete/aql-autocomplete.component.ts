@@ -1,21 +1,23 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ElementRef,
+    EventEmitter,
     forwardRef,
     Input,
     OnDestroy,
+    Output,
     ViewChild
 } from '@angular/core';
-import {AbstractControl, ControlValueAccessor, FormControl, FormGroupDirective, NG_VALUE_ACCESSOR, NgForm} from '@angular/forms';
-import {BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject, timer} from 'rxjs';
-import {debounce, distinctUntilChanged, filter, pairwise, startWith, switchMap, takeUntil} from 'rxjs/operators';
-import {ErrorStateMatcher, MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material';
+import {AbstractControl, ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {BehaviorSubject, combineLatest, EMPTY, interval, Observable, of, Subject, timer} from 'rxjs';
+import {debounce, delayWhen, distinctUntilChanged, filter, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
+import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material';
 
-import {AutocompleteOption} from '../autocomplete.model';
-import {DefaultAutocompleteDataSource} from '../default-autocomplete-data-source';
+import {AutocompleteOption, AutocompleteSelectFunction, InputCursorPosition} from '../autocomplete.model';
+import {AqlSuggestion} from '../../services/aql-autocomplete.service';
+import {AqlAutocompleteDataSource} from './aql-autocomplete.data-source';
 
 /* tslint:disable:component-selector */
 @Component({
@@ -33,27 +35,33 @@ import {DefaultAutocompleteDataSource} from '../default-autocomplete-data-source
 })
 export class AqlAutocompleteComponent implements ControlValueAccessor, AfterViewInit, OnDestroy {
 
+    // tslint:enable:semicolon
+    constructor() {
+    }
+
     @Input() placeholder: string;
+    @Input() floatLabel: 'auto' | 'always' | 'never' = 'auto';
     @Input() debounceTime = 300;
     @Input() width = '';
-    @Input() panelWidth = null;
-    @Input() type: 'context' | 'default' = 'default';
-    @Input() emptyText = '';
+    @Input() panelWidth = '10%';
     @Input() autoActiveFirstOption = false;
-    @Input() appendSelection = false;
-    @Input() forceSelection = false;
-    @Input() dataSource: DefaultAutocompleteDataSource = null;
+    @Input() selectionFunc: AutocompleteSelectFunction = AqlAutocompleteComponent.defaultSelectionFunc;
+    @Input() dataSource: AqlAutocompleteDataSource = null;
     @Input() searchControl: AbstractControl = new FormControl();
-    @Input() dependsOn: AbstractControl = null;
+    @Output() submit: EventEmitter<string> = new EventEmitter<string>();
 
-    searchControlErrorState = new SearchStateMatcher();
     loading: Observable<boolean>;
-    options: Observable<AutocompleteOption[]>;
+    options: Observable<AutocompleteOption<AqlSuggestion>[]>;
 
     @ViewChild('searchInput', {read: ElementRef})
     private searchInput: ElementRef;
 
-    @ViewChild('autoComplete', {read: MatAutocomplete})
+    /**
+     * Prevent submit when the autocomplete panel is open (i.e. we have just selected an option)
+     */
+    public preventSubmitEmission = false;
+
+    @ViewChild('autoCompleteRef', {read: MatAutocomplete})
     private autocomplete: MatAutocomplete;
 
     @ViewChild('searchInput', {read: MatAutocompleteTrigger})
@@ -62,7 +70,7 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
     /**
      * Input cursor position
      */
-    private inputCursorPosition: BehaviorSubject<{ start: number, end: number }> = new BehaviorSubject({start: 0, end: 0});
+    private inputCursorPosition: BehaviorSubject<InputCursorPosition> = new BehaviorSubject({start: 0, end: 0});
 
     /**
      * Text width calculation
@@ -80,6 +88,20 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
     private destroy = new Subject();
 
     // tslint:disable:semicolon
+    static defaultSelectionFunc = (data: string | AqlSuggestion | null) => {
+        let result = '';
+
+        if (typeof data === 'string') {
+            result = data;
+        } else if (typeof data === 'object' && data !== null) {
+            result = data.value;
+            if (data.type === 'keyword') {
+                result += ':';
+            }
+        }
+
+        return result;
+    };
 
     onChange = (_: any) => {
     };
@@ -87,12 +109,13 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
     onTouched = () => {
     };
 
-    displayWith = (data: any) => {
-        let display = data ? data : '';
-        let value = display;
+    displayWith = (data: string | AutocompleteOption<AqlSuggestion> | null) => {
+        let displayValue = '';
 
-        if (this.appendSelectionEnabled()) {
-            value = this.searchInput.nativeElement.value;
+        if (data !== null && data !== '') {
+            let selectedValue = this.selectionFunc(data);
+
+            let inputValue = this.searchControl.value;
 
             // append / replace the selection at the position where the cursor currently is.
             const cursor = this.inputCursorPosition.getValue();
@@ -101,141 +124,47 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
             const start = cursor.start < cursor.end ? cursor.start : cursor.end;
             const end = cursor.end > cursor.start ? cursor.end : cursor.start;
 
-            // set input value
-            value = value.substring(0, start) + display + value.substring(end);
+            const beginning = inputValue.substring(0, start);
 
-            // set cursor position
-            this.searchInput.nativeElement.selectionStart = (value.substring(0, start) + display).length;
-        }
-
-        return value;
-    };
-
-    // tslint:enable:semicolon
-
-    constructor(private cdr: ChangeDetectorRef) {
-    }
-
-
-    /**
-     * Monitor mouse clicks and keyboard events and record current input cursor position.
-     *
-     * NOTE: Do not use the events below as they only works properly in chrome.
-     * @@HostListener('document:selectionchange', ['$event'])
-     * @@HostListener('document:selectionstart', ['$event'])
-     *
-     * @param event
-     */
-    trackInputCursor(event: Event | KeyboardEvent) {
-        // We need to track the input cursor's position when the "type" is context or we will be "appending" the selected option.
-        if (this.type === 'context' || this.appendSelection) {
-            const selection = this.getSelection();
-            this.inputCursorPosition.next(selection);
-
-            if (!(event instanceof KeyboardEvent) && !this.autocomplete.isOpen) {
-                this.autocompleteTrigger.openPanel();
+            // calculate input value
+            if (start !== end) {
+                inputValue = beginning + selectedValue + inputValue.substring(end);
+            } else {
+                // We need to calculate how many letters we need to go back so we can replace the search string.
+                // For example, if we start writing "some long search string lay", the autocomplete should suggest
+                // "layout". When we select it from the list, it should replace "lay" with "layout".
+                const replaceString = beginning.split(/\s+/gi).splice(-1)[0].length;
+                inputValue = beginning.substr(0, start - replaceString) + selectedValue + inputValue.substr(end);
             }
 
+            // set displayValue with the calculated input value
+            displayValue = inputValue;
+
+            // set cursor position
+            this.searchInput.nativeElement.selectionStart = (beginning + selectedValue).length;
         }
-    }
+
+        return displayValue;
+    };
 
     ngAfterViewInit(): void {
         // Subscribe to the data source
-        this.options = this.dataSource && this.searchControl.enabled ? this.dataSource.connect() : of([]);
+        this.options = this.dataSource !== null ? this.dataSource.connect() : of([]);
 
-        // Track and Write changes.
-        this.searchControl.valueChanges.pipe(
-            startWith(this.searchControl.value),
-            distinctUntilChanged(),
-            debounce(search => {
-                // Typing into input sends strings.
-                if (typeof search === 'string') {
-                    return timer(this.debounceTime);
-                }
-                return EMPTY; // immediate - no debounce for choosing from the list
-            }),
-            takeUntil(this.destroy)
-        ).subscribe((val) => {
-            this.writeValue(val);
-        });
+        // Track and Write input changes.
+        this._inputChanges();
 
         // Search/filter autocomplete list
-        this.searchControl.valueChanges.pipe(
-            filter(v => typeof v === 'string'),
-            filter(() => this.searchControl.disabled),
-            takeUntil(this.destroy)
-        ).subscribe((search) => {
-            console.log('search/filter');
-            // search/filter
-            this.dataSource.getSearchTerm = search;
+        this._inputSearchSubscriber();
 
-            // force selection from list of options.
-            if (this.forceSelectionEnabled()) {
-                if (search !== '' && !this.dataSource.exactOptionMatch(search)) {
-                    this.searchControl.setErrors({
-                        invalidOption: 'Option not found!'
-                    });
-                }
-            }
-        });
+        // Necessary to prevent emitting submit event when selecting from an autocomplete option.
+        this._preventSubmitOnOptionSelection();
 
-        // Move autocomplete panel when the type is 'context'.
-        if (this.type === 'context') {
-            if (this.panelWidth === null) {
-                this.panelWidth = '10%';
-            }
+        // Move the autocomplete panel while typing to simulate real IDE like autocomplete.
+        this._movePanel();
 
-            combineLatest(
-                this.searchControl.valueChanges,
-                this.inputCursorPosition
-            ).pipe(
-                startWith({search: '', cursor: null}),
-                switchMap((v) => {
-                    v[1] = this.getSelection();
-                    return of({search: v[0], cursor: v[1]});
-                }),
-                filter(() => this.searchControl.disabled),
-                takeUntil(this.destroy)
-            ).subscribe((data) => {
-                if (this.autocomplete.panel) {
-                    const cursorValue = data.search.substr(0, data.cursor.start);
-                    const textWidth = this.getTextWidth(cursorValue);
-
-                    // this offset is necessary to properly align the autocomplete panel under the cursor.
-                    const letterOffset = textWidth.width / (textWidth.fontSizeNumber + 10);
-
-                    let position = textWidth.width + letterOffset;
-                    const maxWidth = this.searchInput.nativeElement.clientWidth;
-                    const panelWidth = this.autocomplete.panel.nativeElement.clientWidth;
-
-                    // Don't push the panel outside the container.
-                    if (position + panelWidth > maxWidth) {
-                        position = maxWidth - panelWidth;
-                    }
-
-                    this.autocomplete.panel.nativeElement.style.left = position + 'px';
-                }
-            });
-        }
-
-        // reposition the input cursor on selection
-        if (this.type === 'context' || this.appendSelection) {
-            this.autocomplete.optionSelected.pipe(
-                filter(() => this.searchControl.disabled),
-                takeUntil(this.destroy)
-            ).subscribe((event: MatAutocompleteSelectedEvent) => {
-                const matOption = event.option;
-                const selectedOption: AutocompleteOption = matOption.value;
-
-                this.searchInput.nativeElement.selectionStart = this.inputCursorPosition.getValue().start + selectedOption.display.length;
-                this.searchInput.nativeElement.selectionEnd = this.searchInput.nativeElement.selectionStart;
-            });
-        }
-
-        // depends on
-        if (this.dependsOn) {
-            this.dependencyFieldSubscribers();
-        }
+        // Handle option selection
+        this._handleOptionSelection();
     }
 
     ngOnDestroy(): void {
@@ -264,44 +193,159 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
         }
     }
 
-    writeValue(obj: any): void {
+    writeValue(value: any): void {
         // Angular sometimes writes a value that didn't really change.
-        if (obj !== this.currentInputValue && !this.searchControl.disabled) {
-            this.currentInputValue = obj;
-            this.onChange(obj);
+        if (value !== this.currentInputValue && !this.searchControl.disabled) {
+            this.currentInputValue = value;
+            this.onChange(value);
+            this.onTouched();
         }
     }
 
-    dependencyFieldSubscribers() {
-        const dependencyField = {status: this.dependsOn.status === 'VALID', value: this.dependsOn.value};
+    /**
+     * Monitor mouse clicks and keyboard events and record current input cursor position.
+     *
+     * NOTE: Do not use the events below as they only works properly in chrome.
+     * @@HostListener('document:selectionchange', ['$event'])
+     * @@HostListener('document:selectionstart', ['$event'])
+     *
+     * @param event
+     * @private
+     */
+    _inputCursorPositionTracking(event: Event | KeyboardEvent) {
+        // We need to track the input cursor's position to know where to append the selected option in the input.
+        const selection = this.getInputCursorPosition();
+        this.inputCursorPosition.next(selection);
 
-        // Disable the field when the dependent field is invalid.
-        if (!dependencyField.status) {
-            this.searchControl.disable();
-            this.cdr.detectChanges();
+        if (!(event instanceof KeyboardEvent) && !this.autocomplete.isOpen) {
+            this.autocompleteTrigger.openPanel();
         }
+    }
 
+    /**
+     * Track input changes and write the value when it changes.
+     * @private
+     */
+    _inputChanges() {
+        this.searchControl.valueChanges.pipe(
+            startWith(this.searchControl.value),
+            distinctUntilChanged(),
+            debounce(search => {
+                // Typing into input sends strings.
+                if (typeof search === 'string') {
+                    return timer(this.debounceTime);
+                }
+                return EMPTY; // immediate - no debounce for choosing from the list
+            }),
+            takeUntil(this.destroy)
+        ).subscribe((val) => {
+            this.writeValue(val);
+        });
+    }
+
+    /**
+     * Search the dataSource based on the input search changes.
+     * @private
+     */
+    _inputSearchSubscriber() {
+        this.searchControl.valueChanges.pipe(
+            filter(() => !this.searchControl.disabled),
+            filter(v => typeof v === 'string'),
+            takeUntil(this.destroy)
+        ).subscribe((term) => {
+            // search/filter
+            this.dataSource
+                .search(term, this.getInputCursorPosition())
+                .pipe(take(1))
+                .subscribe((options: AutocompleteOption<AqlSuggestion>[]) => {
+                    // console.log('dataSource results:', options);
+                    // https://github.com/angular/material2/issues/13650
+                    if (options.length < 1) {
+                        if (this.autocomplete.isOpen) {
+                            this.autocompleteTrigger.closePanel();
+                        }
+                    } else {
+                        if (!this.autocomplete.isOpen) {
+                            this.autocomplete.opened.emit();
+                        }
+                    }
+                });
+        });
+    }
+
+    /**
+     * move the panel while typing.
+     * @private
+     */
+    _movePanel() {
         combineLatest(
-            this.dependsOn.statusChanges,
-            this.dependsOn.valueChanges
+            this.searchControl.valueChanges,
+            this.inputCursorPosition
         ).pipe(
-            startWith([dependencyField.status, this.dependsOn.value]),
-            switchMap(data => of({status: (data[0] === 'VALID' || data[0] === true), value: data[1]})),
-            pairwise()
-        ).subscribe((data) => {
-            const previous = data[0];
-            const current = data[1];
+            startWith(<SearchAndCursorData>{search: '', cursor: null}),
+            switchMap((v) => {
+                v[1] = this.getInputCursorPosition();
+                return of({search: v[0], cursor: v[1]});
+            }),
+            filter(() => !this.searchControl.disabled),
+            filter((data) => data.search === '' || typeof data.search === 'string'),
+            distinctUntilChanged(),
+            takeUntil(this.destroy)
+        ).subscribe((data: SearchAndCursorData) => {
+            if (this.autocomplete.panel) {
+                const cursorValue = data.search.substr(0, data.cursor.start);
+                const textWidth = this._getTextWidth(cursorValue);
 
-            if (!current.status) {
-                this.searchControl.disable();
-            } else if (current.status && this.searchControl.disabled) {
-                this.searchControl.enable();
-            }
+                // this offset is necessary to properly align the autocomplete panel under the cursor.
+                const letterOffset = textWidth.width / (textWidth.fontSizeNumber + 15);
+                // this offset is for the prefix icon.
+                const prefixOffset = 35;
 
-            if (current.value !== previous.value) {
-                this.searchControl.setValue(null);
-                this.dataSource.search();
+                let position = textWidth.width + letterOffset + prefixOffset;
+                const maxWidth = this.searchInput.nativeElement.clientWidth;
+                const panelWidth = this.autocomplete.panel.nativeElement.clientWidth;
+
+                // Don't push the panel outside the container.
+                if (position + panelWidth > maxWidth) {
+                    position = maxWidth - panelWidth;
+                }
+
+                this.autocomplete.panel.nativeElement.style.left = position + 'px';
             }
+        });
+    }
+
+    /**
+     * This is necessary to prevent emitting "submit" events when option has been selected with "enter"
+     * @private
+     */
+    _preventSubmitOnOptionSelection() {
+        // Keep track of the selected option index to decide if we should prevent `submit` emission.
+        this.autocomplete._keyManager.change
+            // Slightly delay setting `preventSubmitEmission = false` but don't delay `preventSubmitEmission = true`
+            // so that everything works as expected.
+            .pipe(delayWhen((selectIndex, index) => {
+                const delay = selectIndex > -1 ? 0 : 220;
+                return interval(delay)
+            }))
+            .subscribe(selectIndex => {
+                this.preventSubmitEmission = selectIndex > -1;
+            });
+    }
+
+    _handleOptionSelection() {
+        this.autocomplete.optionSelected.pipe(
+            filter(() => !this.searchControl.disabled),
+            takeUntil(this.destroy)
+        ).subscribe((event: MatAutocompleteSelectedEvent) => {
+            const matOption = event.option;
+            const selectedOption: AqlSuggestion = matOption.value;
+
+            const cursorPosition = this.inputCursorPosition.getValue();
+            const selectionStart = cursorPosition.start + selectedOption.value.length + (selectedOption.type === 'keyword' ? 1 : 0);
+
+            this.searchInput.nativeElement.selectionStart = selectionStart;
+            this.searchInput.nativeElement.selectionEnd = selectionStart;
         });
     }
 
@@ -309,10 +353,10 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
      * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
      *
      * @param {String} text The text to be rendered.
-     *
      * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
+     * @private
      */
-    getTextWidth(text): { width: number, fontSize: any, fontSizeNumber: any, fontWeight: any, fontFamily: any } {
+    _getTextWidth(text): { width: number, fontSize: any, fontSizeNumber: any, fontWeight: any, fontFamily: any } {
         const computedStyle = window.getComputedStyle(this.searchInput.nativeElement, null);
 
         const fontSize = computedStyle.getPropertyValue('font-size');
@@ -332,26 +376,34 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
         };
     }
 
-    getSelection() {
-        return {
+    /**
+     * @private
+     */
+    _sendSubmitEmitter() {
+        if (this.preventSubmitEmission === false) {
+            this.submit.emit(this.searchControl.value);
+        }
+    }
+
+    getInputCursorPosition() {
+        return <InputCursorPosition> {
             start: this.searchInput.nativeElement.selectionStart,
             end: this.searchInput.nativeElement.selectionEnd
         };
     }
 
-    appendSelectionEnabled() {
-        return this.appendSelection === true;
+    getInputValue() {
+        return this.searchInput.nativeElement.value;
     }
 
-    forceSelectionEnabled() {
-        return this.forceSelection === true && this.appendSelection === false;
+    setInputValue(value: string) {
+        this.searchInput.nativeElement.value = value;
+        this.writeValue(value);
     }
-
 }
 
-export class SearchStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        const isSubmitted = form && form.submitted;
-        return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-    }
+interface SearchAndCursorData {
+    search: null | string;
+    cursor: null | InputCursorPosition;
+    opened?: null | undefined;
 }

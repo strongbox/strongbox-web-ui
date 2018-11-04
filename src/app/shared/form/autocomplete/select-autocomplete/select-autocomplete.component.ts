@@ -1,6 +1,6 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, forwardRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import {AbstractControl, ControlValueAccessor, FormControl, FormGroupDirective, NG_VALUE_ACCESSOR, NgForm} from '@angular/forms';
-import {combineLatest, EMPTY, Observable, of, Subject, timer} from 'rxjs';
+import {BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject, timer} from 'rxjs';
 import {debounce, debounceTime, distinctUntilChanged, filter, pairwise, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
 import {ErrorStateMatcher, MatAutocomplete, MatAutocompleteTrigger} from '@angular/material';
 
@@ -36,7 +36,7 @@ export class SelectAutocompleteComponent implements ControlValueAccessor, AfterV
 
     searchControlErrorState = new SearchStateMatcher();
     loading: Observable<boolean>;
-    options: Observable<AutocompleteOption[]>;
+    options: Observable<AutocompleteOption<any>[]>;
 
     private trackingDebounce = 150;
     private dependencyDebounce = 250;
@@ -85,7 +85,7 @@ export class SelectAutocompleteComponent implements ControlValueAccessor, AfterV
 
     ngAfterViewInit(): void {
         // Subscribe to the data source
-        if (this.dataSource && this.searchControl.enabled) {
+        if (this.dataSource !== null && this.searchControl.enabled) {
             if (this.dataSource instanceof AbstractAutocompleteDataSource) {
                 this.options = this.dataSource.connect();
             } else if (this.dataSource instanceof Array) {
@@ -98,7 +98,12 @@ export class SelectAutocompleteComponent implements ControlValueAccessor, AfterV
         }
 
         // Loading state
-        this.loading = this.dataSource.loadingObservable();
+        if (this.dataSource !== null) {
+            this.loading = this.dataSource.loadingObservable();
+        } else {
+            this.loading = new BehaviorSubject<boolean>(false);
+        }
+
 
         // Track and Write changes.
         this.searchControl
@@ -155,12 +160,12 @@ export class SelectAutocompleteComponent implements ControlValueAccessor, AfterV
     }
 
     search(term: string) {
-        if (term !== null) {
+        if (term !== null && this.dataSource !== null) {
             // Search & filter
             this.dataSource
                 .search(term)
                 .pipe(take(1))
-                .subscribe((options: AutocompleteOption[]) => {
+                .subscribe((options: AutocompleteOption<any>[]) => {
                     // Check if search has returned options and show an error if no options were found.
                     if (this.forceSelectionEnabled() && !this.dataSource.exactOptionMatch(term)) {
                         const applyStateError = () => {

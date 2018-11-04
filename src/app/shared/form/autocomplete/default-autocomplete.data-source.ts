@@ -1,20 +1,20 @@
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
-import {AbstractAutocompleteDataSource, AutocompleteSearchCallback, AutocompleteOption} from './autocomplete.model';
+import {AbstractAutocompleteDataSource, AutocompleteSearchCallback, AutocompleteOption, InputCursorPosition} from './autocomplete.model';
 
 /**
  * This class is responsible of retrieving and searching through the autocomplete options.
  */
 export class DefaultAutocompleteDataSource extends AbstractAutocompleteDataSource {
-    private readonly _options: BehaviorSubject<AutocompleteOption[]> = new BehaviorSubject<AutocompleteOption[]>([]);
-    private readonly _filtered: BehaviorSubject<AutocompleteOption[]> = new BehaviorSubject<AutocompleteOption[]>([]);
-    private readonly _searchTerm: BehaviorSubject<string> = new BehaviorSubject<string>('');
-    private readonly _loading = new BehaviorSubject<boolean>(false);
+    protected readonly _options: BehaviorSubject<AutocompleteOption<any>[]> = new BehaviorSubject<AutocompleteOption<any>[]>([]);
+    protected readonly _filtered: BehaviorSubject<AutocompleteOption<any>[]> = new BehaviorSubject<AutocompleteOption<any>[]>([]);
+    protected readonly _searchTerm: BehaviorSubject<string> = new BehaviorSubject<string>('');
+    protected readonly _loading = new BehaviorSubject<boolean>(false);
 
-    private readonly destroy = new Subject();
+    protected readonly destroy = new Subject();
 
-    private _prefetch = false;
-    private _searchService: AutocompleteSearchCallback;
+    protected _prefetch = false;
+    protected _searchService: AutocompleteSearchCallback;
 
     constructor(initialData: any[] = [], dataService: AutocompleteSearchCallback, prefetch = false) {
         super();
@@ -36,7 +36,7 @@ export class DefaultAutocompleteDataSource extends AbstractAutocompleteDataSourc
         return this._searchTerm.value;
     }
 
-    search(term: string = ''): Observable<AutocompleteOption[]> {
+    search(term: string = '', cursorPosition: InputCursorPosition = null): Observable<AutocompleteOption<any>[]> {
         this._searchTerm.next(term);
         this._loading.next(true);
 
@@ -48,8 +48,8 @@ export class DefaultAutocompleteDataSource extends AbstractAutocompleteDataSourc
             this._filtered.next(filterCache);
             this._loading.next(false);
         } else if (filterCache.length < 1 && this._searchService !== null) {
-            this._searchService(term)
-                .subscribe((options: AutocompleteOption[]) => {
+            this._searchService(term, cursorPosition)
+                .subscribe((options: AutocompleteOption<any>[]) => {
                     this._options.next(options);
                     this._filtered.next(this.filter(term, options));
                     this._loading.next(false);
@@ -59,7 +59,7 @@ export class DefaultAutocompleteDataSource extends AbstractAutocompleteDataSourc
         return this._filtered;
     }
 
-    private filter(term: string, options: AutocompleteOption[] = []) {
+    protected filter(term: string, options: AutocompleteOption<any>[] = []) {
         let matches = [];
         if (options !== null) {
             matches = options.filter(v => v.display.indexOf(term) > -1);
@@ -67,7 +67,7 @@ export class DefaultAutocompleteDataSource extends AbstractAutocompleteDataSourc
         return matches;
     }
 
-    private exactMatch(term: string, options: AutocompleteOption[] = []) {
+    protected exactMatch(term: string, options: AutocompleteOption<any>[] = []) {
         let matches = [];
 
         if (options != null) {
@@ -94,7 +94,7 @@ export class DefaultAutocompleteDataSource extends AbstractAutocompleteDataSourc
         return this._loading;
     }
 
-    connect(): Observable<AutocompleteOption[]> {
+    connect(): Observable<AutocompleteOption<any>[]> {
         if (this._prefetch && this._searchService !== null) {
             this.search();
         }

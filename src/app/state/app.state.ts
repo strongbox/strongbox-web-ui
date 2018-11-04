@@ -1,10 +1,13 @@
 import {MatDialog} from '@angular/material/dialog';
 import {MediaChange, ObservableMedia} from '@angular/flex-layout';
 import {Action, NgxsOnInit, Select, Selector, State, StateContext} from '@ngxs/store';
-import {RouterNavigation} from '@ngxs/router-plugin';
+import {Navigate, RouterNavigation} from '@ngxs/router-plugin';
 import {take} from 'rxjs/operators';
+import {MatDialogRef} from '@angular/material';
 
 import {
+    SearchQuerySubmitAction,
+    SearchQueryValueUpdateAction,
     CloseLoginDialogAction,
     HideSideNavAction,
     OpenLoginDialogAction,
@@ -12,10 +15,9 @@ import {
     ShowSideNavAction,
     ToggleSideNavAction
 } from './app.actions';
-
 import {LoginDialogComponent} from '../modules/core/dialogs/login/login.dialog.component';
 import {AppStateModel, defaultAppState, SideNavStateModel, ViewPortStateModel} from './app.state.interfaces';
-import {MatDialogRef} from '@angular/material';
+import {LogoutAction} from '../modules/core/auth/state/auth.actions';
 
 @State<AppStateModel>({
     name: 'app',
@@ -37,8 +39,8 @@ export class AppState implements NgxsOnInit {
     }
 
     @Selector()
-    static query(state: AppStateModel) {
-        return state.query;
+    static aqlQuery(state: AppStateModel) {
+        return state.aqlQuery;
     }
 
     @Selector()
@@ -144,6 +146,24 @@ export class AppState implements NgxsOnInit {
 
         if (payload instanceof MatDialogRef) {
             payload.close(null);
+        }
+    }
+
+    @Action(LogoutAction)
+    logoutAction(ctx: StateContext<AppStateModel>) {
+        ctx.dispatch(new Navigate(['/']));
+    }
+
+    @Action(SearchQueryValueUpdateAction)
+    initialAqlQueryValue(ctx: StateContext<AppStateModel>, {payload}) {
+        ctx.patchState({aqlQuery: payload});
+    }
+
+    @Action(SearchQuerySubmitAction)
+    submitAqlQuery(ctx: StateContext<AppStateModel>, {payload}) {
+        ctx.patchState({aqlQuery: payload});
+        if (payload !== null && payload !== '') {
+            ctx.dispatch(new Navigate(['search', payload]));
         }
     }
 

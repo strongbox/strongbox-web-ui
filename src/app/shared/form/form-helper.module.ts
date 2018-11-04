@@ -7,6 +7,7 @@ import {FormFieldErrorsComponent} from './form-field-errors/form-field-errors.co
 import {AqlAutocompleteComponent} from './autocomplete/aql-autocomplete/aql-autocomplete.component';
 import {SelectAutocompleteComponent} from './autocomplete/select-autocomplete/select-autocomplete.component';
 import {FormDataService} from './services/form-data.service';
+import {AqlAutocompleteService} from './services/aql-autocomplete.service';
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ import {FormDataService} from './services/form-data.service';
         AqlAutocompleteComponent
     ],
     providers: [
-        FormDataService
+        FormDataService,
+        AqlAutocompleteService
     ]
 })
 export class FormHelperModule {
