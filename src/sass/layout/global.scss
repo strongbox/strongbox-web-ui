@@ -68,7 +68,7 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
 
 .global-container {
   margin: auto;
-  padding: 18px 20px 100px 20px;
+  padding: 10px 20px 100px 20px;
 
   // temporary fix.
   max-width: 70vw;
@@ -99,6 +99,11 @@ div.blue-border {
   height: 1px;
   background: #2c82bc;
   margin: 10px 0px 10px 0px;
+}
+
+.tabContent {
+  min-height: 100px;
+  padding: 15px 12px 10px 12px
 }
 
 ::-webkit-scrollbar-button {

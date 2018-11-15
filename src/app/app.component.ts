@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, HostListener, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
 import {Navigate} from '@ngxs/router-plugin';
 import {distinctUntilChanged} from 'rxjs/operators';
@@ -7,10 +7,10 @@ import {distinctUntilChanged} from 'rxjs/operators';
 import {AuthService} from './modules/core/auth/auth.service';
 import {LogoutAction} from './modules/core/auth/state/auth.actions';
 import {
-    SearchQuerySubmitAction,
-    SearchQueryValueUpdateAction,
     HideSideNavAction,
     OpenLoginDialogAction,
+    SearchQuerySubmitAction,
+    SearchQueryValueUpdateAction,
     ToggleSideNavAction
 } from './state/app.actions';
 import {AppState} from './state/app.state';
@@ -51,10 +51,11 @@ export class AppComponent implements OnInit {
     @ViewChild('aqlSearch')
     private aqlSearch: AqlAutocompleteComponent;
 
-    constructor(public router: Router,
-                public auth: AuthService,
+    constructor(public auth: AuthService,
+                private activatedRoute: ActivatedRoute,
                 private aqlService: AqlAutocompleteService,
                 private actions: Actions,
+                private router: Router,
                 private store: Store) {
     }
 

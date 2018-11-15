@@ -1,0 +1,218 @@
+<app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$">
+
+    <form fxLayout="column"
+          class="inputFullWidth"
+          [formGroup]="settingsForm"
+          (submit)="save()">
+
+        <mat-tab-group [dynamicHeight]="true">
+            <mat-tab label="Basic settings">
+                <ng-template mat-tab-label>
+                    <span [class.invalid]="basicSettingsInvalid()">Basic settings</span>
+                </ng-template>
+
+                <div class="tabContent">
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
+                        <mat-form-field>
+                            <input matInput placeholder="Instance name" formControlName="instanceName">
+                            <mat-hint>Give this instance a cool name.</mat-hint>
+                            <mat-error *ngIf="settingsForm.get('instanceName').invalid">
+                                <form-field-errors [field]="settingsForm.get('instanceName')"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout.lt-md="column" fxLayout="row">
+                        <div fxFlex="1 1 auto">
+                            <mat-form-field>
+                                <input matInput placeholder="Base URL" formControlName="baseUrl" #url>
+                                <mat-hint>
+                                    The URL from which Strongbox is accessed (i.e. if you're using reverse proxy
+                                    this should be the public url)
+                                </mat-hint>
+                                <mat-error *ngIf="settingsForm.get('baseUrl').invalid">
+                                    <form-field-errors [field]="settingsForm.get('baseUrl')"></form-field-errors>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxFlex="120px">
+                            <button mat-raised-button color="primary" type="button" (click)="applyGuessedUrl()">
+                                Guess URL
+                            </button>
+                        </div>
+                    </div>
+
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
+                        <mat-form-field>
+                            <input matInput placeholder="Port" formControlName="port">
+                            <mat-hint>The port on which Strongbox will be listening (Default: 48080).</mat-hint>
+                            <mat-error *ngIf="settingsForm.get('port').invalid">
+                                <form-field-errors [field]="settingsForm.get('port')"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span [class.invalid]="getCorsConfigurationGroup().invalid">CORS policy</span>
+                </ng-template>
+
+                <div class="tabContent" formGroupName="corsConfigurationForm">
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
+                        <mat-form-field floatLabel="always">
+                            <mat-label>Origins</mat-label>
+                            <textarea matInput
+                                      cdkTextareaAutosize
+                                      #autosize="cdkTextareaAutosize"
+                                      cdkAutosizeMinRows="1"
+                                      cdkAutosizeMaxRows="15"
+                                      formControlName="allowedOrigins"
+                            ></textarea>
+                            <mat-hint>Insert one origin per line</mat-hint>
+                            <mat-error *ngIf="getCorsConfigurationGroup('allowedOrigins').invalid">
+                                <form-field-errors [field]="getCorsConfigurationGroup('allowedOrigins')"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
+                        <div fxLayout="column" style="width: 100%;">
+                            <mat-checkbox #allowAll formControlName="corsAllowAll" color="primary">Allow all origins
+                                <small>(Not recommended for production use as it poses security risks)</small>
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span [class.invalid]="getSmtpConfigurationGroup().invalid">SMTP settings</span>
+                </ng-template>
+                <div class="tabContent" formGroupName="smtpConfigurationForm">
+                    <div>&nbsp;</div>
+
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%">
+                        <mat-form-field>
+                            <input matInput placeholder="SMTP Host" formControlName="host" autocomplete="off">
+                            <mat-error *ngIf="getSmtpConfigurationGroup('host').invalid">
+                                <form-field-errors [field]="getSmtpConfigurationGroup('host')"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="SMTP Port" formControlName="port" autocomplete="off">
+                            <mat-error *ngIf="getSmtpConfigurationGroup().invalid">
+                                <form-field-errors [field]="getSmtpConfigurationGroup('port')"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-select placeholder="Encryption" formControlName="connection" [disableOptionCentering]="true">
+                                <mat-option value="plain">Plain</mat-option>
+                                <mat-option value="ssl">SSL</mat-option>
+                                <mat-option value="tls">TLS</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%">
+                        <mat-form-field>
+                            <input matInput placeholder="SMTP Username" formControlName="username">
+                            <mat-error *ngIf="getSmtpConfigurationGroup('username').invalid">
+                                <form-field-errors [field]="getSmtpConfigurationGroup('username')"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%">
+                        <mat-form-field>
+                            <input matInput placeholder="SMTP Password" formControlName="password" type="password">
+                            <mat-error *ngIf="getSmtpConfigurationGroup('password').invalid">
+                                <form-field-errors [field]="getSmtpConfigurationGroup('password')"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+<!--
+                    // TODO: Make it possible to send a testing email when we have support for this.
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%">
+                        <div >
+                            <button mat-raised-button color="primary" type="submit" [disabled]="!smtpFieldsValid()">
+                                Test configuration
+                            </button>
+                        </div>
+                    </div>
+-->
+
+                </div>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span [class.invalid]="getProxyConfigurationGroup().invalid">Proxy configuration</span>
+                </ng-template>
+                <div class="tabContent" formGroupName="proxyConfigurationForm">
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%">
+                        <mat-form-field>
+                            <input matInput placeholder="Host" formControlName="host" autocomplete="off">
+                            <mat-error *ngIf="getProxyConfigurationGroup('host').invalid">
+                                <form-field-errors [field]="getProxyConfigurationGroup('host')"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input matInput placeholder="Port" formControlName="port" autocomplete="off">
+                            <mat-error *ngIf="getProxyConfigurationGroup('port').invalid">
+                                <form-field-errors [field]="getProxyConfigurationGroup('port')"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-select placeholder="Type" formControlName="type" [disableOptionCentering]="true">
+                                <mat-option value="DIRECT">Direct</mat-option>
+                                <mat-option value="HTTP">HTTP</mat-option>
+                                <mat-option value="SOCKS4">SOCKS4</mat-option>
+                                <mat-option value="SOCKS5">SOCKS5</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%">
+                        <mat-form-field>
+                            <input matInput placeholder="Username" formControlName="username">
+                            <mat-error *ngIf="getProxyConfigurationGroup('username').invalid">
+                                <form-field-errors [field]="getProxyConfigurationGroup('username')"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%">
+                        <mat-form-field>
+                            <input matInput placeholder="Password" formControlName="password" type="password">
+                            <mat-error *ngIf="getProxyConfigurationGroup('password').invalid">
+                                <form-field-errors [field]="getProxyConfigurationGroup('password')"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- TODO: nonProxyHosts similar to CORS origins. -->
+
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+        <div fxLayoutAlign="center center" class="formSubmitButtons noBorder">
+            <button mat-button routerLink="/" type="button">
+                Back
+            </button>
+
+            <button mat-raised-button color="primary" type="submit" [disabled]="!settingsForm.valid">
+                Save
+            </button>
+        </div>
+        <div>&nbsp;</div>
+
+    </form>
+</app-page-container>

@@ -40,3 +40,6 @@ Thumbs.db
 
 src/aql/*
 !src/aql/AQL.g4
+
+# Avoid unintentionally changing the environment files.
+src/environments/*

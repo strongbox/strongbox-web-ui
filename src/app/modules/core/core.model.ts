@@ -1,6 +1,6 @@
 import {of} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
-import {FormGroup, ValidationErrors} from '@angular/forms';
+import {AbstractControl, FormGroup, ValidationErrors} from '@angular/forms';
 import {Navigate} from '@ngxs/router-plugin';
 import {Store} from '@ngxs/store';
 import {Exclude, Expose, plainToClass, Type} from 'class-transformer';
@@ -25,10 +25,23 @@ export class ApiResponse {
     errorsToForm(form: FormGroup) {
         if (this.errors && this.errors.length > 0) {
             this.errors.forEach((error: ApiFormError, index) => {
-                let field = form.get(error.name);
+                let field: AbstractControl = form;
+                let fieldPath = error.name.split('.').filter(s => s.trim() !== '');
+
+                // This is necessary for processing embedded/children forms.
+                if (fieldPath.length > 1) {
+                    fieldPath.forEach((f) => {
+                        field = field.get(f);
+                    });
+                } else {
+                    field = form.get(error.name);
+                }
+
                 field.setErrors(error);
                 field.markAsDirty();
             });
+
+            form.updateValueAndValidity();
         }
     }
 }

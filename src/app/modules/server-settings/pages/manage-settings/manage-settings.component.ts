@@ -1,0 +1,188 @@
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {BehaviorSubject, of, Subject} from 'rxjs';
+import {Actions, ofActionDispatched, Store} from '@ngxs/store';
+import {catchError, takeUntil} from 'rxjs/operators';
+import {ToastrService} from 'ngx-toastr';
+
+import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
+import {ServerSettingsService} from '../../services/server-settings.service';
+import {FormErrorAction} from '../../../../state/app.actions';
+import {ApiResponse} from '../../../core/core.model';
+
+@Component({
+    selector: 'app-manage-settings',
+    templateUrl: './manage-settings.component.html',
+    styleUrls: ['./manage-settings.component.scss']
+})
+export class ManageSettingsComponent implements OnInit, OnDestroy {
+
+    loading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+    settingsForm: FormGroup;
+
+    breadcrumbs: Breadcrumb[] = [
+        {label: 'Global settings', url: ['/admin/global-settings']}
+    ];
+
+    private destroy = new Subject();
+
+    constructor(private actions: Actions,
+                private cdr: ChangeDetectorRef,
+                private service: ServerSettingsService,
+                private store: Store,
+                private notify: ToastrService) {
+    }
+
+    ngOnInit() {
+        this.settingsForm = new FormGroup({
+            instanceName: new FormControl(this.randomName(), [Validators.required, Validators.minLength(3)]),
+            baseUrl: new FormControl(this.guessUrl(), [Validators.required]),
+            port: new FormControl(48080, [
+                Validators.required,
+                (control: FormControl) => {
+                    const message = {
+                        invalidPort: 'Please enter a port between 1-65535'
+                    };
+
+                    if (!isNaN(control.value) && (control.value < 1 || control.value > 65535)) {
+                        return message;
+                    }
+
+                    if (isNaN(control.value)) {
+                        return message;
+                    }
+
+                    return null;
+                }
+            ]),
+            corsConfigurationForm: new FormGroup({
+                allowedOrigins: new FormControl(),
+                corsAllowAll: new FormControl(),
+            }),
+            smtpConfigurationForm: new FormGroup({
+                host: new FormControl(),
+                port: new FormControl(25),
+                connection: new FormControl('plain'),
+                username: new FormControl(),
+                password: new FormControl()
+            }),
+            proxyConfigurationForm: new FormGroup({
+                host: new FormControl(),
+                port: new FormControl(),
+                type: new FormControl('Direct'),
+                username: new FormControl(),
+                password: new FormControl(),
+                nonProxyHosts: new FormControl()
+            })
+        });
+
+        let valueBeforeDisable = '';
+        this.getCorsConfigurationGroup('corsAllowAll').valueChanges.subscribe(value => {
+            const allowedOrigins = this.getCorsConfigurationGroup('allowedOrigins');
+            if (value === true) {
+                allowedOrigins.disable();
+                valueBeforeDisable = allowedOrigins.value;
+                allowedOrigins.setValue('*');
+            } else {
+                allowedOrigins.setValue(valueBeforeDisable);
+                allowedOrigins.enable();
+            }
+        });
+
+        this.getSmtpConfigurationGroup('connection').valueChanges.subscribe(value => {
+            const port = this.getSmtpConfigurationGroup('port');
+            if (value === 'none') {
+                port.setValue(25);
+            } else if (value === 'ssl') {
+                port.setValue(465);
+            } else {
+                port.setValue(587);
+            }
+        });
+
+        this.actions
+            .pipe(ofActionDispatched(FormErrorAction), takeUntil(this.destroy))
+            .subscribe((action: FormErrorAction) => {
+                action.payload.errorsToForm(this.settingsForm);
+                this.cdr.detectChanges(); // necessary to show the error message.
+            });
+
+        this.loading$.next(true);
+
+        this.service
+            .getSettings()
+            .pipe(
+                catchError(error => {
+                    this.notify.error('Could not retrieve server settings from api!');
+                    console.log(error);
+                    return of(null);
+                }),
+            )
+            .subscribe((settings: any) => {
+                settings['corsConfigurationForm']['allowedOrigins'] = settings['corsConfigurationForm']['allowedOrigins'].join('\n');
+                this.settingsForm.patchValue(settings);
+                this.loading$.next(false);
+            });
+    }
+
+    ngOnDestroy() {
+        this.destroy.next();
+        this.destroy.complete();
+    }
+
+    getCorsConfigurationGroup(field = null) {
+        const group = this.settingsForm.get('corsConfigurationForm');
+        return field === null ? group : group.get(field);
+    }
+
+    getSmtpConfigurationGroup(field = null) {
+        const group = this.settingsForm.get('smtpConfigurationForm');
+        return field === null ? group : group.get(field);
+    }
+
+    getProxyConfigurationGroup(field = null) {
+        const group = this.settingsForm.get('proxyConfigurationForm');
+        return field === null ? group : group.get(field);
+    }
+
+    basicSettingsInvalid() {
+        return this.settingsForm.get('instanceName').invalid ||
+            this.settingsForm.get('baseUrl').invalid ||
+            this.settingsForm.get('port').invalid;
+    }
+
+    randomName() {
+        return 'Strongbox-' + Math.random().toString(36).substring(5);
+    }
+
+    guessUrl() {
+        return document.location.href.split('/').filter((v, i) => i < 3).join('/');
+    }
+
+    applyGuessedUrl() {
+        this.settingsForm.get('url').setValue(this.guessUrl());
+    }
+
+    save() {
+        if (this.settingsForm.valid) {
+            this.loading$.next(true);
+            let data: any = this.settingsForm.getRawValue();
+            let allowedOrigins = data['corsConfigurationForm']['allowedOrigins'];
+
+            if (allowedOrigins !== null) {
+                data['corsConfigurationForm']['allowedOrigins'] = data['corsConfigurationForm']['allowedOrigins'].split(/\r?\n/);
+            }
+
+            this.service.saveSettings(data).subscribe((response: ApiResponse) => {
+                this.loading$.next(false);
+                if (response.isValid()) {
+                    this.notify.success(response.message);
+                } else {
+                    this.notify.error(response.message);
+                }
+            });
+        }
+    }
+
+}

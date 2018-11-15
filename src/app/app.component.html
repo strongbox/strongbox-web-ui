@@ -114,22 +114,24 @@
                 <li *ngIf="(session$ | async).user.hasAuthority('ADMIN')">
                     <a href="#">Administration</a>
                     <ul fxLayout="column" fxLayoutAlign="start">
-                        <li><a>Logs</a></li>
-                        <li><a>Proxy configuration</a></li>
                         <li>
-                            <a>Repositories</a>
-                            <!--<li><a>Remote repositories configuration</a></li>-->
+                            <a routerLink="admin/global-settings"
+                               routerLinkActive="active">
+                                Global settings
+                            </a>
                         </li>
-                        <li><a>Routing</a></li>
                         <li><a>Security</a></li>
-                        <li><a>Server</a></li>
                         <li><a>Storages</a></li>
+                        <li><a>Repositories</a></li>
+                        <li><a>Routing</a></li>
                         <li>
                             <a routerLink="admin/users"
                                routerLinkActive="active">
                                 Users
                             </a>
                         </li>
+                        <li><a>Logs</a></li>
+                        <li><a>System information</a></li>
                     </ul>
                 </li>
             </ul>

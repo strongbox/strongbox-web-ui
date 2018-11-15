@@ -6,8 +6,6 @@ import {AppComponent} from './app.component';
 import {CoreModule} from './modules/core/core.module';
 import {AppRoutingModule} from './app.routing.module';
 import {FormHelperModule} from './shared/form/form-helper.module';
-import {NgProgressModule} from '@ngx-progressbar/core';
-import {NgProgressHttpModule} from '@ngx-progressbar/http';
 
 @NgModule({
     imports: [
