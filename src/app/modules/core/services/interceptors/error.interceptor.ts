@@ -131,7 +131,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         let apiResponse: ApiResponse = plainToClass(ApiResponse, response.error, {groups: ['error']}) as any;
         apiResponse.errorResponse = response;
         this.store.dispatch(new FormErrorAction(apiResponse));
-        return of(null);
+        return throwError(apiResponse);
     }
 
     /**

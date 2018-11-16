@@ -1,10 +1,10 @@
-import {of} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {AbstractControl, FormGroup, ValidationErrors} from '@angular/forms';
 import {Navigate} from '@ngxs/router-plugin';
 import {Store} from '@ngxs/store';
-import {Exclude, Expose, plainToClass, Type} from 'class-transformer';
+import {Exclude, Expose, Type} from 'class-transformer';
 import {ToastrService} from 'ngx-toastr';
+import {of, Subject, throwError} from 'rxjs';
 
 @Exclude()
 export class ApiResponse {
@@ -61,17 +61,20 @@ export class ApiFormError implements ValidationErrors {
     messages: string[] = [];
 }
 
-/* Possibly obsolete */
-export function catchApiError(error: any) {
-    const isHttpErrorResponse = (error instanceof HttpErrorResponse);
-    const response = error;
-
-    if (isHttpErrorResponse && response.status === 400 && response.error.hasOwnProperty('errors')) {
-        let apiResponse: ApiResponse = plainToClass(ApiResponse, response.error, {groups: ['error']}) as any;
-        apiResponse.errorResponse = response;
-
-        return of(apiResponse);
+export function handleFormError(error: ApiResponse, form: FormGroup, loading: Subject<any> = null, notify: ToastrService = null) {
+    if (!(error instanceof ApiResponse)) {
+        return throwError(error);
     }
+
+    if (notify) {
+        notify.error(error.message);
+    }
+
+    if (loading) {
+        loading.next(false);
+    }
+
+    error.errorsToForm(form);
 
     return of(error);
 }

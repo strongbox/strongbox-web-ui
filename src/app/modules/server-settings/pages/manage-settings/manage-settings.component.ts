@@ -1,14 +1,13 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {BehaviorSubject, of, Subject} from 'rxjs';
-import {Actions, ofActionDispatched, Store} from '@ngxs/store';
-import {catchError, takeUntil} from 'rxjs/operators';
+import {Actions, Store} from '@ngxs/store';
+import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 
 import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
 import {ServerSettingsService} from '../../services/server-settings.service';
-import {FormErrorAction} from '../../../../state/app.actions';
-import {ApiResponse} from '../../../core/core.model';
+import {ApiResponse, handleFormError} from '../../../core/core.model';
 
 @Component({
     selector: 'app-manage-settings',
@@ -101,13 +100,6 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.actions
-            .pipe(ofActionDispatched(FormErrorAction), takeUntil(this.destroy))
-            .subscribe((action: FormErrorAction) => {
-                action.payload.errorsToForm(this.settingsForm);
-                this.cdr.detectChanges(); // necessary to show the error message.
-            });
-
         this.loading$.next(true);
 
         this.service
@@ -120,9 +112,11 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
                 }),
             )
             .subscribe((settings: any) => {
-                settings['corsConfigurationForm']['allowedOrigins'] = settings['corsConfigurationForm']['allowedOrigins'].join('\n');
-                this.settingsForm.patchValue(settings);
-                this.loading$.next(false);
+                if (settings !== null) {
+                    settings['corsConfigurationForm']['allowedOrigins'] = settings['corsConfigurationForm']['allowedOrigins'].join('\n');
+                    this.settingsForm.patchValue(settings);
+                    this.loading$.next(false);
+                }
             });
     }
 
@@ -174,14 +168,16 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
                 data['corsConfigurationForm']['allowedOrigins'] = data['corsConfigurationForm']['allowedOrigins'].split(/\r?\n/);
             }
 
-            this.service.saveSettings(data).subscribe((response: ApiResponse) => {
-                this.loading$.next(false);
-                if (response.isValid()) {
-                    this.notify.success(response.message);
-                } else {
-                    this.notify.error(response.message);
-                }
-            });
+            this.service
+                .saveSettings(data)
+                .pipe(catchError(err => handleFormError(err, this.settingsForm, this.loading$)))
+                .subscribe((response: ApiResponse) => {
+                    if (response.isValid()) {
+                        this.notify.success(response.message);
+                    } else {
+                        this.notify.error(response.message);
+                    }
+                });
         }
     }
 
