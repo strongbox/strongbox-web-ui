@@ -161,7 +161,7 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
     }
 
     applyGuessedUrl() {
-        this.settingsForm.get('url').setValue(this.guessUrl());
+        this.settingsForm.get('baseUrl').setValue(this.guessUrl());
     }
 
     save() {
