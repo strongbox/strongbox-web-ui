@@ -1,6 +1,7 @@
 ul.breadcrumbs {
   white-space: nowrap;
   display: inline;
+  font: 400 19px/26px 'Open Sans', Helvetica, sans-serif !important;
 
   li {
     display: inline;
@@ -18,8 +19,4 @@ ul.breadcrumbs {
     content: '  >  ';
   }
 
-}
-
-ul.breadcrumbs.page {
-  font: 400 19px/26px 'Open Sans', Helvetica, sans-serif !important;
 }

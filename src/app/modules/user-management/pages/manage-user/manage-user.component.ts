@@ -1,11 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
 import {Navigate} from '@ngxs/router-plugin';
 import {ToastrService} from 'ngx-toastr';
 import {plainToClass} from 'class-transformer';
+import {takeUntil} from 'rxjs/operators';
 
 import {FormErrorAction} from '../../../../state/app.actions';
 import {User, UserForm, UserFormFieldsData, UserOperations, UserPrivilege, UserResponse, UserRole} from '../../user.model';
@@ -23,7 +24,7 @@ import {FADE_IN_OUT_OVERLAP} from '../../../../shared/animations';
         FADE_IN_OUT_OVERLAP
     ]
 })
-export class ManageUserComponent implements OnInit {
+export class ManageUserComponent implements OnInit, OnDestroy {
 
     @Select(SessionState.hasAuthority('UPDATE_USER'))
     public hasUpdateUserAuthority$;
@@ -43,6 +44,8 @@ export class ManageUserComponent implements OnInit {
     public ngxsFormPath = 'userManagementForm.formState';
 
     public userForm: FormGroup;
+
+    private destroy = new Subject();
 
     public compareSelectedRoles = (val1: string, val2: string) => val1 === val2;
 
@@ -112,11 +115,16 @@ export class ManageUserComponent implements OnInit {
         });
 
         this.actions$
-            .pipe(ofActionDispatched(FormErrorAction))
+            .pipe(ofActionDispatched(FormErrorAction), takeUntil(this.destroy))
             .subscribe((action: FormErrorAction) => {
                 action.payload.errorsToForm(this.userForm);
                 this.cdr.detectChanges(); // necessary to show the error message.
             });
+    }
+
+    ngOnDestroy() {
+        this.destroy.next();
+        this.destroy.complete();
     }
 
 }

@@ -13,7 +13,14 @@ const routes: Routes = [
     {path: 'search', redirectTo: 'search/', pathMatch: 'full'},
     {path: 'search/:query', component: RepositorySearchResultsComponent, resolve: {crisis: CoreRouterResolver}},
     {path: 'profile', component: ProfileComponent, resolve: {crisis: CoreRouterResolver}, canActivate: [AuthGuard]},
-    {path: 'admin/users', loadChildren: './modules/user-management/user-management.module#UserManagementModule'},
+    {
+        path: 'admin/users',
+        loadChildren: './modules/user-management/user-management.module#UserManagementModule'
+    },
+    {
+        path: 'admin/global-settings',
+        loadChildren: './modules/server-settings/server-settings.module#ServerSettingsModule'
+    },
     {path: '**', component: PageNotFoundComponent, resolve: {crisis: CoreRouterResolver}}
 ];
 

@@ -20,8 +20,8 @@ import {
     MatSelectModule,
     MatSidenavModule,
     MatSlideToggleModule,
-    MatTableModule,
     MatSortModule,
+    MatTableModule,
     MatTabsModule,
     MatToolbarModule
 } from '@angular/material';

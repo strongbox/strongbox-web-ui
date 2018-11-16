@@ -1,0 +1,20 @@
+<div class="global-container">
+
+    <div fxLayout="row" *ngIf="showBreadcrumbs">
+        <div fxFlex="1 auto">
+            <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
+        </div>
+    </div>
+
+    <mat-card>
+        <mat-card-content *ngIf="(loading$ | async)">
+            <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 1 auto">
+                <mat-spinner [strokeWidth]="5"></mat-spinner>
+            </div>
+        </mat-card-content>
+        <mat-card-content *ngIf="!(loading$ | async)" fxLayout="column">
+            <ng-content></ng-content>
+        </mat-card-content>
+    </mat-card>
+
+</div>

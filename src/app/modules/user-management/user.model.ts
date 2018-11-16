@@ -151,7 +151,7 @@ export class UserForm {
 
     private applyUpdateUserValidations() {
         const passwordValidators = [
-            Validators.minLength(8)
+            Validators.minLength(2)
         ];
 
         this.form.get('username').disable();

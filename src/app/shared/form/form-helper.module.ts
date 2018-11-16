@@ -17,6 +17,8 @@ import {AqlAutocompleteService} from './services/aql-autocomplete.service';
         MaterialModule
     ],
     exports: [
+        FormsModule,
+        ReactiveFormsModule,
         FormFieldErrorsComponent,
         AqlAutocompleteComponent,
         SelectAutocompleteComponent
