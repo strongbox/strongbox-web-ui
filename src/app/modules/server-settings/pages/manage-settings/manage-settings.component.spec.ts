@@ -4,13 +4,14 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NgxsModule} from '@ngxs/store';
 import {NgxsFormPluginModule} from '@ngxs/form-plugin';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ToastrModule} from 'ngx-toastr';
 
 import {ManageSettingsComponent} from './manage-settings.component';
 import {FormHelperModule} from '../../../../shared/form/form-helper.module';
 import {MaterialModule} from '../../../../shared/material.module';
 import {LayoutModule} from '../../../../shared/layout/layout.module';
 import {AppState} from '../../../../state/app.state';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('ManageSettingsComponent', () => {
     let component: ManageSettingsComponent;
@@ -29,7 +30,8 @@ describe('ManageSettingsComponent', () => {
                 HttpClientTestingModule,
                 NgxsModule.forRoot([AppState]),
                 NgxsFormPluginModule,
-                FormHelperModule
+                FormHelperModule,
+                ToastrModule.forRoot(),
             ],
             declarations: [ManageSettingsComponent]
         }).compileComponents();
