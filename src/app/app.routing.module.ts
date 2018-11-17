@@ -21,6 +21,10 @@ const routes: Routes = [
         path: 'admin/global-settings',
         loadChildren: './modules/server-settings/server-settings.module#ServerSettingsModule'
     },
+    {
+        path: 'admin/environment-info',
+        loadChildren: './modules/environment-info/environment-info.module#EnvironmentInfoModule'
+    },
     {path: '**', component: PageNotFoundComponent, resolve: {crisis: CoreRouterResolver}}
 ];
 
