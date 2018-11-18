@@ -63,7 +63,7 @@
             </div>
         </mat-tab>
 
-        <mat-tab label="System">
+        <mat-tab label="System Properties">
             <div class="tabContent">
                 <mat-form-field style="width: 100%;" *ngIf="dataSourceSystem.data.length > 0">
                     <input matInput (keyup)="applyFilter('sys', $event.target.value)" placeholder="Filter" autocomplete="off">
