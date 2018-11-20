@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
-import {AbstractUserGuard} from './abstract-user-guard';
+import {AbstractAuthorityGuard} from '../../core/guards/abstract-authority-guard';
 
 @Injectable()
-export class ViewUserGuard extends AbstractUserGuard {
-    protected REQUIRED_AUTHORITY = 'VIEW_USER';
+export class ViewUserGuard extends AbstractAuthorityGuard {
+    allAuthoritiesCollection() {
+        return ['VIEW_USER'];
+    }
 }

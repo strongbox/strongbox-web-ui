@@ -9,7 +9,7 @@ import {AuthenticatedUser, UserAuthority} from '../../core/auth/auth.model';
 import {UpdateUserGuard} from './update-user.guard';
 
 
-describe('UpdateUserGuard should', () => {
+describe('Guard: UpdateUserGuard should', () => {
     let updateUserGuard: UpdateUserGuard;
     let store: Store;
 
@@ -59,21 +59,21 @@ describe('UpdateUserGuard should', () => {
 
     it('allow logged in users with UPDATE_USER authority to access route', () => {
         store.reset(userSession);
-        updateUserGuard.canActivate().subscribe((result) => {
+        updateUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(true);
         });
     });
 
     it('allow logged in users with ADMIN authority to access route', () => {
         store.reset(adminSession);
-        updateUserGuard.canActivate().subscribe((result) => {
+        updateUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(true);
         });
     });
 
     it('prevent unauthenticated users to access route', () => {
         store.reset(guestSession);
-        updateUserGuard.canActivate().subscribe((result) => {
+        updateUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(false);
         });
     });

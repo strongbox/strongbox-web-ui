@@ -1,5 +1,4 @@
 import {TestBed} from '@angular/core/testing';
-import {Router} from '@angular/router';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NgxsModule, Store} from '@ngxs/store';
 
@@ -10,12 +9,20 @@ import {ManageSettingsGuard} from './manage-settings.guard';
 
 
 describe('Guard: ManageSettings should', () => {
-    let createUserGuard: ManageSettingsGuard;
+    let guard: ManageSettingsGuard;
     let store: Store;
 
     const adminSession = {
         session: {
             user: new AuthenticatedUser('authenticated-admin-user', null, [new UserAuthority('ADMIN')]),
+            token: null,
+            state: 'authenticated'
+        }
+    };
+
+    const lowPrivileges = {
+        session: {
+            user: new AuthenticatedUser('authenticated-user', null, [new UserAuthority('SOME_PRIV')]),
             token: null,
             state: 'authenticated'
         }
@@ -27,38 +34,38 @@ describe('Guard: ManageSettings should', () => {
 
     // async beforeEach
     beforeEach(() => {
-        const router = {
-            navigate: jasmine.createSpy('navigate')
-        };
-
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
-                NgxsModule.forRoot([
-                    SessionState
-                ]),
+                NgxsModule.forRoot([SessionState]),
             ],
             providers: [
                 ManageSettingsGuard,
-                AuthService,
-                {provide: Router, useValue: router}
+                AuthService
             ]
         }).compileComponents(); // compile template and css
 
-        createUserGuard = TestBed.get(ManageSettingsGuard);
+        guard = TestBed.get(ManageSettingsGuard);
         store = TestBed.get(Store);
     });
 
     it('allow logged in users with ADMIN authority to access route', () => {
         store.reset(adminSession);
-        createUserGuard.canActivate().subscribe((result) => {
+        guard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(true);
+        });
+    });
+
+    it('prevent users with low authority to access route', () => {
+        store.reset(lowPrivileges);
+        guard.canActivate().subscribe((result: boolean) => {
+            expect(result).toBe(false);
         });
     });
 
     it('prevent unauthenticated users to access route', () => {
         store.reset(guestSession);
-        createUserGuard.canActivate().subscribe((result) => {
+        guard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(false);
         });
     });

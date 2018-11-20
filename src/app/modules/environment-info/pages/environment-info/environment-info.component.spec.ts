@@ -7,6 +7,7 @@ import {LayoutModule} from '../../../../shared/layout/layout.module';
 import {HttpClientModule} from '@angular/common/http';
 import {ToastrModule} from 'ngx-toastr';
 import {RouterTestingModule} from '@angular/router/testing';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('EnvironmentInfoComponent', () => {
     let component: EnvironmentInfoComponent;
@@ -18,7 +19,7 @@ describe('EnvironmentInfoComponent', () => {
                 CommonModule,
                 MaterialModule,
                 LayoutModule,
-                HttpClientModule,
+                HttpClientTestingModule,
                 RouterTestingModule,
                 ToastrModule.forRoot()
             ],

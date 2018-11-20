@@ -9,7 +9,7 @@ import {AuthenticatedUser, UserAuthority} from '../../core/auth/auth.model';
 import {CreateUserGuard} from './create-user.guard';
 
 
-describe('CreateUserGuard should', () => {
+describe('Guard: CreateUserGuard should', () => {
     let createUserGuard: CreateUserGuard;
     let store: Store;
 
@@ -59,21 +59,21 @@ describe('CreateUserGuard should', () => {
 
     it('allow logged in users with CREATE_USER authority to access route', () => {
         store.reset(userSession);
-        createUserGuard.canActivate().subscribe((result) => {
+        createUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(true);
         });
     });
 
     it('allow logged in users with ADMIN authority to access route', () => {
         store.reset(adminSession);
-        createUserGuard.canActivate().subscribe((result) => {
+        createUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(true);
         });
     });
 
     it('prevent unauthenticated users to access route', () => {
         store.reset(guestSession);
-        createUserGuard.canActivate().subscribe((result) => {
+        createUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(false);
         });
     });
