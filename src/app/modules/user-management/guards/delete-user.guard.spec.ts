@@ -9,7 +9,7 @@ import {AuthenticatedUser, UserAuthority} from '../../core/auth/auth.model';
 import {DeleteUserGuard} from './delete-user.guard';
 
 
-describe('DeleteUserGuard should', () => {
+describe('Guard: DeleteUserGuard should', () => {
     let deleteUserGuard: DeleteUserGuard;
     let store: Store;
 
@@ -59,21 +59,21 @@ describe('DeleteUserGuard should', () => {
 
     it('allow logged in users with DELETE_USER authority to access route', () => {
         store.reset(userSession);
-        deleteUserGuard.canActivate().subscribe((result) => {
+        deleteUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(true);
         });
     });
 
     it('allow logged in users with ADMIN authority to access route', () => {
         store.reset(adminSession);
-        deleteUserGuard.canActivate().subscribe((result) => {
+        deleteUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(true);
         });
     });
 
     it('prevent unauthenticated users to access route', () => {
         store.reset(guestSession);
-        deleteUserGuard.canActivate().subscribe((result) => {
+        deleteUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(false);
         });
     });

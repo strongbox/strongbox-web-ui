@@ -1,4 +1,5 @@
 import {UserCredentials} from '../auth.model';
+import {SessionStateModel} from './session.state';
 
 export class LoginAction {
     static readonly type = '[Auth] Login';
@@ -33,5 +34,12 @@ export class UnauthorizedAccessAction {
     static readonly type = '[Auth] Unauthorized access';
 
     constructor(public payload: any = null) {
+    }
+}
+
+export class SetSessionStateModelAction {
+    static readonly type = '[Session] Setting session state model';
+
+    constructor(public payload: SessionStateModel = null) {
     }
 }

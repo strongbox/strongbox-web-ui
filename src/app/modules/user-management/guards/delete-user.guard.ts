@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
-import {AbstractUserGuard} from './abstract-user-guard';
+import {AbstractAuthorityGuard} from '../../core/guards/abstract-authority-guard';
 
 @Injectable()
-export class DeleteUserGuard extends AbstractUserGuard {
-    protected REQUIRED_AUTHORITY = 'DELETE_USER';
+export class DeleteUserGuard extends AbstractAuthorityGuard {
+    allAuthoritiesCollection() {
+        return ['DELETE_USER'];
+    }
 }

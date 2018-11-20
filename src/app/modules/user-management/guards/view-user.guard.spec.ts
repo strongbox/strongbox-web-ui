@@ -9,7 +9,7 @@ import {AuthService} from '../../core/auth/auth.service';
 import {AuthenticatedUser, UserAuthority} from '../../core/auth/auth.model';
 
 
-describe('ViewUserGuard should', () => {
+describe('Guard: ViewUser should', () => {
     let viewUserGuard: ViewUserGuard;
     let store: Store;
 
@@ -59,21 +59,21 @@ describe('ViewUserGuard should', () => {
 
     it('allow logged in users with VIEW_USER authority to access route', () => {
         store.reset(userSession);
-        viewUserGuard.canActivate().subscribe((result) => {
+        viewUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(true);
         });
     });
 
     it('allow logged in users with ADMIN authority to access route', () => {
         store.reset(adminSession);
-        viewUserGuard.canActivate().subscribe((result) => {
+        viewUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(true);
         });
     });
 
     it('prevent unauthenticated users to access route', () => {
         store.reset(guestSession);
-        viewUserGuard.canActivate().subscribe((result) => {
+        viewUserGuard.canActivate().subscribe((result: boolean) => {
             expect(result).toBe(false);
         });
     });

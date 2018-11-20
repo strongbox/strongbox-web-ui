@@ -11,6 +11,7 @@ import {
     InvalidCredentialsAction,
     LoginAction,
     LogoutAction,
+    SetSessionStateModelAction,
     UnauthorizedAccessAction
 } from './auth.actions';
 import {AuthenticatedUser} from '../auth.model';
@@ -44,7 +45,7 @@ function initialSessionState() {
                 state: rawSession.state
             };
         } catch (e) {
-            console.warn('Invalid session found in localStorage.');
+            console.warn('No valid session found.');
             session = defaultSessionState;
         }
 
@@ -122,6 +123,11 @@ export class SessionState implements NgxsOnInit {
     @Action(CheckCredentialsAction)
     checkCredentials() {
         this.auth.checkCredentials().subscribe();
+    }
+
+    @Action(SetSessionStateModelAction)
+    setAuthentication(ctx: StateContext<SessionStateModel>, {payload}: SetSessionStateModelAction) {
+        ctx.setState(payload);
     }
 
     @Action(LoginAction)
