@@ -3,7 +3,9 @@
 [![RocketChat.Community.Channel](https://chat.carlspring.org/images/join-chat.svg)](https://chat.carlspring.org/channel/community)
 [![dependencies Status](https://david-dm.org/strongbox/strongbox-web-ui/status.svg)](https://david-dm.org/strongbox/strongbox-web-ui)
 [![devDependencies Status](https://david-dm.org/strongbox/strongbox-web-ui/dev-status.svg)](https://david-dm.org/strongbox/strongbox-web-ui?type=dev)
-[![Known Vulnerabilities](https://snyk.io/test/github/strongbox/strongbox-web-ui/badge.svg?targetFile=package.json)](https://snyk.io/test/github/strongbox/strongbox-web-ui?targetFile=package.json)
+[![Known Vulnerabilities](https://snyk.io/test/github/strongbox/strongbox-web-ui/badge.svg?targetFile=package.json)](https://snyk.io/test/github/strongbox/strongbox-web-ui?targetFile=package.json)  
+
+
 This is the UI module for the Strongbox artifact repository manager.
 
 ## Development server
