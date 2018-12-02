@@ -1,0 +1,46 @@
+.buttons {
+  margin-top: 0px;
+}
+
+.breadcrumbContainer {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+::ng-deep {
+  .buttons div > button + button {
+    margin-left: 12px;
+  }
+
+  app-page-container {
+    .mat-card-header-text {
+      width: 100%;
+      margin: 0px;
+    }
+
+    .mat-card-title:before {
+      background: transparent;
+    }
+
+    table tr {
+      background: rgba(255,255,255,0.03);
+    }
+
+    table tr:last-of-type {
+      border-bottom: none;
+    }
+
+    &.noBackground {
+      .mat-card {
+        background: transparent !important;
+        box-shadow: none;
+      }
+    }
+
+    &.noPadding {
+      .mat-card {
+        padding: 0px 0px 0px 0px;
+      }
+    }
+  }
+}

@@ -13,7 +13,8 @@ import {BreadcrumbComponent} from './breadcrumb/breadcrumb.component';
         MaterialModule
     ],
     exports: [
-        PageContainerComponent
+        PageContainerComponent,
+        BreadcrumbComponent
     ],
     declarations: [
         PageContainerComponent,
