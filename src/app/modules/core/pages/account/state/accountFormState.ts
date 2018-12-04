@@ -28,7 +28,7 @@ export interface ProfileStateModel {
         }
     }
 })
-export class ProfileFormState {
+export class AccountFormState {
     @Selector()
     static formState(state: ProfileStateModel) {
         return state.formState;

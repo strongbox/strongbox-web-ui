@@ -1,6 +1,6 @@
 import {FormGroup} from '@angular/forms';
 
-export class ProfileFormValidator {
+export class AccountFormValidator {
     static validate(form: FormGroup) {
         const passwordField = form.get('password');
         const repeatPasswordField = form.get('repeatPassword');

@@ -5,16 +5,17 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {NgxsModule} from '@ngxs/store';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgxsFormPluginModule} from '@ngxs/form-plugin';
-
-import {ProfileComponent} from './profile.component';
-import {MaterialModule} from '../../../../shared/material.module';
-import {ProfileService} from './profile.service';
-import {SessionState} from '../../auth/state/session.state';
 import {ToastrModule} from 'ngx-toastr';
 
+import {MyAccountComponent} from './my-account.component';
+import {MaterialModule} from '../../../../shared/material.module';
+import {AccountService} from './account.service';
+import {SessionState} from '../../auth/state/session.state';
+import {LayoutModule} from '../../../../shared/layout/layout.module';
+
 describe('ProfileComponent', () => {
-    let component: ProfileComponent;
-    let fixture: ComponentFixture<ProfileComponent>;
+    let component: MyAccountComponent;
+    let fixture: ComponentFixture<MyAccountComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -23,6 +24,7 @@ describe('ProfileComponent', () => {
                 HttpClientTestingModule,
                 ReactiveFormsModule,
                 MaterialModule,
+                LayoutModule,
                 NgxsModule.forRoot([
                     SessionState
                 ]),
@@ -30,15 +32,15 @@ describe('ProfileComponent', () => {
                 ToastrModule.forRoot(),
                 RouterTestingModule
             ],
-            declarations: [ProfileComponent],
+            declarations: [MyAccountComponent],
             providers: [
-                ProfileService
+                AccountService
             ]
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ProfileComponent);
+        fixture = TestBed.createComponent(MyAccountComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

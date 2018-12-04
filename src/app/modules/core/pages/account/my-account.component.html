@@ -1,18 +1,7 @@
-<div class="global-container">
-
-    <mat-card>
-        <mat-card-title>
-            <ul class="profile">
-                <li *ngFor="let link of links; let i = index">
-                    <a [class.active]="activeLink == i" (click)="activeLink=i">{{ link }}</a>
-                </li>
-            </ul>
-            <div>&nbsp;</div>
-        </mat-card-title>
-
-        <mat-card-content style="padding-top: 15px;">
-
-            <div [hidden]="activeLink !== 0">
+<app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$">
+    <mat-tab-group *ngIf="!(loading$ | async)">
+        <mat-tab label="Account">
+            <div class="tabContent">
                 <form [formGroup]="form" novalidate ngxsForm="profile.formState" [ngxsFormClearOnDestroy]="true" (submit)="save()">
                     <div fxLayout="column">
                         <mat-form-field>
@@ -44,21 +33,18 @@
 
                     <!--[disabled]="!form.valid"-->
                     <div fxLayoutAlign="center center">
-                        <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || (loading | async)">
-                            <mat-progress-spinner color="primary" mode="indeterminate" strokeWidth="2" diameter="18" *ngIf="(loading | async)" style="float: left; margin-top: 8px;"></mat-progress-spinner>
+                        <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || (loading$ | async)">
+                            <mat-progress-spinner color="primary" mode="indeterminate" strokeWidth="2" diameter="18" *ngIf="(loading$ | async)" style="float: left; margin-top: 8px;"></mat-progress-spinner>
                             Save
                         </button>
                     </div>
                 </form>
             </div>
-            <div [hidden]="activeLink !== 1" style="overflow-y: auto">
+        </mat-tab>
+        <mat-tab label="Authorities">
+            <div class="tabContent">
                 <div *ngFor="let authority of authorities$ | async">{{ authority.name }}</div>
             </div>
-            <div [hidden]="activeLink !== 2">
-                TODO: show actual access model.
-            </div>
-
-        </mat-card-content>
-    </mat-card>
-
-</div>
+        </mat-tab>
+    </mat-tab-group>
+</app-page-container>

@@ -1,4 +1,4 @@
-import {ProfileFormState} from './profile.form.state';
+import {AccountFormState} from './accountFormState';
 
 describe('ProfileState', () => {
 
@@ -18,7 +18,7 @@ describe('ProfileState', () => {
 
         const expected = form.formState;
 
-        expect(ProfileFormState.formState(form)).toBe(expected);
+        expect(AccountFormState.formState(form)).toBe(expected);
     });
 
     it('model() should return a proper value', () => {
@@ -37,7 +37,7 @@ describe('ProfileState', () => {
 
         const expected = form.formState.model;
 
-        expect(ProfileFormState.model(form)).toBe(expected);
+        expect(AccountFormState.model(form)).toBe(expected);
     });
 
 });

@@ -1,26 +1,26 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {BehaviorSubject, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {BehaviorSubject} from 'rxjs';
 import {Select, Store} from '@ngxs/store';
 import {UpdateFormValue} from '@ngxs/form-plugin';
 import {ToastrService} from 'ngx-toastr';
 
 import {AuthenticatedUser} from '../../auth/auth.model';
-import {ProfileFormValidator} from './profile.form.validator';
-import {ProfileService} from './profile.service';
-import {ProfileUpdateData} from './profile.model';
+import {AccountFormValidator} from './accountFormValidator';
+import {AccountService} from './account.service';
+import {AccountUpdateData} from './account.model';
 import {SessionState} from '../../auth/state/session.state';
-import {ProfileFormState} from './state/profile.form.state';
+import {AccountFormState} from './state/accountFormState';
+import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
 
 @Component({
-    selector: 'app-profile',
-    templateUrl: './profile.component.html',
-    styleUrls: ['./profile.component.scss']
+    selector: 'app-my-account',
+    templateUrl: './my-account.component.html',
+    styleUrls: ['./my-account.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class MyAccountComponent implements OnInit {
 
-    @Select(ProfileFormState.formState)
+    @Select(AccountFormState.formState)
     public formState$;
 
     @Select(SessionState.authorities)
@@ -33,12 +33,13 @@ export class ProfileComponent implements OnInit {
 
     public form: FormGroup;
 
-    public loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    public loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
-    public links = ['Account', 'Authorities', 'Access Model'];
-    public activeLink = 0;
+    public breadcrumbs: Breadcrumb[] = [
+        {label: 'My account', url: [], active: true}
+    ];
 
-    constructor(private service: ProfileService,
+    constructor(private service: AccountService,
                 private formBuilder: FormBuilder,
                 private store: Store,
                 private toaster: ToastrService) {
@@ -55,18 +56,18 @@ export class ProfileComponent implements OnInit {
     }
 
     save() {
-        const model = this.store.selectSnapshot(ProfileFormState.model);
+        const model = this.store.selectSnapshot(AccountFormState.model);
 
-        const data: ProfileUpdateData = {
+        const data: AccountUpdateData = {
             password: model.password,
             securityTokenKey: model.securityTokenKey
         };
 
-        this.loading.next(true);
+        this.loading$.next(true);
         this.service
             .profile(data)
             .subscribe((result: any) => {
-                this.loading.next(false);
+                this.loading$.next(false);
                 this.toaster.success(result.message, null, {
                     timeOut: 3500
                 });
@@ -79,7 +80,7 @@ export class ProfileComponent implements OnInit {
             repeatPassword: ['', [Validators.nullValidator]],
             securityTokenKey: ['', [Validators.required]]
         }, {
-            validator: ProfileFormValidator.validate
+            validator: AccountFormValidator.validate
         });
 
         this.service.profile().subscribe((user: AuthenticatedUser) => {
@@ -91,6 +92,8 @@ export class ProfileComponent implements OnInit {
                 },
                 path: 'profile.formState'
             }));
+
+            this.loading$.next(false);
         });
     }
 }
