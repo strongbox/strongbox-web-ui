@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {EnvironmentInfo} from '../environment-info.model';
 
 @Injectable({
     providedIn: 'root'
@@ -10,6 +11,6 @@ export class EnvironmentInfoService {
     }
 
     getInfo(): Observable<any> {
-        return this.client.get('/api/configuration/environment/info');
+        return this.client.get<EnvironmentInfo>('/api/configuration/environment/info');
     }
 }

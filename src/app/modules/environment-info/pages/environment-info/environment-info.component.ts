@@ -23,6 +23,7 @@ export class EnvironmentInfoComponent implements OnInit {
     data: BehaviorSubject<EnvironmentInfo> = new BehaviorSubject(<EnvironmentInfo>{environment: [], jvm: [], system: []});
 
     dataSourceStrongbox = new MatTableDataSource();
+    dataSourceJvm = new MatTableDataSource();
     dataSourceEnvironment = new MatTableDataSource();
     dataSourceSystem = new MatTableDataSource();
 
@@ -30,8 +31,10 @@ export class EnvironmentInfoComponent implements OnInit {
     }
 
     applyFilter(type, filterValue: string) {
-        const filter = filterValue.trim().toLowerCase();
-        if (type === 'env') {
+        const filter = filterValue;
+        if (type === 'jvm') {
+            this.dataSourceJvm.filter = filter;
+        } else if (type === 'env') {
             this.dataSourceEnvironment.filter = filter;
         } else if (type === 'sys') {
             this.dataSourceSystem.filter = filter;
@@ -40,9 +43,12 @@ export class EnvironmentInfoComponent implements OnInit {
 
     ngOnInit() {
         this.service.getInfo().subscribe(
-            (data: any) => {
+            (data: EnvironmentInfo) => {
                 data.environment.sort((a, b) => a.name.toLowerCase().startsWith('strongbox_') ? -1 : 0);
 
+                // Looks absurd, but we need it for the MatTableDataSource filter.
+                // https://github.com/angular/material2/blob/7.1.1/src/lib/table/table-data-source.ts#L183
+                this.dataSourceJvm = new MatTableDataSource<any>(data.jvm.map(v => <any>{val: v}));
                 this.dataSourceEnvironment = new MatTableDataSource<any>(data.environment);
                 this.dataSourceSystem = new MatTableDataSource<any>(data.system);
                 this.dataSourceStrongbox = new MatTableDataSource<any>([
@@ -52,7 +58,6 @@ export class EnvironmentInfoComponent implements OnInit {
                     {name: 'Version', value: 'not done yet.'}
                 ]);
 
-                this.data.next(data);
                 this.loading$.next(false);
             },
             (error) => {
