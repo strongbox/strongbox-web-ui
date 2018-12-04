@@ -1,11 +1,20 @@
-@import "../global";
-
-$table-row-color: #132430;
+@import "../../variables";
 
 .mat-table-container {
   border-radius: 5px;
   overflow: hidden;
   border: 1px solid $table-row-color;
+}
+
+// remove the border from the last row in the table.
+.no-last-row-border {
+  tr.mat-row {
+    &:last-of-type {
+      td.mat-cell, td.mat-footer-cell {
+        border-bottom: none;
+      }
+    }
+  }
 }
 
 .mat-table {
@@ -62,10 +71,11 @@ $table-row-color: #132430;
     text-align: center;
 
     $icon-size: 30px;
+
     .mat-icon-button {
       width: $icon-size;
       height: $icon-size;
-      line-height: $icon-size;
+      line-height: calc(#{$icon-size} - 10px);
       color: $nav-link-color;
       transition: color 0.2s;
     }
@@ -76,7 +86,7 @@ $table-row-color: #132430;
 
     .mat-icon-button[disabled] {
       position: relative;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255, 255, 255, 0.25);
 
       &:after {
         content: "";

@@ -1,0 +1,36 @@
+.mat-flat-button.mat-primary:not([disabled]),
+.mat-raised-button.mat-primary:not([disabled]),
+.mat-fab.mat-primary:not([disabled]),
+.mat-mini-fab.mat-primary:not([disabled]) {
+  background: linear-gradient(to bottom, $btn-primary-gradient-0 0%, $btn-primary-gradient-1 100%);
+}
+
+.mat-flat-button.mat-primary:not([disabled]):hover,
+.mat-raised-button.mat-primary:not([disabled]):hover,
+.mat-fab.mat-primary:not([disabled]):hover,
+.mat-mini-fab.mat-primary:not([disabled]):hover {
+  background: linear-gradient(to bottom, lighten($btn-primary-gradient-0, 2%) 0%, lighten($btn-primary-gradient-1, 5%) 100%);
+}
+
+.mat-flat-button.mat-warn:not([disabled]),
+.mat-raised-button.mat-warn:not([disabled]),
+.mat-fab.mat-warn:not([disabled]),
+.mat-mini-fab.mat-warn:not([disabled]) {
+  background: linear-gradient(to bottom, $btn-warn-gradient-0 0%, $btn-warn-gradient-1 100%);
+  /// linear-gradient(to bottom, #f44336 0%, #f44336 100%)
+}
+
+.mat-flat-button.mat-warn:not([disabled]):hover,
+.mat-raised-button.mat-warn:not([disabled]):hover,
+.mat-fab.mat-warn:not([disabled]):hover,
+.mat-mini-fab.mat-warn:not([disabled]):hover {
+  background: linear-gradient(to bottom, lighten($btn-warn-gradient-0, 2%) 0%, lighten($btn-warn-gradient-1, 5%) 100%);
+}
+
+
+
+/*
+.mat-flat-button.mat-warn, .mat-raised-button.mat-warn, .mat-fab.mat-warn, .mat-mini-fab.mat-warn
+
+
+.mat-flat-button.mat-warn, .mat-raised-button.mat-warn, .mat-fab.mat-warn, .mat-mini-fab.mat-warn {*/

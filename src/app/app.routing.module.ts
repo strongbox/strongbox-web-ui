@@ -18,7 +18,7 @@ const routes: Routes = [
         loadChildren: './modules/user-management/user-management.module#UserManagementModule'
     },
     {
-        path: 'admin/global-settings',
+        path: 'admin/server-settings',
         loadChildren: './modules/server-settings/server-settings.module#ServerSettingsModule'
     },
     {

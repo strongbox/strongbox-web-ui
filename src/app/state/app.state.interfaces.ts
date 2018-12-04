@@ -8,6 +8,10 @@ export interface SideNavStateModel {
 
 export interface ViewPortStateModel {
     mobile: boolean;
+    tablet: boolean;
+    laptop: boolean;
+    normal: boolean;
+    large: boolean;
     mqAlias: string;
 }
 
@@ -30,6 +34,10 @@ export const defaultAppState: AppStateModel = {
     loginModalOpened: false,
     viewPort: {
         mobile: false,
+        tablet: false,
+        laptop: false,
+        normal: true,
+        large: false,
         mqAlias: null
     }
 };

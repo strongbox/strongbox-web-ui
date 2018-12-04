@@ -1,156 +1,128 @@
-<ng-progress #progressBar></ng-progress>
+<div class="guest-navigation" *ngIf="!(isAuthenticated$ | async)" [@slideInOut]>
+    <a title="Browse" routerLink="/browse" routerLinkActive="active">
+        <i class="icon ion-md-filing"></i> <span>Browse</span>
+    </a>
 
-<mat-toolbar id="navigation" fxLayout="row" fxLayoutGap="2%" fxLayoutGap.xs="0" [class.transparent]="false">
-    <div class="logo-container" fxLayout="row" fxLayoutGap="10%">
-        <div fxLayout="column" fxLayoutAlign="center center">
+    <a title="Login" (click)="openLoginDialog()">
+        <i class="icon ion-md-lock"></i> <span>Login</span>
+    </a>
+</div>
+
+<div class="header-navigation" *ngIf="!isHomepage" [@slideInOut] fxLayout="row" fxFlexAlign.lt-sm="center center">
+    <div class="container">
+        <div>
             <div class="logo-text">
                 <a routerLink="/" id="logo">Strongbox</a>
             </div>
-        </div>
-        <div fxLayout="column" fxLayoutAlign="center center" *ngIf="(isAuthenticated$ | async) && !(isMobile$ | async)">
-            <div class="menu-button-wrapper" fxLayoutAlign="center">
-                <div fxLayoutAlign="center center">
-                    <div class="menu-container">
-                        <a id="toggleSideNav" (click)="toggleSideNav()" [class.close]="(sideNavOpened$ | async)">
-                            <div class="line top"></div>
-                            <div class="line middle"></div>
-                            <div class="line bottom"></div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- This fills the remaining space of the current row -->
-    <div fxFlex="1 1 auto" class="search-container">
-        <div class="test" fxHide.lt-sm fxLayout="column">
-            <aql-autocomplete #aqlSearch
-                              width="100%"
+        </div>
+        <div class="search" fxFlex="1 1 auto">
+            <aql-autocomplete width="100%"
                               placeholder="Search query"
                               [dataSource]="aqlDataSource"
-                              (submit)="submitSearchRequest($event)"
-            ></aql-autocomplete>
+                              (submit)="submitSearchRequest($event)"></aql-autocomplete>
+        </div>
+        <div *ngIf="!(isAuthenticated$ | async) && !(isHomepage)">
+            <ul>
+                <li>
+                    <a title="Browse" routerLink="/browse" routerLinkActive="active">
+                        <i class="icon ion-md-filing"></i>
+                    </a>
+                </li>
+                <li>
+                    <a title="Login" (click)="openLoginDialog()">
+                        <i class="icon ion-md-lock"></i>
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 
-    <!-- Right menu -->
-    <div fxLayoutAlign="center center" class="right-container">
-        <ul fxLayoutAlign="center center">
-            <li fxHide.lt-xs>
-                <a title="Browse repositories" [routerLink]="['/browse']">
-                    <i class="icon ion-md-apps"></i>
+    <!--
+        <div class="open-mobile-nav" *ngIf="(isMobile$ | async)">
+            <a (click)="showMobileNavigation = !showMobileNavigation">
+                <i class="icon ion-md-menu"></i>
+            </a>
+        </div>
+    -->
+
+</div>
+
+<!--
+<div class="mobile-navigation" *ngIf="showMobileNavigation" [@slideInOutMobile] fxLayout="row" fxFlexAlign="center center">
+    <div class="nav">
+        <ul>
+            <li *ngIf="(isMobile$ | async)">
+                <a title="Search" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <i class="icon ion-md-search"></i> Search
                 </a>
             </li>
-            <li *ngIf="!(isAuthenticated$ | async)" fxHide.lt-xs>
-                <a title="Login" (click)="openLoginDialog()">
-                    <i class="icon ion-md-lock"></i>
+
+            <li *ngIf="(isMobile$ | async)">
+                <a title="Browse" routerLink="/browse" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <i class="icon ion-md-filing"></i> Browse
                 </a>
             </li>
-            <li *ngIf="(isAuthenticated$ | async)">
-                <a title="Notifications">
-                    <span matBadge="14" matBadgeOverlap="false" matBadgeSize="small" matBadgePosition="after above"
-                          matBadgeColor="warn" class="alert">
-                        <i class="icon ion-md-notifications"></i>
-                    </span>
+
+            <ng-container *ngIf="(isAuthenticated$ | async)">
+                <li>
+                    <a title="Notifications"
+                       routerLink="/admin/notifications"
+                       routerLinkActive="active">
+                        <i class="icon ion-md-notifications"
+                           matBadge="22"
+                           matBadgePosition="above after"
+                           matBadgeColor="danger"></i>
+                        Notifications
+                    </a>
+                </li>
+
+                <li *ngFor="let item of navigation">
+                    <a [title]="item.title" [routerLink]="item.url" routerLinkActive="active">
+                        <i [class]="'icon ' + item.icon"></i> {{ item.title }}
+                    </a>
+                </li>
+
+                <li>
+                    <a title="Logout" (click)="auth.logout()">
+                        <i class="icon ion-md-log-out"></i> Logout
+                    </a>
+                </li>
+            </ng-container>
+        </ul>
+    </div>
+</div>
+-->
+
+<div class="side-navigation" [class.alignIconsTop]="!isHomepage" *ngIf="(isAuthenticated$ | async)" [@slideSideInOut]>
+    <div class="corner" *ngIf="!isHomepage" [@slideInOut]>&nbsp;</div>
+    <div class="icons">
+        <ul>
+            <li>
+                <a title="Notifications" routerLink="/admin/notifications" routerLinkActive="active">
+                    <i class="icon ion-md-notifications"
+                       matBadge="22"
+                       matBadgePosition="above after"
+                       matBadgeColor="primary"
+                       style="margin-left: 2px;"
+                    ></i>
                 </a>
             </li>
-            <li *ngIf="(isAuthenticated$ | async)" fxHide.lt-xs>
-                <a title="Profile"
-                   routerLink="profile"
-                   routerLinkActive="active"
-                   [routerLinkActiveOptions]="{exact: true}">
-                    <i class="icon ion-md-person"></i> <span fxHide.lt-lg>&nbsp;&nbsp;{{ (session$ | async).user.username }}</span>
+
+            <li *ngFor="let item of navigation">
+                <a [title]="item.title" [routerLink]="item.url" routerLinkActive="active"
+                   [style.margin-left]="item.marginLeft">
+                    <i [class]="'icon ' + item.icon"></i>
                 </a>
             </li>
-            <li *ngIf="(isAuthenticated$ | async)">
+
+            <li>
                 <a title="Logout" (click)="auth.logout()">
                     <i class="icon ion-md-log-out"></i>
                 </a>
             </li>
-            <li *ngIf="(isAuthenticated$ | async) && (isMobile$ | async)">
-                <div class="menu-button-wrapper" fxLayoutAlign="center">
-                    <div fxLayoutAlign="center center">
-                        <div class="menu-container">
-                            <a id="toggleMobileSideNav" (click)="toggleSideNav()"
-                               [class.close]="(sideNavOpened$ | async)">
-                                <div class="line top"></div>
-                                <div class="line middle"></div>
-                                <div class="line bottom"></div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </li>
         </ul>
     </div>
-</mat-toolbar>
-
-<div fxLayout="column">
-    <mat-sidenav-container class="main-content" (backdropClick)="closeSideNavBackdropClick()">
-        <mat-drawer-container [hasBackdrop]="false" [autosize]="true"></mat-drawer-container>
-
-        <mat-sidenav #sideNavElement
-                     class="menu-sidenav"
-                     [hidden]="(session$ | async).state == 'authenticated'"
-                     [opened]="(sideNavOpened$ | async)"
-                     [fixedInViewport]="true"
-                     [position]="(sideNav$ | async).position"
-                     [mode]="(sideNav$ | async).mode">
-            <ul fxLayout="column" fxLayoutAlign="start" *ngIf="(session$ | async).state == 'authenticated'">
-                <li>
-                    <a>Dashboard</a>
-                </li>
-                <li>
-                    <a>Browse</a>
-                </li>
-                <li>
-                    <a routerLink="profile"
-                       routerLinkActive="active"
-                       [routerLinkActiveOptions]="{exact: true}">
-                        Profile
-                    </a>
-                </li>
-                <li *ngIf="(session$ | async).user.hasAuthority('ADMIN')">
-                    <a href="#">Administration</a>
-                    <ul fxLayout="column" fxLayoutAlign="start">
-                        <li>
-                            <a routerLink="admin/global-settings"
-                               routerLinkActive="active">
-                                Global settings
-                            </a>
-                        </li>
-                        <li><a>Security</a></li>
-                        <li><a>Storages</a></li>
-                        <li><a>Repositories</a></li>
-                        <li><a>Routing</a></li>
-                        <li>
-                            <a routerLink="admin/users"
-                               routerLinkActive="active">
-                                Users
-                            </a>
-                        </li>
-                        <li><a>Logs</a></li>
-                        <li>
-                            <a routerLink="admin/environment-info"
-                               routerLinkActive="active">
-                                System information
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </mat-sidenav>
-
-        <mat-sidenav-content [class]="(sideNavOpened$ | async) ? 'sideNavOpen' : ''">
-            <div class="sidenav-content" fxLayout="row" fxLayout.lt-sm="column">
-                <div [fxFlex]="sideNavFlex().left">&nbsp;</div>
-                <div fxFlex="1 1 auto">
-                    <router-outlet></router-outlet>
-                </div>
-                <div [fxFlex]="sideNavFlex().right" style="transition: all 0.3s">&nbsp;</div>
-            </div>
-
-        </mat-sidenav-content>
-    </mat-sidenav-container>
 </div>
+
+<router-outlet></router-outlet>

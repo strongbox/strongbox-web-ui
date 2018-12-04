@@ -1,8 +1,8 @@
 .mat-autocomplete-panel {
-  background: rgba(31, 53, 70, 1);
+  background: #334554;
   margin-top: 2px;
 }
 
 .mat-autocomplete-panel .mat-option.mat-selected:not(.mat-active):not(:hover) {
-  background: rgba(38, 64, 85, 1);
+  background: rgba(0, 0, 0, 0.12);
 }

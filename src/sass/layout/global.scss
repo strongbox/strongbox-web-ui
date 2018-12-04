@@ -1,20 +1,32 @@
-$nav-background: #13232f;
-$nav-link-color: rgba(255, 255, 255, 0.45);
-$nav-link-hover: rgba(255, 255, 255, 0.90);
+@import "../variables";
+@import "../helpers";
 
-*:not(button):not(mat-option) {
+:not(button):not(mat-option) {
   padding: 0px;
   margin: 0px;
 }
 
 body {
-  display: flex;
-  background: #1f3240;
+  font-family: $font-family;
+
+  background: $body-background-color;
+  background: -moz-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* ff3.6+ */
+  background: -webkit-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* safari4+,chrome */
+  background: -webkit-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* safari5.1+,chrome10+ */
+  background: -ms-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* ie10+ */
+  background: -o-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* opera 11.10+ */
+  background: linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* common. */
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
   color: white;
 }
 
 app-strongbox {
-  width: 100vw;
+  width: 100%;
+  height: 100%;
 }
 
 .clearfix {
@@ -38,12 +50,16 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link)::after {
   display: block;
   width: 0;
   height: 1px;
-  background: #2684bd;
+  background: $global-link-color;
   transition: width .2s;
 }
 
 a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
   width: 100%;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .text-center {
@@ -59,19 +75,19 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
 }
 
 .status-green {
-  color: #3ccd42;
+  color: $status-green;
 }
 
 .status-red {
-  color: #f44336;
+  color: $status-red;
 }
 
 .global-container {
   margin: auto;
-  padding: 10px 20px 100px 20px;
+  padding: 82px 20px 100px 30px;
 
   // temporary fix.
-  max-width: 70vw;
+  max-width: 92vw;
 
   > h3 {
     font-weight: 400;
@@ -81,7 +97,7 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
 
   > .page {
     padding: 25px 24px 8px 24px;
-    background: #132530;
+    background: $page-container-color;
   }
 
   .no-records {
@@ -103,7 +119,11 @@ div.blue-border {
 
 .tabContent {
   min-height: 100px;
-  padding: 15px 12px 10px 12px
+  padding: 15px 12px 10px 12px;
+
+  table {
+    width: 100%;
+  }
 }
 
 ::-webkit-scrollbar-button {

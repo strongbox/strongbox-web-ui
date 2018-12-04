@@ -1,5 +1,6 @@
 .mat-dialog-container {
-  background: #223340;
+  background: saturate(darken($body-background-color, 4%), 7%);
+  position: relative;
 
   .mat-dialog-title {
     padding: 0px 0px 10px 0px;
@@ -12,5 +13,6 @@
 }
 
 .deleteDialog .mat-dialog-container {
-  background: #af2e25;
+  //background: #af2e25;
+  background: linear-gradient(180deg, hsla(0, 60%, 43%, 1) 0%, hsla(0, 60%, 25%, 1) 100%);
 }

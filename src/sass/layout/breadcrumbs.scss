@@ -1,3 +1,5 @@
+@import "../variables";
+
 ul.breadcrumbs {
   white-space: nowrap;
   display: inline;
@@ -21,5 +23,6 @@ ul.breadcrumbs {
 }
 
 ul.breadcrumbs.page {
-  font: 400 19px/26px 'Open Sans', Helvetica, sans-serif !important;
+  // font: 400 19px/26px 'Open Sans', Helvetica, sans-serif !important;
+  font: 300 24px/30px $font-family !important;
 }
