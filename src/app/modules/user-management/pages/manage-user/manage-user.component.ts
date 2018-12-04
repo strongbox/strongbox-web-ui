@@ -14,6 +14,7 @@ import {UserManagementService} from '../../services/user-management.service';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {ApiResponse, handle404error} from '../../../core/core.model';
 import {FADE_IN_OUT_OVERLAP} from '../../../../shared/animations';
+import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
 
 @Component({
     selector: 'app-manage-user',
@@ -41,9 +42,11 @@ export class ManageUserComponent implements OnInit, OnDestroy {
 
     public username = null;
 
-    public ngxsFormPath = 'userManagementForm.formState';
-
     public userForm: FormGroup;
+
+    public breadcrumbs: Breadcrumb[] = [
+        {label: 'Users', url: ['/admin/users']}
+    ];
 
     private destroy = new Subject();
 
@@ -85,6 +88,7 @@ export class ManageUserComponent implements OnInit, OnDestroy {
         this.route.paramMap.subscribe((params: ParamMap) => {
             const username = params.get('username');
             if (!username) {
+                this.breadcrumbs.push({label: 'New user', url: [], active: true});
                 this.operation = UserOperations.CREATE;
                 this.userForm = new UserForm(this.operation).getForm();
                 this.service.getUserFormFields().subscribe((fields: UserFormFieldsData) => {
@@ -95,6 +99,7 @@ export class ManageUserComponent implements OnInit, OnDestroy {
 
                 this.user$.next(new User());
             } else {
+                this.breadcrumbs.push({label: username, url: [], active: true});
                 this.operation = UserOperations.UPDATE;
                 this.username = username;
                 this.service

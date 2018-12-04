@@ -7,6 +7,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ListUsersComponent} from './list-users.component';
 import {MaterialModule} from '../../../../shared/material.module';
 import {NgxsModule} from '@ngxs/store';
+import {LayoutModule} from '../../../../shared/layout/layout.module';
 
 describe('Component: ListUsersComponent', () => {
     let component: ListUsersComponent;
@@ -17,6 +18,7 @@ describe('Component: ListUsersComponent', () => {
             imports: [
                 RouterTestingModule,
                 BrowserAnimationsModule,
+                LayoutModule,
                 MaterialModule,
                 HttpClientTestingModule,
                 NgxsModule.forRoot(),

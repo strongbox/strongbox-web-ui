@@ -12,6 +12,7 @@ import {MaterialModule} from '../../../../../../shared/material.module';
 import {FormHelperModule} from '../../../../../../shared/form/form-helper.module';
 import {AppState} from '../../../../../../state/app.state';
 import {UserForm} from '../../../../user.model';
+import {LayoutModule} from '../../../../../../shared/layout/layout.module';
 
 describe('Component: UserAccessModelComponent', () => {
     let component: UserAccessModelComponent;
@@ -24,6 +25,7 @@ describe('Component: UserAccessModelComponent', () => {
                 BrowserAnimationsModule,
                 FormsModule,
                 ReactiveFormsModule,
+                LayoutModule,
                 MaterialModule,
                 FormHelperModule,
                 HttpClientTestingModule,

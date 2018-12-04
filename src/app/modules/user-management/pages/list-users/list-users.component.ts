@@ -1,13 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {BehaviorSubject} from 'rxjs';
-import {Select} from '@ngxs/store';
+import {Select, Store} from '@ngxs/store';
 import {ToastrService} from 'ngx-toastr';
+import {Navigate} from '@ngxs/router-plugin';
 
 import {User} from '../../user.model';
 import {UserManagementService} from '../../services/user-management.service';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {ConfirmDialogComponent} from '../../../core/dialogs/confirm/confirm.dialog.component';
+import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
 
 @Component({
     selector: 'app-list-users',
@@ -31,10 +33,17 @@ export class ListUsersComponent implements OnInit {
     displayedColumns: string[] = ['username', 'enabled', 'actions'];
     data: BehaviorSubject<User[]> = new BehaviorSubject<User[]>(null);
 
-    isLoadingResults = true;
+    loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
     deleteLoading = false;
 
-    constructor(private service: UserManagementService, private dialog: MatDialog, private notify: ToastrService) {
+    breadcrumbs: Breadcrumb[] = [
+        {label: 'Users', url: ['/admin/users']}
+    ];
+
+    constructor(private service: UserManagementService,
+                private dialog: MatDialog,
+                private notify: ToastrService,
+                private store: Store) {
     }
 
     confirmDeletion(user: User) {
@@ -70,11 +79,13 @@ export class ListUsersComponent implements OnInit {
             });
     }
 
-    ngOnInit() {
-        this.isLoadingResults = true;
+    navigate(url) {
+        this.store.dispatch(new Navigate(url));
+    }
 
+    ngOnInit() {
         this.service.getUsers().subscribe((results: User[]) => {
-            this.isLoadingResults = false;
+            this.loading$.next(false);
             this.data.next(results);
         });
     }

@@ -1,61 +1,49 @@
-<div class="global-container">
+<app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding">
 
-    <mat-card>
-        <mat-card-title>
-            <div fxLayout="row">
-                <div fxFlex="1 auto">
-                    Users
-                </div>
+    <div page-actions>
+        <button mat-raised-button *ngIf="(hasCreateUserAuthority$ | async)" color="primary" routerLink="./create">
+            <i class="icon ion-md-add"></i> &nbsp; Add
+        </button>
+    </div>
 
-                <div fxFlex="96px">
-                    <button mat-raised-button *ngIf="(hasCreateUserAuthority$ | async)" color="primary" routerLink="./create">
-                        <i class="icon ion-md-add"></i> &nbsp; Add
-                    </button>
-                </div>
-            </div>
-        </mat-card-title>
-        <mat-card-content>
-            <table mat-table [dataSource]="data" multiTemplateDataRows>
-                <ng-container matColumnDef="username">
-                    <th mat-header-cell *matHeaderCellDef>Username</th>
-                    <td mat-cell *matCellDef="let row"><a [routerLink]="[row.username, 'view']">{{row.username}}</a></td>
-                </ng-container>
+    <table class="no-last-row-border" mat-table [dataSource]="data" multiTemplateDataRows>
+        <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef>Username</th>
+            <td mat-cell *matCellDef="let row" [routerLink]="[row.username, 'view']" class="clickable">{{row.username}}</td>
+        </ng-container>
 
-                <ng-container matColumnDef="enabled">
-                    <th mat-header-cell *matHeaderCellDef style="width: 150px; text-align: center;">Enabled</th>
-                    <td mat-cell *matCellDef="let row" style="text-align: center;">
-                        <span *ngIf="row.enabled" class="status-green">Yes</span>
-                        <span *ngIf="!row.enabled" class="status-red">No</span>
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="enabled">
+            <th mat-header-cell *matHeaderCellDef style="width: 150px; text-align: center;">Enabled</th>
+            <td mat-cell *matCellDef="let row" style="text-align: center;">
+                <span *ngIf="row.enabled" class="status-green">Yes</span>
+                <span *ngIf="!row.enabled" class="status-red">No</span>
+            </td>
+        </ng-container>
 
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef style="width: 80px;">Actions</th>
-                    <td mat-cell *matCellDef="let row">
-                        <ul class="actions">
-                            <li *ngIf="(hasViewUserAuthority$ | async)">
-                                <a title="View user" [routerLink]="[row.username, 'view']">
-                                    <i class="icon ion-md-eye"></i>
-                                </a>
-                            </li>
-                            <li *ngIf="(hasUpdateUserAuthority$ | async)">
-                                <a title="Update user" [routerLink]="[row.username, 'edit']">
-                                    <i class="icon ion-md-create"></i>
-                                </a>
-                            </li>
-                            <li *ngIf="(hasDeleteUserAuthority$ | async)">
-                                <a title="Delete user" (click)="confirmDeletion(row)">
-                                    <i class="icon ion-md-trash"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef style="width: 80px;">Actions</th>
+            <td mat-cell *matCellDef="let row">
+                <ul class="actions">
+                    <li *ngIf="(hasViewUserAuthority$ | async)">
+                        <a title="View user" [routerLink]="[row.username, 'view']">
+                            <i class="icon ion-md-eye"></i>
+                        </a>
+                    </li>
+                    <li *ngIf="(hasUpdateUserAuthority$ | async)">
+                        <a title="Update user" [routerLink]="[row.username, 'edit']">
+                            <i class="icon ion-md-create"></i>
+                        </a>
+                    </li>
+                    <li *ngIf="(hasDeleteUserAuthority$ | async)">
+                        <a title="Delete user" (click)="confirmDeletion(row)">
+                            <i class="icon ion-md-trash"></i>
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-        </mat-card-content>
-    </mat-card>
-
-</div>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</app-page-container>

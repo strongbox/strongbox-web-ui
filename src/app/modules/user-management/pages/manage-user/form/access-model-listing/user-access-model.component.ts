@@ -120,22 +120,22 @@ export class UserAccessModelComponent implements OnInit, AfterViewInit, OnChange
     }
 
     private updateDataSource() {
-        this.dataSource = new MatTableDataSource(this.repositories().getRawValue());
+        this.dataSource = new MatTableDataSource(this.repositoriesAccess().getRawValue());
     }
 
-    repositories(): FormArray {
-        return this.parentForm.get('accessModel').get('repositoriesAccess') as FormArray;
+    repositoriesAccess(): FormArray {
+        return this.parentForm.get('accessModel').get('repositoriesAccess') as FormArray; // PathPrivilege
     }
 
     updateCollection(form): void {
         const value = form.value;
         if (this.privilegeIndex !== null) {
-            this.repositories().at(this.privilegeIndex).setValue(value);
+            this.repositoriesAccess().at(this.privilegeIndex).setValue(value);
             this.dataSource.data.splice(this.privilegeIndex, 1);
         } else {
             // We need to push a NEW form with the values from the old one into the parent because of
             // weird issues. https://github.com/angular/angular/issues/25814
-            this.repositories().push(UserForm.generateAccessModelPathForm(value));
+            this.repositoriesAccess().push(UserForm.generateAccessModelPathForm(value));
             this.dataSource.data.push(value);
         }
 
@@ -184,7 +184,7 @@ export class UserAccessModelComponent implements OnInit, AfterViewInit, OnChange
         }
 
         if (index !== null) {
-            this.repositories().removeAt(index);
+            this.repositoriesAccess().removeAt(index);
             this.updateDataSource();
 
             if (this.dataSource.data.length === 0) {
@@ -196,15 +196,20 @@ export class UserAccessModelComponent implements OnInit, AfterViewInit, OnChange
     }
 
     deleteSelected() {
-        const selected = this.selection.selected.map((s) => s.path.trim());
+        const selected = this.selection.selected;
 
-        selected.forEach((p) => {
-            this.repositories().getRawValue().forEach((v: PathPrivilege, i) => {
-                if (selected.indexOf(v.path.trim()) > -1) {
-                    this.repositories().removeAt(i);
-                    return;
-                }
-            });
+        selected.forEach((selectedPathPrivilege: PathPrivilege) => {
+            const index = this.repositoriesAccess()
+                .getRawValue()
+                .findIndex((formPathPrivilege) => {
+                    return formPathPrivilege.path === selectedPathPrivilege.path
+                        && formPathPrivilege.repositoryId === selectedPathPrivilege.repositoryId
+                        && formPathPrivilege.storageId === selectedPathPrivilege.storageId;
+                });
+
+            if (index > -1) {
+                this.repositoriesAccess().removeAt(index);
+            }
         });
 
         this.selection.clear();
