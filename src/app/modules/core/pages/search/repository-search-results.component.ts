@@ -7,6 +7,7 @@ import {RepositorySearchService} from './repository-search.service';
 import {CodeSnippet, SearchResponse, SearchResult} from './search-result-interfaces';
 import {SearchQueryValueUpdateAction} from '../../../../state/app.actions';
 import {Navigate} from '@ngxs/router-plugin';
+import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
 
 @Component({
     selector: 'app-repository-search-results',
@@ -18,6 +19,8 @@ export class RepositorySearchResultsComponent implements OnInit {
     results$: BehaviorSubject<SearchResponse> = new BehaviorSubject(null);
 
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
+
+    breadcrumbs: Breadcrumb[] = [];
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -74,6 +77,11 @@ export class RepositorySearchResultsComponent implements OnInit {
         this.route.paramMap.subscribe((params: ParamMap) => {
             const query = params.get('query');
             if (query) {
+                this.breadcrumbs = [
+                    {label: 'Search results', url: []},
+                    {label: query, url: [], active: true}
+                ];
+
                 this.store.dispatch(new SearchQueryValueUpdateAction(params.get('query') || ''));
 
                 this.loading$.next(true);

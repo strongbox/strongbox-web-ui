@@ -1,45 +1,43 @@
-<div fxLayout="row" fxLayoutAlign="center">
-    <div fxFill="">
-        <div class="results">
-            <mat-accordion *ngIf="!(loading$ | async)">
-                <mat-expansion-panel *ngFor="let result of (results$ | async)?.artifact">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            {{ result.artifactCoordinates.groupId }}:{{result.artifactCoordinates.artifactId}}:{{result.artifactCoordinates.extension}}:{{result.artifactCoordinates.version}}
-                        </mat-panel-title>
-                        <mat-panel-description fxHide.lt-lg>
-                            <div class="panel-description text-right">
-                                <span><span class="highlight">Storage:</span> {{ result.storageId }}</span>
-                                <span class="separator"></span>
-                                <span><span class="highlight">Repository:</span> {{ result.repositoryId }}</span>
-                            </div>
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
+<app-page-container [loading]="loading$" [breadcrumbs]="breadcrumbs" class="noPadding noBackground">
 
-                    <div fxShow.lt-lg fxHide.gt-lg>
-                        <div class="panel-description small-screen text-left">
-                            <span class="highlight storage">Storage:</span> {{ result.storageId }} <br/>
-                            <span class="highlight">Repository:</span> {{ result.repositoryId }}
-                        </div>
+    <mat-accordion *ngIf="!(loading$ | async)">
+        <mat-expansion-panel *ngFor="let result of (results$ | async)?.artifact">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ result.artifactCoordinates.groupId }}:{{result.artifactCoordinates.artifactId}}:{{result.artifactCoordinates.extension}}:{{result.artifactCoordinates.version}}
+                </mat-panel-title>
+                <mat-panel-description fxHide.lt-lg>
+                    <div class="panel-description text-right">
+                        <span><span class="highlight">Storage:</span> {{ result.storageId }}</span>
+                        <span class="separator"></span>
+                        <span><span class="highlight">Repository:</span> {{ result.repositoryId }}</span>
                     </div>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
 
-                    <div>
-                        <mat-tab-group [dynamicHeight]="true" [selectedIndex]="findMavenSnippetIndex(result)">
-                            <mat-tab *ngFor="let snippet of result.snippets" [label]="snippet.name">
-                                <pre class="code" (click)="selectAll($event)">{{ snippet.code | codeSnippet }}</pre>
-                            </mat-tab>
-                        </mat-tab-group>
-                    </div>
+            <div fxShow.lt-lg fxHide.gt-lg>
+                <div class="panel-description small-screen text-left">
+                    <span class="highlight storage">Storage:</span> {{ result.storageId }} <br/>
+                    <span class="highlight">Repository:</span> {{ result.repositoryId }}
+                </div>
+            </div>
 
-                    <div class="links">
-                        <a [href]="link('download', result)">Download</a>
-                        <a [routerLink]="link('group', result)">Search by group</a>
-                        <a [routerLink]="link('artifact', result)">Search by artifact</a>
-                        <a [routerLink]="link('other-versions', result)">Other versions</a>
-                        <a [routerLink]="link('share', result)">Share</a>
-                    </div>
-                </mat-expansion-panel>
-            </mat-accordion>
-        </div>
-    </div>
-</div>
+            <div>
+                <mat-tab-group [dynamicHeight]="true" [selectedIndex]="findMavenSnippetIndex(result)">
+                    <mat-tab *ngFor="let snippet of result.snippets" [label]="snippet.name">
+                        <pre class="code" (click)="selectAll($event)">{{ snippet.code | codeSnippet }}</pre>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+
+            <div class="links">
+                <a [href]="link('download', result)">Download</a>
+                <a [routerLink]="link('group', result)">Search by group</a>
+                <a [routerLink]="link('artifact', result)">Search by artifact</a>
+                <a [routerLink]="link('other-versions', result)">Other versions</a>
+                <a [routerLink]="link('share', result)">Share</a>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+</app-page-container>

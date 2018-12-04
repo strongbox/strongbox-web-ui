@@ -109,6 +109,12 @@
                 </a>
             </li>
 
+            <li>
+                <a title="Browse" routerLink="/browse" routerLinkActive="active">
+                    <i class="icon ion-md-filing"></i>
+                </a>
+            </li>
+
             <li *ngFor="let item of navigation">
                 <a [title]="item.title" [routerLink]="item.url" routerLinkActive="active"
                    [style.margin-left]="item.marginLeft">
