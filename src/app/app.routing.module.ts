@@ -36,7 +36,7 @@ const routes: Routes = [
 
 @NgModule({
     // TODO Preload modules to which we actually have access to.
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes, {urlUpdateStrategy: 'eager'})],
     exports: [RouterModule],
     providers: [
         RepositorySearchResultResolver
