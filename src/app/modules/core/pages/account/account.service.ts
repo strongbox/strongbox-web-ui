@@ -7,20 +7,20 @@ import {plainToClass} from 'class-transformer';
 
 
 import {AuthenticatedUser} from '../../auth/auth.model';
-import {ProfileUpdateData} from './profile.model';
+import {AccountUpdateData} from './account.model';
 import {SessionState} from '../../auth/state/session.state';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ProfileService {
+export class AccountService {
 
     @Select(SessionState.authorities) authorities$;
 
     constructor(private http: HttpClient) {
     }
 
-    profile(updateData: ProfileUpdateData = null): Observable<any> {
+    profile(updateData: AccountUpdateData = null): Observable<any> {
         if (updateData) {
             // This could return form errors - be sure to catch and properly handle them.
             return this.http.put(`/api/account`, updateData);

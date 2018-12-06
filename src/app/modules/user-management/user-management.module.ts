@@ -18,6 +18,7 @@ import {ManageUserComponent} from './pages/manage-user/manage-user.component';
 import {FormHelperModule} from '../../shared/form/form-helper.module';
 import {UserAccessModelComponent} from './pages/manage-user/form/access-model-listing/user-access-model.component';
 import {FormDataService} from '../../shared/form/services/form-data.service';
+import {LayoutModule} from '../../shared/layout/layout.module';
 
 @NgModule({
     imports: [
@@ -25,6 +26,7 @@ import {FormDataService} from '../../shared/form/services/form-data.service';
         FormsModule,
         ReactiveFormsModule,
 
+        LayoutModule,
         MaterialModule,
         FormHelperModule,
 

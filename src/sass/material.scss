@@ -1,4 +1,5 @@
 @import '~@angular/material/theming';
+@import 'variables';
 
 //
 // Fonts configuration
@@ -9,17 +10,20 @@
 // @import '~open-sans-fontface/sass/variables';
 $OpenSansPath: "~open-sans-fontface/fonts" !default;
 $OpenSansVersion: "1.1.0" !default;
-@import '~open-sans-fontface/sass/mixins';
-@import '~open-sans-fontface/sass/Light';
+//@import '~open-sans-fontface/sass/mixins';
+//@import '~open-sans-fontface/sass/Light';
+//@import '~open-sans-fontface/sass/Regular';
+@import '~open-sans-fontface/sass/open-sans';
 
 // Raleway
 //@import '~fonts-raleway/scss/variables';
 $raleway-font-path: '~fonts-raleway/fonts/fonts-raleway' !default;
 @import '~fonts-raleway/scss/raleway-thin';
+@import '~fonts-raleway/scss/raleway-extralight';
+@import '~fonts-raleway/scss/raleway-light';
 
 // Ionic icons
 @import '~ionicons/dist/css/ionicons.css';
-
 
 //
 // Material configuration
@@ -27,12 +31,12 @@ $raleway-font-path: '~fonts-raleway/fonts/fonts-raleway' !default;
 
 // Define a custom typography config that overrides the font-family as well as the `headlines` and `body-1` levels, etc.
 $custom-typography: mat-typography-config(
-    $font-family: 'Helvetica, sans-serif',
-    $display-4: mat-typography-level(112px, 112px, 300, 'Open Sans, Helvetica, Arial, sans-serif'),
-    $display-3: mat-typography-level(56px, 56px, 400, 'Open Sans, Helvetica, Arial, sans-serif'),
-    $display-2: mat-typography-level(45px, 48px, 400, 'Open Sans, Helvetica, Arial, sans-serif'),
-    $display-1: mat-typography-level(34px, 40px, 400, 'Open Sans, Helvetica, Arial, sans-serif'),
-    $headline: mat-typography-level(24px, 32px, 400, 'Open Sans, Helvetica, Arial, sans-serif'),
+    $font-family: $font-family,
+    $display-4: mat-typography-level(112px, 112px, 300, $font-family),
+    $display-3: mat-typography-level(56px, 56px, 400, $font-family),
+    $display-2: mat-typography-level(45px, 48px, 400, $font-family),
+    $display-1: mat-typography-level(34px, 40px, 400, $font-family),
+    $headline: mat-typography-level(24px, 32px, 400, $font-family),
     $title: mat-typography-level(20px, 32px, 500),
     $subheading-2: mat-typography-level(16px, 28px, 400),
     $subheading-1: mat-typography-level(15px, 23px, 400),

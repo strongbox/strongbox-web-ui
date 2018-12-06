@@ -10,6 +10,7 @@ import {MaterialModule} from '../../../../shared/material.module';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {UserAccessModelComponent} from '../manage-user/form/access-model-listing/user-access-model.component';
 import {FormHelperModule} from '../../../../shared/form/form-helper.module';
+import {LayoutModule} from '../../../../shared/layout/layout.module';
 
 describe('Component: ViewUserComponent', () => {
     let component: ViewUserComponent;
@@ -19,6 +20,7 @@ describe('Component: ViewUserComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
+                LayoutModule,
                 MaterialModule,
                 FormsModule,
                 FormHelperModule,

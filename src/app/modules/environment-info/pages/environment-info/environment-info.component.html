@@ -6,7 +6,7 @@
         TODO: Update the controller to give this information.
         <mat-tab label="Strongbox">
             <div class="tabContent">
-                <table mat-table [dataSource]="dataSourceStrongbox" style="width: 100%;">
+                <table mat-table [dataSource]="dataSourceStrongbox">
                     <ng-container matColumnDef="name">
                         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
                     </ng-container>
@@ -23,14 +23,20 @@
 -->
 
         <mat-tab label="JVM arguments">
-            <mat-list>
-                <mat-list-item *ngFor="let item of (data | async).jvm">
-                    {{ item }}
-                </mat-list-item>
-            </mat-list>
+            <div class="tabContent">
+                <mat-form-field style="width: 100%;" *ngIf="dataSourceJvm.data.length > 0">
+                    <input matInput (keyup)="applyFilter('jvm', $event.target.value)" placeholder="Filter" autocomplete="off">
+                </mat-form-field>
 
-            <div fxLayout="row" fxLayoutAlign="center" style="padding: 10px;" *ngIf="(data | async).jvm.length < 1">
-                No JVM arguments were found.
+                <mat-list *ngIf="dataSourceJvm.filteredData.length > 0">
+                    <mat-list-item *ngFor="let item of dataSourceJvm.filteredData">
+                        {{ item.val }}
+                    </mat-list-item>
+                </mat-list>
+
+                <div fxLayout="row" fxLayoutAlign="center" class="not-found" *ngIf="dataSourceJvm.filteredData.length < 1">
+                    No JVM arguments were found.
+                </div>
             </div>
         </mat-tab>
 
@@ -40,7 +46,7 @@
                     <input matInput (keyup)="applyFilter('env', $event.target.value)" placeholder="Filter" autocomplete="off">
                 </mat-form-field>
 
-                <table mat-table [dataSource]="dataSourceEnvironment" style="width: 100%;" *ngIf="dataSourceSystem.data.length > 0">
+                <table mat-table [dataSource]="dataSourceEnvironment" *ngIf="dataSourceEnvironment.filteredData.length > 0">
                     <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef>Name</th>
                         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -54,10 +60,9 @@
 
                     <tr mat-header-row *matHeaderRowDef="['name', 'value']"></tr>
                     <tr mat-row *matRowDef="let row; columns: ['name', 'value'];"></tr>
-
                 </table>
 
-                <div fxLayout="row" fxLayoutAlign="center" style="padding: 10px;" *ngIf="dataSourceEnvironment.data.length < 1">
+                <div fxLayout="row" fxLayoutAlign="center" class="not-found" *ngIf="dataSourceEnvironment.filteredData.length < 1">
                     No environment variables were found.
                 </div>
             </div>
@@ -69,7 +74,7 @@
                     <input matInput (keyup)="applyFilter('sys', $event.target.value)" placeholder="Filter" autocomplete="off">
                 </mat-form-field>
 
-                <table mat-table [dataSource]="dataSourceSystem" style="width: 100%;" *ngIf="dataSourceSystem.data.length > 0">
+                <table mat-table [dataSource]="dataSourceSystem" *ngIf="dataSourceSystem.filteredData.length > 0">
                     <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef>Name</th>
                         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -83,11 +88,10 @@
 
                     <tr mat-header-row *matHeaderRowDef="['name', 'value']"></tr>
                     <tr mat-row *matRowDef="let row; columns: ['name', 'value'];"></tr>
-
                 </table>
 
-                <div fxLayout="row" fxLayoutAlign="center" style="padding: 10px;" *ngIf="dataSourceSystem.data.length < 1">
-                    No system variables were found.
+                <div fxLayout="row" fxLayoutAlign="center" class="not-found" *ngIf="dataSourceSystem.filteredData.length < 1">
+                    No system properties were found.
                 </div>
             </div>
         </mat-tab>

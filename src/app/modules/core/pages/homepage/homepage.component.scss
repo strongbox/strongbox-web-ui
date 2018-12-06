@@ -1,0 +1,85 @@
+@import "../../../../../sass/helpers";
+
+.homepage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  margin-top: -8vh;
+
+  @media (max-width: 480px) and (orientation: portrait) {
+    margin-top: -1rem;
+    height: 95vh;
+  }
+
+
+  .strongbox {
+    @include logo-text(2.5rem, -2px 0px 0px 0px);
+  }
+
+  .search {
+    min-width: 250px;
+    max-width: 40rem;
+    width: 100%;
+
+    @media (min-width: 320px) and (max-width: 480px) {
+      max-width: 12rem;
+    }
+
+    ::ng-deep input {
+      font: 400 19px/26px 'Open Sans', Helvetica, sans-serif;
+      color: #EAEAEA;
+    }
+
+    ::ng-deep .mat-form-field-wrapper {
+      padding-bottom: 0px;
+    }
+
+    ::ng-deep .mat-form-field-flex {
+      padding: 0;
+      margin-top: 20px;
+      background-color: rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      border: 1px solid #233d4c;
+      transition: all 0.2s ease;
+    }
+
+    @include input-placeholder(rgba(255, 255, 255, 0.85), #1a2f3e);
+
+    ::ng-deep .mat-form-field-infix {
+      border-top: none;
+      padding: .31em 0 0.31em 0.5em;
+    }
+
+    ::ng-deep .mat-form-field-underline {
+      display: none;
+    }
+
+    ::ng-deep .mat-form-field-prefix {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 15px;
+      margin-left: 10px;
+      margin-right: -4px;
+    }
+
+    ::ng-deep .mat-focused {
+      .mat-form-field-flex {
+        background-color: rgba(255, 255, 255, .8);
+      }
+
+      @include input-placeholder(rgba(255, 255, 255, 0.85), #1a2f3e);
+
+      input {
+        color: #323232;
+      }
+
+      .mat-form-field-prefix {
+        color: #323232;
+      }
+    }
+  }
+
+}

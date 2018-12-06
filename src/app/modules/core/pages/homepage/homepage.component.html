@@ -1,0 +1,15 @@
+<div class="homepage" fxLayout="column" *ngIf="(isHomepage$ | async)">
+    <div class="strongbox">
+        <div class="logo-text">
+            <a routerLink="/" id="logo">Strongbox</a>
+        </div>
+    </div>
+
+    <div class="search">
+        <aql-autocomplete #aqlSearch
+                          width="100%"
+                          placeholder="Search query"
+                          [dataSource]="aqlDataSource"
+                          (submit)="submitSearchRequest($event)"></aql-autocomplete>
+    </div>
+</div>

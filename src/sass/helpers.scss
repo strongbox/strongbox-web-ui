@@ -9,7 +9,7 @@
 
     font-family: 'Raleway', sans-serif;
     font-size: $font-size;
-    font-weight: 100;
+    font-weight: 300;
     @if $margin != null {
       margin: $margin
     }
@@ -26,18 +26,7 @@
     }
 
     a::after {
-      content: '';
-      width: 0;
-      height: 1px;
-      background: #2684b4;
-      transition: width .2s;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-    }
-
-    a:hover::after {
-      width: 100%;
+      background: transparent;
     }
   }
 
@@ -93,4 +82,15 @@
   input:focus:-moz-placeholder { /* Firefox 18- */
     color: $hover;
   }
+}
+
+@function enumerate($list) {
+  $map: ();
+  $length: length($list);
+  @for $index from 1 through $length {
+    $isLast: $index == $length;
+    $value: nth($list, $index);
+    $map: map-merge($map, ($index:$value), $isLast);
+  }
+  @return $map;
 }

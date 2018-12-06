@@ -21,19 +21,20 @@ import {environment} from '../../../environments/environment';
 import {ApiURLInterceptor} from './services/interceptors/api-url.interceptor';
 import {CodeSnippet} from './pipes/code-snippet.pipe';
 import {RepositorySearchService} from './pages/search/repository-search.service';
-import {CoreRouterResolver} from './core.router.resolver';
 import {SessionState} from './auth/state/session.state';
 import {AuthService} from './auth/auth.service';
 import {LoginDialogComponent} from './dialogs/login/login.dialog.component';
 import {AppState} from '../../state/app.state';
 import {TokenInterceptor} from './services/interceptors/token.interceptor';
 import {AuthGuard} from './auth/auth.guard';
-import {ProfileComponent} from './pages/profile/profile.component';
-import {ProfileService} from './pages/profile/profile.service';
-import {ProfileFormState} from './pages/profile/state/profile.form.state';
+import {MyAccountComponent} from './pages/account/my-account.component';
+import {AccountService} from './pages/account/account.service';
+import {AccountFormState} from './pages/account/state/accountFormState';
 import {ErrorInterceptor} from './services/interceptors/error.interceptor';
 import {ConfirmDialogComponent} from './dialogs/confirm/confirm.dialog.component';
 import {FormHelperModule} from '../../shared/form/form-helper.module';
+import {LayoutModule} from '../../shared/layout/layout.module';
+import {NgProgressRouterModule} from '@ngx-progressbar/router';
 
 @NgModule({
     imports: [
@@ -45,7 +46,9 @@ import {FormHelperModule} from '../../shared/form/form-helper.module';
 
         // User Interface (layout, material, etc)
         FlexLayoutModule,
+        LayoutModule,
         MaterialModule,
+        FormHelperModule,
         ToastrModule.forRoot({
             autoDismiss: true,
             disableTimeOut: false,
@@ -61,7 +64,7 @@ import {FormHelperModule} from '../../shared/form/form-helper.module';
         NgxsModule.forRoot([
             AppState,
             SessionState,
-            ProfileFormState
+            AccountFormState
         ]),
         NgxsRouterPluginModule.forRoot(),
         NgxsFormPluginModule.forRoot(),
@@ -73,10 +76,12 @@ import {FormHelperModule} from '../../shared/form/form-helper.module';
         NgProgressModule.forRoot({
             color: '#2684bd',
             spinner: false,
-            thick: true,
-            debounceTime: 100
+            thick: false,
+            fixed: true,
+            debounceTime: 50
         }),
-        NgProgressHttpModule
+        NgProgressHttpModule.forRoot(),
+        NgProgressRouterModule.forRoot()
     ],
     exports: [
         CommonModule,
@@ -102,7 +107,7 @@ import {FormHelperModule} from '../../shared/form/form-helper.module';
         ConfirmDialogComponent,
         RepositorySearchResultsComponent,
         PageNotFoundComponent,
-        ProfileComponent
+        MyAccountComponent
     ],
     entryComponents: [
         LoginDialogComponent,
@@ -124,10 +129,9 @@ import {FormHelperModule} from '../../shared/form/form-helper.module';
             useClass: ErrorInterceptor,
             multi: true
         },
-        CoreRouterResolver,
         AuthService,
         AuthGuard,
-        ProfileService,
+        AccountService,
         RepositorySearchService,
     ]
 })

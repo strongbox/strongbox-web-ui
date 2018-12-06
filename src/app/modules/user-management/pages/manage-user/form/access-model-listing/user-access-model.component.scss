@@ -28,7 +28,7 @@
   ::ng-deep .mat-icon-button {
     width: $icon-size;
     height: $icon-size;
-    line-height: $icon-size;
+    line-height: calc(#{$icon-size} - 10px);
   }
 }
 
@@ -41,7 +41,7 @@
   .mat-icon-button {
     width: $icon-size;
     height: $icon-size;
-    line-height: $icon-size;
+    line-height: calc(#{$icon-size} - 10px);
     color: $nav-link-color;
     transition: color 0.2s;
   }

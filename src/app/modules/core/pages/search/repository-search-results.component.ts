@@ -1,12 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
-import {Store} from '@ngxs/store';
 
-import {RepositorySearchService} from './repository-search.service';
 import {CodeSnippet, SearchResponse, SearchResult} from './search-result-interfaces';
-import {SearchQueryValueUpdateAction} from '../../../../state/app.actions';
-import {Navigate} from '@ngxs/router-plugin';
+import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
 
 @Component({
     selector: 'app-repository-search-results',
@@ -19,11 +16,9 @@ export class RepositorySearchResultsComponent implements OnInit {
 
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
-    constructor(private route: ActivatedRoute,
-                private router: Router,
-                private searchService: RepositorySearchService,
-                private store: Store
-    ) {
+    breadcrumbs: Breadcrumb[] = [];
+
+    constructor(private route: ActivatedRoute) {
     }
 
     /**
@@ -71,22 +66,16 @@ export class RepositorySearchResultsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.route.paramMap.subscribe((params: ParamMap) => {
-            const query = params.get('query');
-            if (query) {
-                this.store.dispatch(new SearchQueryValueUpdateAction(params.get('query') || ''));
+        this.route.data.subscribe((data: any) => {
+            const query = this.route.snapshot.paramMap.get('query');
 
-                this.loading$.next(true);
+            this.breadcrumbs = [
+                {label: 'Search results', url: []},
+                {label: query, url: [], active: true}
+            ];
 
-                this.searchService
-                    .find(query)
-                    .subscribe((response: SearchResponse) => {
-                        this.loading$.next(false);
-                        this.results$.next(response);
-                    });
-            } else {
-                this.store.dispatch(new Navigate(['/']));
-            }
+            this.results$.next(data.searchResponse);
+            this.loading$.next(false);
         });
     }
 }

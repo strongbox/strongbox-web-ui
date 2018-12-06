@@ -8,11 +8,12 @@ import {
     Input,
     OnDestroy,
     Output,
+    Renderer2,
     ViewChild
 } from '@angular/core';
-import {AbstractControl, ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {BehaviorSubject, combineLatest, EMPTY, interval, Observable, of, Subject, timer} from 'rxjs';
-import {debounce, delayWhen, distinctUntilChanged, filter, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {BehaviorSubject, combineLatest, interval, Observable, of, Subject} from 'rxjs';
+import {delayWhen, distinctUntilChanged, filter, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material';
 
 import {AutocompleteOption, AutocompleteSelectFunction, InputCursorPosition} from '../autocomplete.model';
@@ -35,19 +36,26 @@ import {AqlAutocompleteDataSource} from './aql-autocomplete.data-source';
 })
 export class AqlAutocompleteComponent implements ControlValueAccessor, AfterViewInit, OnDestroy {
 
-    // tslint:enable:semicolon
-    constructor() {
-    }
-
     @Input() placeholder: string;
     @Input() floatLabel: 'auto' | 'always' | 'never' = 'auto';
-    @Input() debounceTime = 300;
     @Input() width = '';
     @Input() panelWidth = '10%';
     @Input() autoActiveFirstOption = false;
     @Input() selectionFunc: AutocompleteSelectFunction = AqlAutocompleteComponent.defaultSelectionFunc;
     @Input() dataSource: AqlAutocompleteDataSource = null;
-    @Input() searchControl: AbstractControl = new FormControl();
+
+    private inputValue$ = new BehaviorSubject(null);
+
+    @Input() set value(value: string) {
+        this.inputValue$.next(value);
+    }
+
+    private disabled$ = new BehaviorSubject(false);
+
+    @Input() set disabled(value: boolean) {
+        this.disabled$.next(value);
+    }
+
     @Output() submit: EventEmitter<string> = new EventEmitter<string>();
 
     loading: Observable<boolean>;
@@ -115,7 +123,7 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
         if (data !== null && data !== '') {
             let selectedValue = this.selectionFunc(data);
 
-            let inputValue = this.searchControl.value;
+            let inputValue = this.inputValue$.getValue();
 
             // append / replace the selection at the position where the cursor currently is.
             const cursor = this.inputCursorPosition.getValue();
@@ -147,12 +155,12 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
         return displayValue;
     };
 
+    constructor(private renderer: Renderer2) {
+    }
+
     ngAfterViewInit(): void {
         // Subscribe to the data source
         this.options = this.dataSource !== null ? this.dataSource.connect() : of([]);
-
-        // Track and Write input changes.
-        this._inputChanges();
 
         // Search/filter autocomplete list
         this._inputSearchSubscriber();
@@ -178,6 +186,7 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
     }
 
     registerOnChange(fn: any): void {
+        console.log('registerOnChange', fn);
         this.onChange = fn;
     }
 
@@ -186,20 +195,19 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
     }
 
     setDisabledState(isDisabled: boolean): void {
-        if (isDisabled) {
-            this.searchControl.disable();
-        } else {
-            this.searchControl.enable();
-        }
+        this.renderer.setProperty(this.searchInput.nativeElement, 'disabled', isDisabled);
     }
 
-    writeValue(value: any): void {
-        // Angular sometimes writes a value that didn't really change.
-        if (value !== this.currentInputValue && !this.searchControl.disabled) {
-            this.currentInputValue = value;
-            this.onChange(value);
-            this.onTouched();
+    writeValue(data: AqlSuggestion | string | null): void {
+        // Write the appropriate value in the input field.
+        let value = data;
+        if (this._isAqlSuggestionType(data)) {
+            value = (<AqlSuggestion>data).value;
         }
+
+        this.currentInputValue = value;
+        const normalizedValue = value == null ? '' : value;
+        this.inputValue$.next(normalizedValue);
     }
 
     /**
@@ -226,21 +234,13 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
      * Track input changes and write the value when it changes.
      * @private
      */
-    _inputChanges() {
-        this.searchControl.valueChanges.pipe(
-            startWith(this.searchControl.value),
-            distinctUntilChanged(),
-            debounce(search => {
-                // Typing into input sends strings.
-                if (typeof search === 'string') {
-                    return timer(this.debounceTime);
-                }
-                return EMPTY; // immediate - no debounce for choosing from the list
-            }),
-            takeUntil(this.destroy)
-        ).subscribe((val) => {
-            this.writeValue(val);
-        });
+    _inputChanges(event: KeyboardEvent) {
+        let value = (<any>event.target).value;
+        if (value !== this.inputValue$.getValue()) {
+            this.inputValue$.next(value);
+        }
+
+        this._inputCursorPositionTracking(event);
     }
 
     /**
@@ -248,29 +248,31 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
      * @private
      */
     _inputSearchSubscriber() {
-        this.searchControl.valueChanges.pipe(
-            filter(() => !this.searchControl.disabled),
-            filter(v => typeof v === 'string'),
-            takeUntil(this.destroy)
-        ).subscribe((term) => {
-            // search/filter
-            this.dataSource
-                .search(term, this.getInputCursorPosition())
-                .pipe(take(1))
-                .subscribe((options: AutocompleteOption<AqlSuggestion>[]) => {
-                    // console.log('dataSource results:', options);
-                    // https://github.com/angular/material2/issues/13650
-                    if (options.length < 1) {
-                        if (this.autocomplete.isOpen) {
-                            this.autocompleteTrigger.closePanel();
+        this.inputValue$
+            .pipe(
+                filter(() => !this.disabled$.getValue()),
+                filter(v => typeof v === 'string'),
+                takeUntil(this.destroy)
+            )
+            .subscribe((term) => {
+                // search/filter
+                this.dataSource
+                    .search(term, this.getInputCursorPosition())
+                    .pipe(take(1))
+                    .subscribe((options: AutocompleteOption<AqlSuggestion>[]) => {
+                        // console.log('dataSource results:', options);
+                        // https://github.com/angular/material2/issues/13650
+                        if (options.length < 1) {
+                            if (this.autocomplete.isOpen) {
+                                this.autocompleteTrigger.closePanel();
+                            }
+                        } else {
+                            if (!this.autocomplete.isOpen) {
+                                this.autocomplete.opened.emit();
+                            }
                         }
-                    } else {
-                        if (!this.autocomplete.isOpen) {
-                            this.autocomplete.opened.emit();
-                        }
-                    }
-                });
-        });
+                    });
+            });
     }
 
     /**
@@ -279,7 +281,7 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
      */
     _movePanel() {
         combineLatest(
-            this.searchControl.valueChanges,
+            this.inputValue$,
             this.inputCursorPosition
         ).pipe(
             startWith(<SearchAndCursorData>{search: '', cursor: null}),
@@ -287,7 +289,7 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
                 v[1] = this.getInputCursorPosition();
                 return of({search: v[0], cursor: v[1]});
             }),
-            filter(() => !this.searchControl.disabled),
+            filter(() => !this.disabled$.getValue()),
             filter((data) => data.search === '' || typeof data.search === 'string'),
             distinctUntilChanged(),
             takeUntil(this.destroy)
@@ -322,11 +324,11 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
     _preventSubmitOnOptionSelection() {
         // Keep track of the selected option index to decide if we should prevent `submit` emission.
         this.autocomplete._keyManager.change
-            // Slightly delay setting `preventSubmitEmission = false` but don't delay `preventSubmitEmission = true`
-            // so that everything works as expected.
+        // Slightly delay setting `preventSubmitEmission = false` but don't delay `preventSubmitEmission = true`
+        // so that everything works as expected.
             .pipe(delayWhen((selectIndex, index) => {
                 const delay = selectIndex > -1 ? 0 : 220;
-                return interval(delay)
+                return interval(delay);
             }))
             .subscribe(selectIndex => {
                 this.preventSubmitEmission = selectIndex > -1;
@@ -335,7 +337,7 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
 
     _handleOptionSelection() {
         this.autocomplete.optionSelected.pipe(
-            filter(() => !this.searchControl.disabled),
+            filter(() => !this.disabled$.getValue()),
             takeUntil(this.destroy)
         ).subscribe((event: MatAutocompleteSelectedEvent) => {
             const matOption = event.option;
@@ -381,12 +383,21 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
      */
     _sendSubmitEmitter() {
         if (this.preventSubmitEmission === false) {
-            this.submit.emit(this.searchControl.value);
+            this.submit.emit(this.inputValue$.getValue());
         }
     }
 
+    _getInputValue() {
+        return this.inputValue$.getValue();
+    }
+
+    _isAqlSuggestionType(data: any) {
+        const suggestion = (<AqlSuggestion>data);
+        return suggestion !== null && suggestion !== undefined && suggestion.value !== undefined && suggestion.type !== undefined;
+    }
+
     getInputCursorPosition() {
-        return <InputCursorPosition> {
+        return <InputCursorPosition>{
             start: this.searchInput.nativeElement.selectionStart,
             end: this.searchInput.nativeElement.selectionEnd
         };
@@ -394,11 +405,6 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
 
     getInputValue() {
         return this.searchInput.nativeElement.value;
-    }
-
-    setInputValue(value: string) {
-        this.searchInput.nativeElement.value = value;
-        this.writeValue(value);
     }
 }
 

@@ -8,8 +8,9 @@ import {RepositorySearchResultsComponent} from './repository-search-results.comp
 import {CodeSnippet} from '../../pipes/code-snippet.pipe';
 import {AppState} from '../../../../state/app.state';
 import {MaterialModule} from '../../../../shared/material.module';
+import {LayoutModule} from '../../../../shared/layout/layout.module';
 
-describe('RepositorySearchResultsComponent', () => {
+describe('Component: RepositorySearchResultsComponent', () => {
     let httpClient: HttpClient;
     let httpTestingController: HttpTestingController;
 
@@ -21,6 +22,7 @@ describe('RepositorySearchResultsComponent', () => {
             imports: [
                 HttpClientTestingModule,
                 RouterTestingModule,
+                LayoutModule,
                 MaterialModule,
                 NgxsModule.forRoot([AppState]),
             ],

@@ -12,6 +12,7 @@ import {FormHelperModule} from '../../../../shared/form/form-helper.module';
 import {ManageUserComponent} from './manage-user.component';
 import {AppState} from '../../../../state/app.state';
 import {UserAccessModelComponent} from './form/access-model-listing/user-access-model.component';
+import {LayoutModule} from '../../../../shared/layout/layout.module';
 
 describe('Component: ManageUserComponent', () => {
     let component: ManageUserComponent;
@@ -24,6 +25,7 @@ describe('Component: ManageUserComponent', () => {
                 BrowserAnimationsModule,
                 FormsModule,
                 ReactiveFormsModule,
+                LayoutModule,
                 MaterialModule,
                 FormHelperModule,
                 HttpClientTestingModule,

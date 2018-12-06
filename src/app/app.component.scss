@@ -1,0 +1,291 @@
+@import "../sass/variables";
+@import "../sass/helpers";
+
+a:hover {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.header-navigation {
+  width: 100%;
+  height: $header-nav-height;
+
+  background: $header-nav-background;
+
+  z-index: 99;
+  display: flex;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  padding: 11px 10px 0px 48px;
+  box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.25);
+
+  .container {
+    width: 94vw;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 34px;
+
+    li:first-of-type {
+      margin-left: 24px;
+    }
+
+    li {
+      display: inline-flex;
+      margin-right: 24px;
+    }
+
+    i {
+      font-size: 24px;
+    }
+  }
+
+  @include logo-text(1.8rem, -0.6rem 0px 0px 0px);
+
+  .logo-text {
+    margin-right: 24px;
+  }
+
+  .search {
+    ::ng-deep input {
+      font: 400 19px/26px 'Open Sans', Helvetica, sans-serif;
+      color: #EAEAEA;
+    }
+
+    ::ng-deep .mat-form-field-wrapper {
+      padding-bottom: 0px;
+    }
+
+    ::ng-deep .mat-form-field-flex {
+      padding: 0;
+      margin-top: 0px;
+      background-color: rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      border: 1px solid #233d4c;
+      transition: all 0.2s ease;
+    }
+
+    @include input-placeholder(rgba(255, 255, 255, 0.85), #1a2f3e);
+
+    ::ng-deep .mat-form-field-infix {
+      border-top: none;
+      padding: .31em 0 0.31em 0.5em;
+    }
+
+    ::ng-deep .mat-form-field-underline {
+      display: none;
+    }
+
+    ::ng-deep .mat-form-field-prefix {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 15px;
+      margin-left: 10px;
+      margin-right: -4px;
+    }
+
+    ::ng-deep .mat-focused {
+      .mat-form-field-flex {
+        background-color: rgba(255, 255, 255, .8);
+      }
+
+      @include input-placeholder(rgba(255, 255, 255, 0.85), #1a2f3e);
+
+      input {
+        color: #323232;
+      }
+
+      .mat-form-field-prefix {
+        color: #323232;
+      }
+    }
+  }
+}
+
+.header-navigation.transparent {
+  background: transparent;
+  box-shadow: unset;
+}
+
+.guest-navigation {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+
+  padding: 12px 10px 20px 20px;
+
+  a {
+    margin-right: 20px;
+  }
+
+  i {
+    font-size: 22px;
+
+    @media (max-width: 480px) {
+      font-size: 18px;
+    }
+  }
+
+  span {
+    font-size: 16px;
+    position: relative;
+    margin-left: 6px;
+    top: -1px;
+
+    @media (max-width: 480px) {
+      font-size: 12px;
+    }
+
+  }
+}
+
+.side-navigation {
+  display: flex;
+  width: 48px;
+  min-height: 690px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  background: transparentize($header-nav-background, 0.89);
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+
+  -webkit-box-shadow: 0px 0px 10px -2px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: 0px 0px 10px -2px rgba(0, 0, 0, 0.6);
+  box-shadow: 0px 0px 10px -2px rgba(0, 0, 0, 0.6);
+
+  z-index: 999;
+
+  /*
+  background: linear-gradient(to bottom,
+      $body-gradient-0 0%,
+      $body-gradient-1 20%,
+      $body-gradient-2 100%
+  );
+  */
+
+  // Check if this works better?
+  // background: linear-gradient(to bottom, #324359 0%, #203142 100%);
+  // background: rgb(47, 64, 82);
+  // background: #253748;
+
+  .corner {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 49px;
+    height: $header-nav-height;
+    background: rgba(0, 0, 0, 0.15);
+  }
+
+  li {
+    list-style: none;
+    margin-bottom: 24px;
+  }
+
+  i {
+    font-size: 24px;
+  }
+
+  .icons {
+    top: calc(50% - calc(6 * 48px));
+    position: absolute;
+    -webkit-transition: all 0.25s;
+    -moz-transition: all 0.25s;
+    -ms-transition: all 0.25s;
+    -o-transition: all 0.25s;
+    transition: all 0.25s;
+  }
+
+}
+
+.side-navigation.alignIconsTop {
+  .icons {
+    top: $header-nav-height + 24px;
+  }
+}
+
+.side-navigation.bottom {
+  display: inline-flex;
+  position: fixed;
+  top: unset;
+  bottom: 0px;
+  height: 48px;
+  min-height: unset;
+  width: 100%;
+  padding: 12px 10px 8px 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  background: #314254;
+  background: linear-gradient(to right, #314254 0%, #2c3e4f 10%, #253848 20%, #233646 50%, #203142 100%);
+
+  ul {
+    white-space: nowrap;
+  }
+
+  li:first-of-type {
+    margin-left: 24px;
+  }
+
+  li:last-of-type {
+    margin-right: 48px;
+  }
+
+  li {
+    margin-right: 48px;
+    display: inline;
+  }
+
+}
+
+.mobile-navigation {
+  display: inline-flex;
+  position: absolute;
+  top: 50px;
+  left: 0px;
+  z-index: 999;
+  width: 100%;
+  background: #314254;
+  background: linear-gradient(to right, #314254 0%, #2c3e4f 10%, #253848 20%, #233646 50%, #203142 100%);
+
+  @include logo-text(1.8rem, -0.4rem 0px 0px 0px);
+
+  .logo-text {
+    margin-top: 10px;
+    margin-left: 16px;
+  }
+
+  .close {
+    padding: 10px;
+    color: red;
+  }
+
+  @media (max-width: 768px) {
+    padding: 11px 10px 11px 0px;
+  }
+
+  .open-mobile-nav {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+  }
+
+  .icons {
+    margin-top: 20px;
+
+    ul {
+      margin-left: 16px;
+    }
+
+    li {
+      list-style: none;
+      margin-bottom: 24px;
+    }
+  }
+}

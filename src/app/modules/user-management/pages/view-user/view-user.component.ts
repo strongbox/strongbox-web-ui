@@ -6,10 +6,11 @@ import {Navigate} from '@ngxs/router-plugin';
 import {Select, Store} from '@ngxs/store';
 import {ToastrService} from 'ngx-toastr';
 
-import {UserPrivilege, UserRole, User, UserForm, UserOperations, UserResponse} from '../../user.model';
+import {User, UserForm, UserOperations, UserPrivilege, UserResponse, UserRole} from '../../user.model';
 import {UserManagementService} from '../../services/user-management.service';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {handle404error} from '../../../core/core.model';
+import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
 
 @Component({
     selector: 'app-view-user',
@@ -23,12 +24,17 @@ export class ViewUserComponent implements OnInit {
     hasUpdateUserAuthority$;
 
     loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-    user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-    public assignableRoles$: BehaviorSubject<UserRole[]> = new BehaviorSubject<UserRole[]>([]);
-    public assignablePrivileges$: BehaviorSubject<UserPrivilege[]> = new BehaviorSubject<UserPrivilege[]>([]);
+    user$: BehaviorSubject<User> = new BehaviorSubject<User>(new User());
+    assignableRoles$: BehaviorSubject<UserRole[]> = new BehaviorSubject<UserRole[]>([]);
+    assignablePrivileges$: BehaviorSubject<UserPrivilege[]> = new BehaviorSubject<UserPrivilege[]>([]);
+    assignedRoles: UserRole[] = [];
 
     // Necessary to generate the app-user-access-model-listing
     userForm: FormGroup;
+
+    breadcrumbs: Breadcrumb[] = [
+        {label: 'Users', url: ['/admin/users']}
+    ];
 
     constructor(private service: UserManagementService,
                 private route: ActivatedRoute,
@@ -39,6 +45,7 @@ export class ViewUserComponent implements OnInit {
     ngOnInit() {
         this.route.paramMap.subscribe((params: ParamMap) => {
             const username = params.get('username');
+            this.breadcrumbs.push({label: username, url: [], active: true});
             if (username) {
                 this.service
                     .getUser(username, true)
@@ -47,6 +54,9 @@ export class ViewUserComponent implements OnInit {
                             this.user$.next(response.user);
                             this.assignableRoles$.next(response.assignableRoles);
                             this.assignablePrivileges$.next(response.assignablePrivileges.filter(v => v.name.indexOf('ARTIFACTS_') > -1));
+                            this.assignedRoles = response.assignableRoles.filter((ar: UserRole) => {
+                                return response.user.roles.find((ur: string) => ur === ar.name) !== undefined;
+                            });
                             this.loading$.next(false);
                             this.userForm = new UserForm(UserOperations.VIEW, response.user).getForm();
                         },

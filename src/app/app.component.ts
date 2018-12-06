@@ -1,32 +1,70 @@
-import {ChangeDetectionStrategy, Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
+import {animate, group, state, style, transition, trigger} from '@angular/animations';
+import {Actions, Select, Store} from '@ngxs/store';
 import {Navigate} from '@ngxs/router-plugin';
-import {distinctUntilChanged} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 import {AuthService} from './modules/core/auth/auth.service';
 import {LogoutAction} from './modules/core/auth/state/auth.actions';
-import {
-    HideSideNavAction,
-    OpenLoginDialogAction,
-    SearchQuerySubmitAction,
-    SearchQueryValueUpdateAction,
-    ToggleSideNavAction
-} from './state/app.actions';
+import {OpenLoginDialogAction, SearchQuerySubmitAction} from './state/app.actions';
 import {AppState} from './state/app.state';
 import {SessionState} from './modules/core/auth/state/session.state';
-import {AqlAutocompleteService} from './shared/form/services/aql-autocomplete.service';
 import {AbstractAutocompleteDataSource} from './shared/form/autocomplete/autocomplete.model';
 import {AqlAutocompleteDataSource} from './shared/form/autocomplete/aql-autocomplete/aql-autocomplete.data-source';
-import {AqlAutocompleteComponent} from './shared/form/autocomplete/aql-autocomplete/aql-autocomplete.component';
+import {AqlAutocompleteService} from './shared/form/services/aql-autocomplete.service';
 
 @Component({
     selector: 'app-strongbox',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        trigger('slideInOut', [
+            state('in', style({top: '*', height: '*', opacity: 0})),
+
+            transition(':leave', [
+                group([
+                    animate('250ms cubic-bezier(.95,.59,.36,1.04)', style({top: '-20px'})),
+                    animate(150, style({opacity: 0}))
+                ])
+
+            ]),
+
+            transition(':enter', [
+                style({height: '*', top: '-20px', opacity: 0}),
+
+                group([
+                    animate('250ms cubic-bezier(.36,1.04,.59,.95)', style({top: 0})),
+                    animate(150, style({opacity: 1}))
+                ])
+
+            ])
+        ]),
+        trigger('slideSideInOut', [
+            state('in', style({left: '*', height: '*', opacity: 0})),
+
+            transition(':leave', [
+                group([
+                    animate('250ms cubic-bezier(.95,.59,.36,1.04)', style({left: '-30px'})),
+                    animate(150, style({opacity: 0}))
+                ])
+
+            ]),
+
+            transition(':enter', [
+                style({height: '*', left: '-20px', opacity: 0}),
+
+                group([
+                    animate('250ms cubic-bezier(.36,1.04,.59,.95)', style({left: 0})),
+                    animate(200, style({opacity: 1}))
+                ])
+
+            ])
+        ])
+    ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
     @Select()
     public session$;
@@ -48,8 +86,20 @@ export class AppComponent implements OnInit {
 
     public aqlDataSource: AbstractAutocompleteDataSource;
 
-    @ViewChild('aqlSearch')
-    private aqlSearch: AqlAutocompleteComponent;
+    @Select(AppState.isHomepage)
+    public isHomepage$;
+
+    public navigation = [
+        {title: 'Dashboard', url: ['/admin/dashboard'], icon: 'ion-md-desktop'},
+        {title: 'Storages', url: ['/admin/storages'], icon: 'ion-md-cube'},
+        {title: 'Security', url: ['/admin/security'], icon: 'ion-md-lock', marginLeft: '2px'},
+        {title: 'Users', url: ['/admin/users'], icon: 'ion-md-people'},
+        {title: 'System', url: ['/admin/server-settings'], icon: 'ion-md-build'},
+        {title: 'About', url: ['/admin/environment-info'], icon: 'ion-md-information-circle-outline'},
+        {title: 'My account', url: ['/my-account'], icon: 'ion-md-person'}
+    ];
+
+    private destroy$: Subject<any> = new Subject();
 
     constructor(public auth: AuthService,
                 private activatedRoute: ActivatedRoute,
@@ -61,9 +111,14 @@ export class AppComponent implements OnInit {
 
     @HostListener('window:keydown', ['$event'])
     onKeyup(event: KeyboardEvent) {
+        if (event.code === 'KeyH' && event.altKey === true) {
+            event.preventDefault();
+            this.store.dispatch(new Navigate(['/']));
+        }
+
         if (event.code === 'KeyS' && event.altKey === true) {
             event.preventDefault();
-            this.toggleSideNav();
+            // this.toggleSideNav();
         }
 
         if (event.code === 'KeyL' && event.altKey === true) {
@@ -78,12 +133,12 @@ export class AppComponent implements OnInit {
 
         if (event.code === 'KeyP' && event.altKey === true) {
             event.preventDefault();
-            this.store.dispatch(new Navigate(['profile']));
+            this.store.dispatch(new Navigate(['/my-account']));
         }
 
         if (event.code === 'KeyU' && event.altKey === true) {
             event.preventDefault();
-            this.store.dispatch(new Navigate(['admin/users']));
+            this.store.dispatch(new Navigate(['/admin/users']));
         }
     }
 
@@ -91,39 +146,8 @@ export class AppComponent implements OnInit {
         this.store.dispatch(new OpenLoginDialogAction());
     }
 
-    closeSideNavBackdropClick() {
-        this.store.dispatch(new HideSideNavAction());
-    }
-
-    toggleSideNav() {
-        this.store.dispatch(new ToggleSideNavAction());
-    }
-
     submitSearchRequest(searchQuery = '') {
         this.store.dispatch(new SearchQuerySubmitAction(searchQuery));
-    }
-
-    sideNavFlex() {
-        const isMobile = this.store.selectSnapshot(AppState.isMobile);
-        const isSideNavOpened = this.store.selectSnapshot(AppState.isSideNavOpened);
-
-        let fxFlexLeft = '245px';
-        let fxFlexRight = '245px';
-
-        if (isMobile) {
-            fxFlexLeft = '1px';
-            fxFlexRight = '1px';
-        }
-
-        if (!isMobile && isSideNavOpened) {
-            fxFlexLeft = '5px';
-            fxFlexRight = '1px';
-        }
-
-        return {
-            left: fxFlexLeft,
-            right: fxFlexRight
-        };
     }
 
     ngOnInit(): void {
@@ -131,12 +155,10 @@ export class AppComponent implements OnInit {
             null,
             (search, cursorPosition) => this.aqlService.search(search, cursorPosition)
         );
+    }
 
-        // set aql search input value
-        this.actions
-            .pipe(ofActionDispatched(SearchQueryValueUpdateAction), distinctUntilChanged())
-            .subscribe(({payload: value}) => {
-                this.aqlSearch.setInputValue(value);
-            });
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }

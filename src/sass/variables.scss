@@ -1,0 +1,40 @@
+// Fonts
+$font-family: unquote("'Open Sans', Helvetica, Arial, sans-serif");
+
+// Global / Body / Navigation
+$body-background-color: hsla(207, 23%, 27%, 1);
+$body-gradient-0: $body-background-color;
+$body-gradient-1: hsla(210, 24%, 16%, 1);
+$body-gradient-degrees: 172deg;
+// These colors kind of worked. Will be keeping them in case we decide to get back to those again.
+// $body-gradient-0: #374250;
+// $body-gradient-0: #324359; // hsl(214, 28%, 27%)
+// $body-gradient-1: #304051;
+// $body-gradient-2: #27394A;
+// $body-gradient-3: #1C2C3E;
+// $body-gradient-4: #172A40; // hsl(212, 47%, 17%)
+
+$header-nav-height: 60px;
+// $header-nav-background: #27333f;
+$header-nav-background: hsla(210, 30%, 20%, 1);
+
+$page-container-color: #132530;
+
+$nav-background: #13232f;
+$nav-link-color: rgba(227, 227, 227, 0.60);
+$nav-link-hover: rgba(255, 255, 255, 0.90);
+
+$global-link-color: #2684bd;
+
+$status-green: hsla(123, 106%, 35%, 1);
+$status-red: #f44336;
+
+// Buttons
+$btn-primary-gradient-0: hsla(208, 92%, 58%, 1);
+$btn-primary-gradient-1: darken($btn-primary-gradient-0, 20%); // hsla(200, 94%, 30%, 1);
+
+$btn-warn-gradient-0: hsla(4, 70%, 52%, 1);
+$btn-warn-gradient-1: darken(desaturate($btn-warn-gradient-0, 7%), 20%);
+
+// Tables
+$table-row-color: rgba(0, 0, 0, 0.1);

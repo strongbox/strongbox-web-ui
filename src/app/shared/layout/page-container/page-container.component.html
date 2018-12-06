@@ -1,12 +1,15 @@
 <div class="global-container">
 
-    <div fxLayout="row" *ngIf="showBreadcrumbs">
+    <div fxLayout="row" *ngIf="showBreadcrumbs" class="breadcrumbContainer">
         <div fxFlex="1 auto">
             <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
         </div>
+        <div fxFlex="1 0 auto" fxLayoutAlign="right" class="buttons">
+            <ng-content select="[page-actions]"></ng-content>
+        </div>
     </div>
 
-    <mat-card>
+    <mat-card class="page-container-shadow">
         <mat-card-content *ngIf="(loading$ | async)">
             <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 1 auto">
                 <mat-spinner [strokeWidth]="5"></mat-spinner>

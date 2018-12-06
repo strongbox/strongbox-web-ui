@@ -67,14 +67,18 @@
         <!-- Actions column -->
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef class="actions">
-                <button mat-icon-button type="button" *ngIf="!isParentFormDisabled()">
-                    <i class="ion-md-add" (click)="showForm()"></i>
+                <button *ngIf="!isParentFormDisabled()"
+                        mat-icon-button
+                        type="button"
+                        (click)="showForm()">
+                    <i class="ion-md-add"></i>
                 </button>
-                <button mat-icon-button
-                        [disabled]="!isSomeSelected()"
-                        (click)="deleteSelected()"
+                <button *ngIf="!isParentFormDisabled()"
+                        mat-icon-button
                         title="Delete selected items"
-                        type="button" *ngIf="!isParentFormDisabled()">
+                        type="button"
+                        [disabled]="!isSomeSelected()"
+                        (click)="deleteSelected()">
                     <i class="ion-md-trash"></i>
                 </button>
             </th>
