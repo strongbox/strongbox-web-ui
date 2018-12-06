@@ -1,3 +1,5 @@
+<ng-progress #progressBar></ng-progress>
+
 <div class="guest-navigation" *ngIf="!(isAuthenticated$ | async)" [@slideInOut]>
     <a title="Browse" routerLink="/browse" routerLinkActive="active">
         <i class="icon ion-md-filing"></i> <span>Browse</span>
@@ -8,7 +10,7 @@
     </a>
 </div>
 
-<div class="header-navigation" *ngIf="!isHomepage" [@slideInOut] fxLayout="row" fxFlexAlign.lt-sm="center center">
+<div class="header-navigation" *ngIf="!(isHomepage$ | async)" [@slideInOut] fxLayout="row" fxFlexAlign.lt-sm="center center">
     <div class="container">
         <div>
             <div class="logo-text">
@@ -17,8 +19,10 @@
 
         </div>
         <div class="search" fxFlex="1 1 auto">
-            <aql-autocomplete width="100%"
+            <aql-autocomplete #aqlSearch
+                              width="100%"
                               placeholder="Search query"
+                              [value]="(aqlQuery$ | async)"
                               [dataSource]="aqlDataSource"
                               (submit)="submitSearchRequest($event)"></aql-autocomplete>
         </div>
@@ -94,8 +98,8 @@
 </div>
 -->
 
-<div class="side-navigation" [class.alignIconsTop]="!isHomepage" *ngIf="(isAuthenticated$ | async)" [@slideSideInOut]>
-    <div class="corner" *ngIf="!isHomepage" [@slideInOut]>&nbsp;</div>
+<div class="side-navigation" [class.alignIconsTop]="!(isHomepage$ | async)" *ngIf="(isAuthenticated$ | async)" [@slideSideInOut]>
+    <div class="corner" *ngIf="!(isHomepage$ | async)" [@slideInOut]>&nbsp;</div>
     <div class="icons">
         <ul>
             <li>
@@ -116,7 +120,9 @@
             </li>
 
             <li *ngFor="let item of navigation">
-                <a [title]="item.title" [routerLink]="item.url" routerLinkActive="active"
+                <a routerLinkActive="active"
+                   [title]="item.title"
+                   [routerLink]="item.url"
                    [style.margin-left]="item.marginLeft">
                     <i [class]="'icon ' + item.icon"></i>
                 </a>

@@ -20,6 +20,7 @@ export interface AppStateModel {
     aqlQuery: string | null;
     loginModalOpened: boolean;
     viewPort: ViewPortStateModel;
+    isHomepage: boolean;
 }
 
 export const defaultAppSideNavState: SideNavStateModel = {
@@ -32,6 +33,7 @@ export const defaultAppState: AppStateModel = {
     sideNav: defaultAppSideNavState,
     aqlQuery: null,
     loginModalOpened: false,
+    isHomepage: true,
     viewPort: {
         mobile: false,
         tablet: false,

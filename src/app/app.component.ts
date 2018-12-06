@@ -1,17 +1,16 @@
-import {ChangeDetectionStrategy, Component, HostListener, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {animate, group, state, style, transition, trigger} from '@angular/animations';
-import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
+import {Actions, Select, Store} from '@ngxs/store';
 import {Navigate} from '@ngxs/router-plugin';
-import {distinctUntilChanged, filter} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 import {AuthService} from './modules/core/auth/auth.service';
 import {LogoutAction} from './modules/core/auth/state/auth.actions';
-import {OpenLoginDialogAction, SearchQuerySubmitAction, SearchQueryValueUpdateAction} from './state/app.actions';
+import {OpenLoginDialogAction, SearchQuerySubmitAction} from './state/app.actions';
 import {AppState} from './state/app.state';
 import {SessionState} from './modules/core/auth/state/session.state';
 import {AbstractAutocompleteDataSource} from './shared/form/autocomplete/autocomplete.model';
-import {AqlAutocompleteComponent} from './shared/form/autocomplete/aql-autocomplete/aql-autocomplete.component';
 import {AqlAutocompleteDataSource} from './shared/form/autocomplete/aql-autocomplete/aql-autocomplete.data-source';
 import {AqlAutocompleteService} from './shared/form/services/aql-autocomplete.service';
 
@@ -65,7 +64,7 @@ import {AqlAutocompleteService} from './shared/form/services/aql-autocomplete.se
         ])
     ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
     @Select()
     public session$;
@@ -87,10 +86,8 @@ export class AppComponent implements OnInit {
 
     public aqlDataSource: AbstractAutocompleteDataSource;
 
-    @ViewChild('aqlSearch')
-    private aqlSearch: AqlAutocompleteComponent;
-
-    public isHomepage = true;
+    @Select(AppState.isHomepage)
+    public isHomepage$;
 
     public navigation = [
         {title: 'Dashboard', url: ['/admin/dashboard'], icon: 'ion-md-desktop'},
@@ -101,6 +98,8 @@ export class AppComponent implements OnInit {
         {title: 'About', url: ['/admin/environment-info'], icon: 'ion-md-information-circle-outline'},
         {title: 'My account', url: ['/my-account'], icon: 'ion-md-person'}
     ];
+
+    private destroy$: Subject<any> = new Subject();
 
     constructor(public auth: AuthService,
                 private activatedRoute: ActivatedRoute,
@@ -156,20 +155,10 @@ export class AppComponent implements OnInit {
             null,
             (search, cursorPosition) => this.aqlService.search(search, cursorPosition)
         );
+    }
 
-        // set aql search input value
-        this.actions
-            .pipe(ofActionDispatched(SearchQueryValueUpdateAction), distinctUntilChanged())
-            .subscribe(({payload: value}) => {
-                this.aqlSearch.setInputValue(value);
-            });
-
-
-        this.router
-            .events
-            .pipe(filter((e) => e instanceof NavigationEnd))
-            .subscribe((event: NavigationEnd) => {
-                this.isHomepage = event.url === '/';
-            });
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }

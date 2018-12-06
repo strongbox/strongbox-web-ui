@@ -1,4 +1,4 @@
-<div class="homepage" fxLayout="column">
+<div class="homepage" fxLayout="column" *ngIf="(isHomepage$ | async)">
     <div class="strongbox">
         <div class="logo-text">
             <a routerLink="/" id="logo">Strongbox</a>

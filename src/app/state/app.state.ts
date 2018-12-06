@@ -2,15 +2,15 @@ import {MatDialog} from '@angular/material/dialog';
 import {MediaChange, ObservableMedia} from '@angular/flex-layout';
 import {Action, NgxsOnInit, Select, Selector, State, StateContext} from '@ngxs/store';
 import {Navigate, RouterNavigation} from '@ngxs/router-plugin';
-import {take} from 'rxjs/operators';
+import {filter, take} from 'rxjs/operators';
 import {MatDialogRef} from '@angular/material';
 
 import {
-    SearchQuerySubmitAction,
-    SearchQueryValueUpdateAction,
     CloseLoginDialogAction,
     HideSideNavAction,
     OpenLoginDialogAction,
+    SearchQuerySubmitAction,
+    SearchQueryValueUpdateAction,
     SetViewPortAction,
     ShowSideNavAction,
     ToggleSideNavAction
@@ -18,6 +18,7 @@ import {
 import {LoginDialogComponent} from '../modules/core/dialogs/login/login.dialog.component';
 import {AppStateModel, defaultAppState, SideNavStateModel, ViewPortStateModel} from './app.state.interfaces';
 import {LogoutAction} from '../modules/core/auth/state/auth.actions';
+import {NavigationStart, Router} from '@angular/router';
 
 @State<AppStateModel>({
     name: 'app',
@@ -58,8 +59,14 @@ export class AppState implements NgxsOnInit {
         return state.loginModalOpened;
     }
 
+    @Selector()
+    static isHomepage(state: AppStateModel) {
+        return state.isHomepage;
+    }
+
     constructor(private dialog: MatDialog,
-                private media: ObservableMedia) {
+                private media: ObservableMedia,
+                private router: Router) {
     }
 
     ngxsOnInit(ctx: StateContext<AppStateModel>) {
@@ -74,6 +81,13 @@ export class AppState implements NgxsOnInit {
 
             ctx.dispatch(new SetViewPortAction({mobile: isMobile, mqAlias: change.mqAlias, sideNav: sideNav}));
         });
+
+        this.router
+            .events
+            .pipe(filter((e) => e instanceof NavigationStart))
+            .subscribe((event: NavigationStart) => {
+                ctx.patchState({...ctx.getState(), isHomepage: event.url === '/' || event.url === ''});
+            });
     }
 
     @Action(RouterNavigation)
@@ -87,7 +101,7 @@ export class AppState implements NgxsOnInit {
     setViewPort(ctx: StateContext<AppStateModel>, {payload}: SetViewPortAction) {
         const state = {
             sideNav: payload.sideNav,
-            viewPort: <ViewPortStateModel> {
+            viewPort: <ViewPortStateModel>{
                 mobile: payload.mobile,
                 mqAlias: payload.mqAlias
             }
@@ -155,7 +169,7 @@ export class AppState implements NgxsOnInit {
     }
 
     @Action(SearchQueryValueUpdateAction)
-    initialAqlQueryValue(ctx: StateContext<AppStateModel>, {payload}) {
+    updateAqlQueryValue(ctx: StateContext<AppStateModel>, {payload}) {
         ctx.patchState({aqlQuery: payload});
     }
 

@@ -6,11 +6,12 @@
            [attr.aria-label]="placeholder"
            spellcheck="false"
            matInput
-           [formControl]="searchControl"
            #searchInput
+           [value]="_getInputValue()"
            [matAutocomplete]="autoCompleteRef"
            (click)="_inputCursorPositionTracking($event)"
-           (keyup)="_inputCursorPositionTracking($event)"
+           (keyup)="_inputChanges($event)"
+           (change)="onChange($event.target.value)"
            (blur)="onTouched()"
            (keyup.enter)="_sendSubmitEmitter()"
     >

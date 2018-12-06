@@ -21,7 +21,6 @@ import {environment} from '../../../environments/environment';
 import {ApiURLInterceptor} from './services/interceptors/api-url.interceptor';
 import {CodeSnippet} from './pipes/code-snippet.pipe';
 import {RepositorySearchService} from './pages/search/repository-search.service';
-import {CoreRouterResolver} from './core.router.resolver';
 import {SessionState} from './auth/state/session.state';
 import {AuthService} from './auth/auth.service';
 import {LoginDialogComponent} from './dialogs/login/login.dialog.component';
@@ -35,6 +34,7 @@ import {ErrorInterceptor} from './services/interceptors/error.interceptor';
 import {ConfirmDialogComponent} from './dialogs/confirm/confirm.dialog.component';
 import {FormHelperModule} from '../../shared/form/form-helper.module';
 import {LayoutModule} from '../../shared/layout/layout.module';
+import {NgProgressRouterModule} from '@ngx-progressbar/router';
 
 @NgModule({
     imports: [
@@ -76,10 +76,12 @@ import {LayoutModule} from '../../shared/layout/layout.module';
         NgProgressModule.forRoot({
             color: '#2684bd',
             spinner: false,
-            thick: true,
-            debounceTime: 100
+            thick: false,
+            fixed: true,
+            debounceTime: 50
         }),
-        NgProgressHttpModule
+        NgProgressHttpModule.forRoot(),
+        NgProgressRouterModule.forRoot()
     ],
     exports: [
         CommonModule,
@@ -127,7 +129,6 @@ import {LayoutModule} from '../../shared/layout/layout.module';
             useClass: ErrorInterceptor,
             multi: true
         },
-        CoreRouterResolver,
         AuthService,
         AuthGuard,
         AccountService,

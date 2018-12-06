@@ -1,9 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Actions, ofActionDispatched, Select, Store} from '@ngxs/store';
-import {distinctUntilChanged} from 'rxjs/operators';
+import {Actions, Select, Store} from '@ngxs/store';
 
 import {SessionState} from '../../auth/state/session.state';
-import {SearchQuerySubmitAction, SearchQueryValueUpdateAction} from '../../../../state/app.actions';
+import {SearchQuerySubmitAction} from '../../../../state/app.actions';
 import {AuthService} from '../../auth/auth.service';
 import {AqlAutocompleteService} from '../../../../shared/form/services/aql-autocomplete.service';
 import {AppState} from '../../../../state/app.state';
@@ -19,6 +18,9 @@ import {AqlAutocompleteDataSource} from '../../../../shared/form/autocomplete/aq
 export class HomepageComponent implements OnInit {
     @Select(SessionState.isAuthenticated)
     public isAuthenticated$;
+
+    @Select(AppState.isHomepage)
+    public isHomepage$;
 
     @Select(AppState.aqlQuery)
     public aqlQuery$;
@@ -43,12 +45,5 @@ export class HomepageComponent implements OnInit {
             null,
             (search, cursorPosition) => this.aqlService.search(search, cursorPosition)
         );
-
-        // set aql search input value
-        this.actions
-            .pipe(ofActionDispatched(SearchQueryValueUpdateAction), distinctUntilChanged())
-            .subscribe(({payload: value}) => {
-                this.aqlSearch.setInputValue(value);
-            });
     }
 }
