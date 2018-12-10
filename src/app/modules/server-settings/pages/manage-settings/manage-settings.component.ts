@@ -21,7 +21,7 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
     settingsForm: FormGroup;
 
     breadcrumbs: Breadcrumb[] = [
-        {label: 'Global settings', url: ['/admin/global-settings']}
+        {label: 'Global settings', url: ['/admin/server-settings']}
     ];
 
     private destroy = new Subject();
@@ -61,15 +61,15 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
             }),
             smtpConfigurationForm: new FormGroup({
                 host: new FormControl(),
-                port: new FormControl(25),
-                connection: new FormControl('plain'),
+                port: new FormControl(),
+                connection: new FormControl(),
                 username: new FormControl(),
                 password: new FormControl()
             }),
             proxyConfigurationForm: new FormGroup({
                 host: new FormControl(),
                 port: new FormControl(),
-                type: new FormControl('Direct'),
+                type: new FormControl(),
                 username: new FormControl(),
                 password: new FormControl(),
                 nonProxyHosts: new FormControl()
@@ -91,7 +91,9 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
 
         this.getSmtpConfigurationGroup('connection').valueChanges.subscribe(value => {
             const port = this.getSmtpConfigurationGroup('port');
-            if (value === 'none') {
+            if (value === null || value === '' || value === undefined) {
+                port.setValue(null);
+            } else if (value === 'plain') {
                 port.setValue(25);
             } else if (value === 'ssl') {
                 port.setValue(465);
@@ -172,6 +174,7 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
                 .saveSettings(data)
                 .pipe(catchError(err => handleFormError(err, this.settingsForm, this.loading$)))
                 .subscribe((response: ApiResponse) => {
+                    this.loading$.next(false);
                     if (response.isValid()) {
                         this.notify.success(response.message);
                     } else {

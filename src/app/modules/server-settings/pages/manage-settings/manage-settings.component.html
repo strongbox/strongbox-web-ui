@@ -108,7 +108,8 @@
                         </mat-form-field>
 
                         <mat-form-field>
-                            <mat-select placeholder="Encryption" formControlName="connection" [disableOptionCentering]="true">
+                            <mat-select placeholder="Encryption" formControlName="connection" [disableOptionCentering]="true" >
+                                <mat-option>None</mat-option>
                                 <mat-option value="plain">Plain</mat-option>
                                 <mat-option value="ssl">SSL</mat-option>
                                 <mat-option value="tls">TLS</mat-option>
@@ -170,6 +171,7 @@
 
                         <mat-form-field>
                             <mat-select placeholder="Type" formControlName="type" [disableOptionCentering]="true">
+                                <mat-option>None</mat-option>
                                 <mat-option value="DIRECT">Direct</mat-option>
                                 <mat-option value="HTTP">HTTP</mat-option>
                                 <mat-option value="SOCKS4">SOCKS4</mat-option>
@@ -208,7 +210,7 @@
                 Back
             </button>
 
-            <button mat-raised-button color="primary" type="submit" [disabled]="!settingsForm.valid">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!settingsForm.valid || (loading$ | async)">
                 Save
             </button>
         </div>
