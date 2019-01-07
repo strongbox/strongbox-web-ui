@@ -1,0 +1,30 @@
+<div *ngIf="!(loading$ | async)" matDialogTitle>
+    Storage details
+</div>
+
+<div matDialogContent>
+    <form (submit)="submit()" [formGroup]="form" *ngIf="!(loading$ | async)">
+        <mat-form-field>
+            <input formControlName="id" matInput placeholder="Storage ID" required>
+            <mat-error *ngIf="form.get('id').invalid">
+                <form-field-errors [field]="form.get('id')"></form-field-errors>
+            </mat-error>
+        </mat-form-field>
+        <div class="spacer">&nbsp;</div>
+        <mat-form-field>
+            <input formControlName="basedir" matInput placeholder="Base directory" required>
+            <mat-error *ngIf="form.get('basedir').invalid">
+                <form-field-errors [field]="form.get('basedir')"></form-field-errors>
+            </mat-error>
+        </mat-form-field>
+    </form>
+
+    <div *ngIf="(loading$ | async)" class="overlay">
+        <mat-progress-spinner color="primary" mode="indeterminate" [strokeWidth]="4"></mat-progress-spinner>
+    </div>
+</div>
+
+<div *ngIf="!(loading$ | async)" matDialogActions align="center">
+    <button mat-button (click)="close()">Close</button>
+    <button [disabled]="form.invalid" color="primary" mat-raised-button type="submit" (click)="submit()">Save</button>
+</div>

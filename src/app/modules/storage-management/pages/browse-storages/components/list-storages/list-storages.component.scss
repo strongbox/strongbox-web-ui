@@ -1,0 +1,39 @@
+.search {
+  width: 100%;
+
+  background: hsl(209, 23%, 26%);
+  margin-top: -8px;
+  padding: 8px 0px 10px 0px !important;
+
+  margin-bottom: 10px;
+
+  mat-form-field {
+    width: 100%;
+    padding-left: 8px;
+  }
+
+  ::ng-deep .mat-list-item-content {
+    padding: 0px 15px 0px 24px;
+  }
+}
+
+::ng-deep mat-list-item {
+  height: 40px !important;
+
+  .link {
+    padding-right: 21px;
+    line-height: 1.15rem;
+  }
+
+  .actions {
+    text-align: right;
+
+    li {
+      list-style: none;
+      float: left;
+      &:not(last-of-type) {
+        margin-right: 10px;
+      }
+    }
+  }
+}

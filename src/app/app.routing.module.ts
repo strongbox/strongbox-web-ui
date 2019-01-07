@@ -9,6 +9,7 @@ import {MyAccountComponent} from './modules/core/pages/account/my-account.compon
 import {RepositorySearchResultResolver} from './modules/core/resolvers/RepositorySearchResultResolver';
 
 const routes: Routes = [
+    // Public
     {path: '', component: HomepageComponent},
     {path: 'search', redirectTo: 'search/', pathMatch: 'full'},
     {
@@ -18,7 +19,13 @@ const routes: Routes = [
             searchResponse: RepositorySearchResultResolver
         }
     },
+    // Authenticated only
     {path: 'my-account', component: MyAccountComponent, canActivate: [AuthGuard]},
+    // Administration
+    {
+        path: 'admin/environment-info',
+        loadChildren: './modules/environment-info/environment-info.module#EnvironmentInfoModule'
+    },
     {
         path: 'admin/users',
         loadChildren: './modules/user-management/user-management.module#UserManagementModule'
@@ -28,8 +35,8 @@ const routes: Routes = [
         loadChildren: './modules/server-settings/server-settings.module#ServerSettingsModule'
     },
     {
-        path: 'admin/environment-info',
-        loadChildren: './modules/environment-info/environment-info.module#EnvironmentInfoModule'
+        path: 'admin/storages',
+        loadChildren: './modules/storage-management/storage-management.module#StorageManagementModule'
     },
     {path: '**', component: PageNotFoundComponent}
 ];

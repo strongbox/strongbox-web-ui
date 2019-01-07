@@ -1,5 +1,5 @@
 export interface Breadcrumb {
     label: string;
-    url: string[];
+    url: any;
     active?: boolean;
 }

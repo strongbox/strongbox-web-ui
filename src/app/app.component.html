@@ -120,12 +120,17 @@
             </li>
 
             <li *ngFor="let item of navigation">
-                <a routerLinkActive="active"
-                   [title]="item.title"
-                   [routerLink]="item.url"
-                   [style.margin-left]="item.marginLeft">
-                    <i [class]="'icon ' + item.icon"></i>
-                </a>
+                <div routerLinkActive="active">
+                    <a [title]="item.title"
+                       [routerLink]="item.url"
+                       [style.margin-left]="item.marginLeft">
+                        <i [class]="'icon ' + item.icon"></i>
+                    </a>
+
+                    <ng-container *ngFor="let alternative of item.alternatives;">
+                        <a [routerLink]="alternative" [style.display]="'none'">&nbsp;</a>
+                    </ng-container>
+                </div>
             </li>
 
             <li>

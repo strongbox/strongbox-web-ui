@@ -1,0 +1,12 @@
+<app-page-container [breadcrumbs]="breadcrumbs" class="noPadding">
+    <div fxLayout="row">
+        <div fxFlex="20">
+            <div fxLayout="column">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+        <div fxFlex="80">
+            <router-outlet name="repositoriesFor"></router-outlet>
+        </div>
+    </div>
+</app-page-container>
