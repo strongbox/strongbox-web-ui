@@ -5,6 +5,8 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {animate, group, state, style, transition, trigger} from '@angular/animations';
 import {ToastrService} from 'ngx-toastr';
+import {Store} from '@ngxs/store';
+import {Navigate} from '@ngxs/router-plugin';
 
 import {StorageEntity} from '../../../../storage.model';
 import {StorageFormDialogComponent} from '../../../../dialogs/storage-form/storage-form.dialog.component';
@@ -53,7 +55,8 @@ export class ListStoragesComponent implements OnInit, OnDestroy {
                 public route: ActivatedRoute,
                 private cdk: ChangeDetectorRef,
                 private notify: ToastrService,
-                private service: StorageManagerService) {
+                private service: StorageManagerService,
+                private store: Store) {
     }
 
     applyFilter(filterValue: string) {
@@ -102,6 +105,7 @@ export class ListStoragesComponent implements OnInit, OnDestroy {
                             this.storagesSource.data = this.storagesSource.data.filter((s) => s.id !== storage.id);
                             this.cdk.detectChanges();
                             this.notify.success(result.message);
+                            this.store.dispatch(new Navigate(['/admin/storages/browse/']));
                         } else {
                             this.notify.error(result.message);
                         }
