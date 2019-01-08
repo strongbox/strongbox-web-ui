@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
 import {ApiFormError} from '../../../modules/core/core.model';
@@ -9,7 +9,7 @@ import {ApiFormError} from '../../../modules/core/core.model';
     templateUrl: './form-field-errors.component.html',
     styleUrls: ['./form-field-errors.component.scss']
 })
-export class FormFieldErrorsComponent implements OnInit {
+export class FormFieldErrorsComponent {
 
     @Input()
     field: FormGroup = null;
@@ -17,9 +17,13 @@ export class FormFieldErrorsComponent implements OnInit {
     constructor() {
     }
 
+    isFieldSet() {
+        return this.field instanceof FormGroup;
+    }
+
     getApiErrors() {
-        if (this.field !== null) {
-            if (this.field.errors && this.field.errors instanceof ApiFormError) {
+        if (this.isFieldSet()) {
+            if (this.field.invalid && this.field.errors instanceof ApiFormError) {
                 return this.field.errors.messages;
             }
         }
@@ -28,8 +32,8 @@ export class FormFieldErrorsComponent implements OnInit {
     }
 
     getFormErrors() {
-        if (this.field !== null) {
-            if (this.field.errors && !(this.field.errors instanceof ApiFormError)) {
+        if (this.isFieldSet()) {
+            if (this.field.invalid && !(this.field.errors instanceof ApiFormError)) {
                 let errors = [];
 
                 Object.keys(this.field.errors).forEach((key) => {
@@ -52,9 +56,6 @@ export class FormFieldErrorsComponent implements OnInit {
         }
 
         return [];
-    }
-
-    ngOnInit() {
     }
 
 }
