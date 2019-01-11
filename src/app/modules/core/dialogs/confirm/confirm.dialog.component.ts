@@ -45,12 +45,12 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
     }
 
     confirm(status: boolean | null = true) {
-        if (typeof this.data.onConfirm === 'function') {
-            this.data.onConfirm(this.dialogRef);
-        }
-
         if (status === true) {
             this.events.next(ConfirmDialogEvents.CONFIRMED);
+
+            if (typeof this.data.onConfirm === 'function') {
+                this.data.onConfirm(this.dialogRef);
+            }
         } else {
             this.events.next(ConfirmDialogEvents.CANCELLED);
         }
