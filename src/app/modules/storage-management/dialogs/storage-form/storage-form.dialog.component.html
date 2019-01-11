@@ -12,7 +12,13 @@
         </mat-form-field>
         <div class="spacer">&nbsp;</div>
         <mat-form-field>
-            <input formControlName="basedir" matInput placeholder="Base directory" required>
+            <textarea formControlName="basedir"
+                      matInput
+                      cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="1"
+                      placeholder="Base directory">
+            </textarea>
             <mat-error *ngIf="form.get('basedir').invalid">
                 <form-field-errors [field]="form.get('basedir')"></form-field-errors>
             </mat-error>

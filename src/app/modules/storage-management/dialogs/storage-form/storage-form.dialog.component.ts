@@ -5,7 +5,7 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {plainToClass} from 'class-transformer';
 import {ToastrService} from 'ngx-toastr';
 import {takeUntil} from 'rxjs/operators';
-import {Actions, ofActionDispatched} from '@ngxs/store';
+import {Actions, ofActionDispatched, Store} from '@ngxs/store';
 import {RouterNavigation} from '@ngxs/router-plugin';
 
 import {StorageManagerService} from '../../services/storage-manager.service';
@@ -20,19 +20,19 @@ import {ApiResponse} from '../../../core/core.model';
 export class StorageFormDialogComponent implements OnInit, OnDestroy {
 
     public form: FormGroup;
-    public storageId: string = null;
-
-    public loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
+    public loading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    private storage: StorageEntity = null;
     private destroy$: Subject<any> = new Subject();
 
     constructor(private actions: Actions,
                 private dialog: MatDialog,
                 private dialogRef: MatDialogRef<StorageFormDialogComponent>,
-                private service: StorageManagerService,
+                private store: Store,
+                private storageService: StorageManagerService,
                 private notify: ToastrService,
                 @Inject(MAT_DIALOG_DATA) data: any) {
-        if (data !== null && data.hasOwnProperty('storageId')) {
-            this.storageId = data.storageId;
+        if (data['storage'] !== null) {
+            this.storage = data['storage'];
         }
     }
 
@@ -45,15 +45,15 @@ export class StorageFormDialogComponent implements OnInit, OnDestroy {
             this.loading$.next(true);
             this.dialogRef.updateSize('35vw', null);
 
-            const storage: StorageEntity = plainToClass(StorageEntity, this.form.getRawValue()) as any;
+            const storageEntity: StorageEntity = plainToClass(StorageEntity, this.form.getRawValue()) as any;
 
-            this.service
-                .saveStorage(this.storageId, storage)
+            this.storageService
+                .saveStorage(this.storage ? this.storage.id : null, storageEntity)
                 .pipe(takeUntil(this.destroy$))
                 .subscribe((response: ApiResponse) => {
                     if (response.isValid()) {
                         this.notify.success(response.message);
-                        this.dialogRef.close(storage);
+                        this.dialogRef.close(storageEntity);
                     } else {
                         this.notify.error(response.message);
                         this.loading$.next(false);
@@ -64,23 +64,11 @@ export class StorageFormDialogComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.form = new FormGroup({
-            id: new FormControl('', [Validators.required]),
-            basedir: new FormControl('', [Validators.required])
+            id: new FormControl(this.storage ? this.storage.id : '', [Validators.required]),
+            basedir: new FormControl(this.storage ? this.storage.basedir : '')
         });
 
         this.dialogRef.updateSize('35vw', null);
-
-        if (this.storageId !== null) {
-            this.service
-                .getStorage(this.storageId)
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((storage: StorageEntity) => {
-                    this.form.patchValue({id: storage.id, basedir: storage.basedir});
-                    this.loading$.next(false);
-                });
-        } else {
-            this.loading$.next(false);
-        }
 
         this.actions
             .pipe(takeUntil(this.destroy$), ofActionDispatched(RouterNavigation))

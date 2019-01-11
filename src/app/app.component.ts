@@ -93,7 +93,7 @@ export class AppComponent implements OnInit, OnDestroy {
         {title: 'Dashboard', url: ['/admin/dashboard'], icon: 'ion-md-desktop'},
         {
             title: 'Storages',
-            url: ['/admin/storages/browse'],
+            url: ['/admin/storages'],
             icon: 'ion-md-cube',
             // https://github.com/angular/angular/issues/22588
             alternatives: [

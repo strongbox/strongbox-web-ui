@@ -1,11 +1,11 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {MatDialog, MatDialogConfig, MatTableDataSource} from '@angular/material';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {animate, group, state, style, transition, trigger} from '@angular/animations';
 import {ToastrService} from 'ngx-toastr';
-import {Store} from '@ngxs/store';
+import {Select, Store} from '@ngxs/store';
 import {Navigate} from '@ngxs/router-plugin';
 
 import {StorageEntity} from '../../../../storage.model';
@@ -13,6 +13,8 @@ import {StorageFormDialogComponent} from '../../../../dialogs/storage-form/stora
 import {ConfirmDialogComponent, ConfirmDialogData, ConfirmDialogEvents} from '../../../../../core/dialogs/confirm/confirm.dialog.component';
 import {StorageManagerService} from '../../../../services/storage-manager.service';
 import {ApiResponse} from '../../../../../core/core.model';
+import {BrowseStoragesSelectStorage, BrowseStoragesToggleStoragesSearchInput} from '../../state/browse-storages.actions';
+import {BrowseStoragesState} from '../../state/browse-storages.state.model';
 
 @Component({
     selector: 'app-list-storages',
@@ -22,9 +24,11 @@ import {ApiResponse} from '../../../../../core/core.model';
         trigger('slideInOut', [
             state('in', style({height: '*', opacity: '*', transform: '*'})),
             transition(':leave', [
+                style({height: 40, opacity: 1, transform: 'perspective(172px) rotateX(0deg)'}),
+
                 group([
-                    animate('250ms cubic-bezier(.36,1.04,.59,.95)', style({height: 0, padding: 0})),
-                    animate('220ms cubic-bezier(.36,1.04,.59,.95)', style({transform: 'perspective(172px) rotateX(90deg)', opacity: 0}))
+                    animate('250ms cubic-bezier(.36,1.04,.59,.95)', style({height: 0, opacity: 0})),
+                    animate('220ms cubic-bezier(.36,1.04,.59,.95)', style({transform: 'perspective(172px) rotateX(90deg)'}))
                 ])
             ]),
 
@@ -35,28 +39,42 @@ import {ApiResponse} from '../../../../../core/core.model';
                     animate('250ms cubic-bezier(.36,1.04,.59,.95)', style({height: 40, opacity: 1})),
                     animate('220ms cubic-bezier(.36,1.04,.59,.95)', style({transform: 'perspective(172px) rotateX(0deg)'}))
                 ])
-
             ])
         ])
     ]
 })
 export class ListStoragesComponent implements OnInit, OnDestroy {
 
-    loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
+    @Select(BrowseStoragesState.selectedStorage)
+    selectedStorage$: Observable<string>;
 
-    selectedStorage: BehaviorSubject<StorageEntity> = new BehaviorSubject(null);
+    @Select(BrowseStoragesState.loadingStorages)
+    loadingStorages$: Observable<boolean>;
+
+    @Select(BrowseStoragesState.showStorageSearchInput)
+    showSearch$: Observable<boolean>;
+
+    @Select(BrowseStoragesState.storages)
+    storages$: Observable<StorageEntity[]>;
+
     storagesSource: MatTableDataSource<StorageEntity> = new MatTableDataSource([]);
-
-    showSearch$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     destroy$: Subject<any> = new Subject();
 
-    constructor(private dialog: MatDialog,
-                public route: ActivatedRoute,
-                private cdk: ChangeDetectorRef,
+    constructor(private cdk: ChangeDetectorRef,
+                private dialog: MatDialog,
                 private notify: ToastrService,
-                private service: StorageManagerService,
+                public route: ActivatedRoute,
+                private storageService: StorageManagerService,
                 private store: Store) {
+    }
+
+    toggleStorageSearch() {
+        this.store.dispatch(new BrowseStoragesToggleStoragesSearchInput());
+    }
+
+    getStorageRoute(storageId: string) {
+        return ['/admin/storages', storageId];
     }
 
     applyFilter(filterValue: string) {
@@ -65,7 +83,7 @@ export class ListStoragesComponent implements OnInit, OnDestroy {
 
     openStorageForm(storage: StorageEntity = null) {
         this.dialog
-            .open(StorageFormDialogComponent, {data: {storageId: storage !== null && storage !== undefined ? storage.id : null}})
+            .open(StorageFormDialogComponent, {data: {storage: storage !== null && storage !== undefined ? storage : null}})
             .afterClosed()
             .pipe(takeUntil(this.destroy$))
             .subscribe(result => {
@@ -80,8 +98,6 @@ export class ListStoragesComponent implements OnInit, OnDestroy {
                     }
                 }
             });
-
-
     }
 
     deleteStorage(storage: StorageEntity) {
@@ -97,7 +113,7 @@ export class ListStoragesComponent implements OnInit, OnDestroy {
             if (event === ConfirmDialogEvents.CONFIRMED) {
                 instance.showSpinner(true);
 
-                this.service
+                this.storageService
                     .deleteStorage(storage.id)
                     .subscribe((result: ApiResponse) => {
                         instance.close(result.isValid());
@@ -114,13 +130,21 @@ export class ListStoragesComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnInit(): void {
-        this.route.data.pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
-            this.loading$.next(false);
-            this.storagesSource.data = data !== null && data['storages'] !== undefined ? data['storages'] : [];
-        });
+    updateSelectedStorage(storageId: string) {
+        this.store.dispatch(new BrowseStoragesSelectStorage(storageId));
+    }
 
-        this.showSearch$.pipe(takeUntil(this.destroy$)).subscribe(data => !!data ? this.storagesSource.filter = null : null);
+    ngOnInit(): void {
+        this.storages$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((storages: StorageEntity[]) => {
+                this.storagesSource.data = storages !== null ? storages : [];
+                this.cdk.detectChanges();
+            });
+
+        this.showSearch$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(data => !!data ? this.storagesSource.filter = null : null);
     }
 
     ngOnDestroy(): void {

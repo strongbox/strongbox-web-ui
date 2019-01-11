@@ -20,20 +20,29 @@
 ::ng-deep mat-list-item {
   height: 40px !important;
 
-  .link {
-    padding-right: 21px;
-    line-height: 1.15rem;
-  }
+  .list-row {
+    .link {
+      padding-right: 11px;
+      line-height: 1.65rem;
+    }
 
-  .actions {
-    text-align: right;
+    .actions {
+      opacity: 0;
+      text-align: right;
+      transition: 0.18s all ease-in-out;
 
-    li {
-      list-style: none;
-      float: left;
-      &:not(last-of-type) {
-        margin-right: 10px;
+      li {
+        list-style: none;
+        float: left;
+        &:not(last-of-type) {
+          margin-right: 10px;
+        }
       }
     }
+
+    &:hover .actions {
+      opacity: 1;
+    }
   }
+
 }

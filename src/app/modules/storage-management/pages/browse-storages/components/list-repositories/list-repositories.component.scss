@@ -11,3 +11,13 @@
   text-align: center;
   padding-bottom: 7.7rem;
 }
+
+.actions {
+  .mat-cell,
+  .mat-header-cell {
+    flex: 0 0 30%;
+  }
+  .mat-header-cell {
+    padding-right: 0px;
+  }
+}

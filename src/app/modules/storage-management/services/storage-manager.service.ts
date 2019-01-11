@@ -34,19 +34,19 @@ export class StorageManagerService {
     saveStorage(storageId: string | null, data: StorageEntity): Observable<ApiResponse> {
         let url = `/api/configuration/strongbox/storages`;
         if (storageId) {
-            // https://youtrack.carlspring.org/issue/SB-1327
+            // TODO: https://youtrack.carlspring.org/issue/SB-1327
             // url = `${url}/${storageId}`;
         }
 
         return this.http
             .put(url, data)
-            .pipe(map((r: any) => plainToClass(ApiResponse, r) as any));
+            .pipe(map((r: any) => plainToClass(ApiResponse, r, {groups: ['error']}) as any));
     }
 
     deleteStorage(storageId: string): Observable<ApiResponse> {
         return this.http
             .delete(`/api/configuration/strongbox/storages/${storageId}`)
-            .pipe(map((r: any) => plainToClass(ApiResponse, r) as any));
+            .pipe(map((r: any) => plainToClass(ApiResponse, r, {groups: ['error']}) as any));
     }
 
     getRepository(storageId: string, repositoryId: string): Observable<Repository> {
@@ -58,7 +58,15 @@ export class StorageManagerService {
     deleteRepository(storageId: string, repositoryId: string): Observable<ApiResponse> {
         return this.http
             .delete(`/api/configuration/strongbox/storages/${storageId}/${repositoryId}`)
-            .pipe(map((r: any) => plainToClass(ApiResponse, r) as any));
+            .pipe(map((r: any) => plainToClass(ApiResponse, r, {groups: ['error']}) as any));
+    }
+
+    saveRepository(storageId: string, repository: Repository): Observable<ApiResponse> {
+        // tslint:disable-next-line:max-line-length
+        delete repository.storageId; // because org.carlspring.strongbox.forms.configuration.RepositoryForm does not ignore unrecognized fields.
+        return this.http
+            .put(`/api/configuration/strongbox/storages/${storageId}/${repository.id}`, repository)
+            .pipe(map((r: any) => plainToClass(ApiResponse, r, {groups: ['error']}) as any));
     }
 
 }

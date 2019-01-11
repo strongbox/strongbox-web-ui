@@ -3,15 +3,13 @@
     <table class="mat-table" style="width: 100%;">
         <thead>
             <tr class="mat-header-row">
-                <th
-                        class="mat-header-cell cdk-column-repository mat-column-repository mat-table-sticky ng-star-inserted"
-                        style="width: 80%;">
+                <th class="mat-header-cell cdk-column-repository mat-column-repository mat-table-sticky ng-star-inserted"
+                    style="width: 80%;">
                     Storage
                 </th>
-                <th
-                        class="mat-header-cell cdk-column-repository mat-column-repository mat-table-sticky ng-star-inserted"
-                        style="width: 20%; text-align: right;">
-                    <a (click)="showSearch$.next(!showSearch$.getValue())"
+                <th class="mat-header-cell cdk-column-repository mat-column-repository mat-table-sticky ng-star-inserted"
+                    style="width: 20%; text-align: right;">
+                    <a (click)="toggleStorageSearch()"
                        [class.active]="(showSearch$ | async)"
                        style="font-size: 18px; margin-right: 10px;">
                         <i class="icons ion-md-search"></i>
@@ -24,22 +22,21 @@
         </thead>
     </table>
     <div style="padding-bottom: 15px;">
+
         <mat-list>
-            <mat-list-item *ngIf="(showSearch$ | async)" class="search" @slideInOut>
+            <mat-list-item class="search" *ngIf="(showSearch$ | async) === true" @slideInOut>
                 <mat-form-field floatLabel="never" appearance="standard">
-                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter storages"
+                    <input matInput (keyup)="applyFilter($event.target.value)"
+                           placeholder="Filter storages"
                            autocomplete="off">
                 </mat-form-field>
             </mat-list-item>
             <mat-list-item *ngFor="let storage of storagesSource.filteredData"
-                           (click)="selectedStorage.next(storage)"
-                           [class.active]="storage.id === (selectedStorage | async)?.id"
+                           [class.active]="storage.id === (selectedStorage$ | async)"
             >
-                <div fxLayout="row" style="width: 100%;">
+                <div fxLayout="row" class="list-row">
                     <div class="link" fxFlex="1 1 auto">
-                        <a [routerLink]="[{ outlets: { 'repositoriesFor': [storage.id] }}]"
-                           routerLinkActive="active"
-                        >
+                        <a [routerLink]="getStorageRoute(storage.id)" routerLinkActive="active" (click)="updateSelectedStorage(storage.id)">
                             {{ storage.id }}
                         </a>
                     </div>

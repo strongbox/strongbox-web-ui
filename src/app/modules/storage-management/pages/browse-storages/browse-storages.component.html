@@ -1,12 +1,38 @@
 <app-page-container [breadcrumbs]="breadcrumbs" class="noPadding">
+    <div page-actions>
+        <mat-menu #matMenuHeader="matMenu" xPosition="before" class="menu-2-offset">
+            <button mat-menu-item *ngFor="let type of repositoryTypes" [routerLink]="createRepositoryLink(type)">
+                {{ type | titlecase }} repository
+            </button>
+        </mat-menu>
+        <!--  -->
+        <button mat-raised-button color="primary"
+                [matMenuTriggerFor]="matMenuHeader"
+                [disabled]="(selectedStorage$ | async) == null"
+                #matMenuTriggerHeader="matMenuTrigger">
+            Add a repository
+            <i class="ion splitter"
+               [class.ion-md-arrow-dropdown]="!matMenuTriggerHeader.menuOpen"
+               [class.ion-md-arrow-dropup]="matMenuTriggerHeader.menuOpen"
+            ></i>
+        </button>
+    </div>
+
     <div fxLayout="row">
-        <div fxFlex="20">
-            <div fxLayout="column">
-                <router-outlet></router-outlet>
+        <ng-container *ngIf="(initialLoading$ | async)">
+            <div class="loading">
+                <mat-spinner [strokeWidth]="5" mode="indeterminate" color="primary"></mat-spinner>
             </div>
-        </div>
-        <div fxFlex="80">
-            <router-outlet name="repositoriesFor"></router-outlet>
-        </div>
+        </ng-container>
+        <ng-container *ngIf="!(initialLoading$ | async)">
+            <div fxFlex="20">
+                <div fxLayout="column">
+                    <app-list-storages></app-list-storages>
+                </div>
+            </div>
+            <div fxFlex="80">
+                <app-list-repositories></app-list-repositories>
+            </div>
+        </ng-container>
     </div>
 </app-page-container>
