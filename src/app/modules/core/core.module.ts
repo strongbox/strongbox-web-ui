@@ -19,7 +19,6 @@ import {HomepageComponent} from './pages/homepage/homepage.component';
 import {RepositorySearchResultsComponent} from './pages/search/repository-search-results.component';
 import {environment} from '../../../environments/environment';
 import {ApiURLInterceptor} from './services/interceptors/api-url.interceptor';
-import {CodeSnippet} from './pipes/code-snippet.pipe';
 import {RepositorySearchService} from './pages/search/repository-search.service';
 import {SessionState} from './auth/state/session.state';
 import {AuthService} from './auth/auth.service';
@@ -101,7 +100,6 @@ import {NgProgressRouterModule} from '@ngx-progressbar/router';
         ConfirmDialogComponent
     ],
     declarations: [
-        CodeSnippet,
         HomepageComponent,
         LoginDialogComponent,
         ConfirmDialogComponent,

@@ -5,7 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {NgxsModule} from '@ngxs/store';
 
 import {RepositorySearchResultsComponent} from './repository-search-results.component';
-import {CodeSnippet} from '../../pipes/code-snippet.pipe';
+import {CodeSnippetPipePipe} from '../../../../shared/layout/pipes/code-snippet.pipe';
 import {AppState} from '../../../../state/app.state';
 import {MaterialModule} from '../../../../shared/material.module';
 import {LayoutModule} from '../../../../shared/layout/layout.module';
@@ -28,7 +28,7 @@ describe('Component: RepositorySearchResultsComponent', () => {
             ],
             declarations: [
                 RepositorySearchResultsComponent,
-                CodeSnippet
+                CodeSnippetPipePipe
             ]
         });
 

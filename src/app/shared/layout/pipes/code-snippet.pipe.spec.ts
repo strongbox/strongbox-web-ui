@@ -1,20 +1,20 @@
 import {inject, TestBed} from '@angular/core/testing';
 import {BrowserModule} from '@angular/platform-browser';
 
-import {CodeSnippet} from './code-snippet.pipe';
+import {CodeSnippetPipePipe} from './code-snippet.pipe';
 
 describe('CodeSnippet', () => {
-    let pipe: CodeSnippet;
+    let pipe: CodeSnippetPipePipe;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [BrowserModule],
-            declarations: [CodeSnippet],
-            providers: [CodeSnippet]
+            declarations: [CodeSnippetPipePipe],
+            providers: [CodeSnippetPipePipe]
         });
     });
 
-    beforeEach(inject([CodeSnippet], p => {
+    beforeEach(inject([CodeSnippetPipePipe], p => {
         pipe = p;
     }));
 
