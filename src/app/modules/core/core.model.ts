@@ -22,7 +22,7 @@ export class ApiResponse {
         return typeof this.errorResponse === 'undefined' || this.errorResponse === null;
     }
 
-    errorsToForm(form: FormGroup) {
+    errorsToForm(form: AbstractControl) {
         if (this.errors && this.errors.length > 0) {
             this.errors.forEach((error: ApiFormError, index) => {
                 let field: AbstractControl = form;
@@ -61,7 +61,7 @@ export class ApiFormError implements ValidationErrors {
     messages: string[] = [];
 }
 
-export function handleFormError(error: ApiResponse, form: FormGroup, loading: Subject<any> = null, notify: ToastrService = null) {
+export function handleFormError(error: ApiResponse, form: AbstractControl, loading: Subject<any> = null, notify: ToastrService = null) {
     if (!(error instanceof ApiResponse)) {
         return throwError(error);
     }

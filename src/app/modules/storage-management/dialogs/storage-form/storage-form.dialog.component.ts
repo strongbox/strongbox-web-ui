@@ -4,13 +4,13 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {plainToClass} from 'class-transformer';
 import {ToastrService} from 'ngx-toastr';
-import {takeUntil} from 'rxjs/operators';
+import {catchError, takeUntil} from 'rxjs/operators';
 import {Actions, ofActionDispatched, Store} from '@ngxs/store';
 import {RouterNavigation} from '@ngxs/router-plugin';
 
 import {StorageManagerService} from '../../services/storage-manager.service';
 import {StorageEntity} from '../../storage.model';
-import {ApiResponse} from '../../../core/core.model';
+import {ApiResponse, handleFormError} from '../../../core/core.model';
 
 @Component({
     selector: 'app-storages-dialog',
@@ -49,14 +49,14 @@ export class StorageFormDialogComponent implements OnInit, OnDestroy {
 
             this.storageService
                 .saveStorage(this.storage ? this.storage.id : null, storageEntity)
-                .pipe(takeUntil(this.destroy$))
+                .pipe(
+                    catchError(err => handleFormError(err, this.form, this.loading$, this.notify)),
+                    takeUntil(this.destroy$)
+                )
                 .subscribe((response: ApiResponse) => {
                     if (response.isValid()) {
                         this.notify.success(response.message);
                         this.dialogRef.close(storageEntity);
-                    } else {
-                        this.notify.error(response.message);
-                        this.loading$.next(false);
                     }
                 });
         }

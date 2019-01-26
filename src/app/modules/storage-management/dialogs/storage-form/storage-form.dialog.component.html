@@ -1,36 +1,43 @@
-<div *ngIf="!(loading$ | async)" matDialogTitle>
-    Storage details
-</div>
+<ng-container *ngIf="!(loading$ | async)">
+    <div matDialogTitle>
+        Storage details
+    </div>
 
-<div matDialogContent>
-    <form (submit)="submit()" [formGroup]="form" *ngIf="!(loading$ | async)">
-        <mat-form-field>
-            <input formControlName="id" matInput placeholder="Storage ID" required>
-            <mat-error *ngIf="form.get('id').invalid">
-                <form-field-errors [field]="form.get('id')"></form-field-errors>
-            </mat-error>
-        </mat-form-field>
-        <div class="spacer">&nbsp;</div>
-        <mat-form-field>
-            <textarea formControlName="basedir"
-                      matInput
-                      cdkTextareaAutosize
-                      #autosize="cdkTextareaAutosize"
-                      cdkAutosizeMinRows="1"
-                      placeholder="Base directory">
-            </textarea>
-            <mat-error *ngIf="form.get('basedir').invalid">
-                <form-field-errors [field]="form.get('basedir')"></form-field-errors>
-            </mat-error>
-        </mat-form-field>
-    </form>
+    <div matDialogContent>
+        <form (submit)="submit()" [formGroup]="form">
+            <mat-form-field>
+                <input formControlName="id" matInput placeholder="Storage ID" required>
+                <mat-error *ngIf="form.get('id').invalid">
+                    <form-field-errors [field]="form.get('id')"></form-field-errors>
+                </mat-error>
+            </mat-form-field>
+            <div class="spacer">&nbsp;</div>
+            <mat-form-field>
+                <textarea formControlName="basedir"
+                          matInput
+                          cdkTextareaAutosize
+                          #autosize="cdkTextareaAutosize"
+                          cdkAutosizeMinRows="1"
+                          placeholder="Base directory">
+                </textarea>
+                <mat-error *ngIf="form.get('basedir').invalid">
+                    <form-field-errors [field]="form.get('basedir')"></form-field-errors>
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </div>
 
-    <div *ngIf="(loading$ | async)" class="overlay">
+    <div matDialogActions align="center">
+        <button mat-button (click)="close()">Close</button>
+        <button [disabled]="form.invalid" color="primary" mat-raised-button type="submit" (click)="submit()">
+            Save
+        </button>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="(loading$ | async)">
+    <div class="overlay">
         <mat-progress-spinner color="primary" mode="indeterminate" [strokeWidth]="4"></mat-progress-spinner>
     </div>
-</div>
+</ng-container>
 
-<div *ngIf="!(loading$ | async)" matDialogActions align="center">
-    <button mat-button (click)="close()">Close</button>
-    <button [disabled]="form.invalid" color="primary" mat-raised-button type="submit" (click)="submit()">Save</button>
-</div>
