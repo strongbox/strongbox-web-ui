@@ -1,0 +1,69 @@
+<div style="position:relative; height: 73vh; ">
+
+    <table class="mat-table" style="width: 100%;">
+        <thead>
+            <tr class="mat-header-row">
+                <th class="mat-header-cell cdk-column-repository mat-column-repository mat-table-sticky ng-star-inserted"
+                    style="width: 75%;">
+                    Storage
+                </th>
+                <th class="mat-header-cell cdk-column-repository mat-column-repository mat-table-sticky ng-star-inserted"
+                    style="width: 25%; text-align: right; font-size: 18px;">
+                    <a (click)="toggleStorageSearch()"
+                       [class.active]="(showSearch$ | async)"
+                       style="margin-right: 10px;">
+                        <i class="icons ion-md-search"></i>
+                    </a>
+                    <a (click)="openStorageForm()" style="margin-right: 10px;">
+                        <i class="icons ion-md-add-circle-outline"></i>
+                    </a>
+                    <a (click)="refreshStorages()">
+                        <i class="icons ion-md-refresh"></i>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+    </table>
+    <div style="padding-bottom: 15px;">
+
+        <mat-list>
+            <mat-list-item class="search" *ngIf="(showSearch$ | async) === true" @slideInOut>
+                <mat-form-field floatLabel="never" appearance="standard">
+                    <input matInput (keyup)="applyFilter($event.target.value)"
+                           placeholder="Filter storages"
+                           autocomplete="off">
+                </mat-form-field>
+            </mat-list-item>
+            <mat-list-item *ngFor="let storage of storagesSource.filteredData"
+                           [class.active]="storage.id === (selectedStorage$ | async)"
+            >
+                <div fxLayout="row" class="list-row">
+                    <div class="link" fxFlex="1 1 auto">
+                        <a [routerLink]="getStorageRoute(storage.id)" routerLinkActive="active" (click)="updateSelectedStorage(storage.id)">
+                            {{ storage.id }}
+                        </a>
+                    </div>
+                    <div class="actions" fxFlex="48px">
+                        <ul>
+                            <li>
+                                <a (click)="openStorageForm(storage)">
+                                    <i class="icons ion-md-create" style="font-size: 18px;"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a (click)="deleteStorage(storage)">
+                                    <i class="icons ion-md-trash" style="font-size: 18px; color: hsla(0, 60%, 50%, 1);"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </mat-list-item>
+        </mat-list>
+    </div>
+
+    <div style="border-right: 1px solid rgba(255,255,255,0.15); height: 100%; position:absolute; top: 0px; right: 0px;">
+        &nbsp;
+    </div>
+</div>
+

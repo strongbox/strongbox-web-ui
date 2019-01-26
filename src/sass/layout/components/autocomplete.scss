@@ -1,5 +1,7 @@
+@import '../../variables';
+
 .mat-autocomplete-panel {
-  background: #334554;
+  background: $panel-background;
   margin-top: 2px;
 }
 

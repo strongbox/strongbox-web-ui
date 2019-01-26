@@ -1,0 +1,12 @@
+.mat-menu-panel {
+  background: $panel-background;
+}
+
+.mat-menu-content:not(:empty) {
+  padding-top: unset !important;
+  padding-bottom: unset !important;
+}
+
+.menu-2-offset {
+  margin-top: 2px;
+}

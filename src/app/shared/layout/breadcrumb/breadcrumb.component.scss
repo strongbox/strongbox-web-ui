@@ -1,7 +1,9 @@
+@import "../../../../sass/variables";
+
 ul.breadcrumbs {
   white-space: nowrap;
   display: inline;
-  font: 400 19px/26px 'Open Sans', Helvetica, sans-serif !important;
+  font: 300 22px/30px $font-family;
 
   li {
     display: inline;

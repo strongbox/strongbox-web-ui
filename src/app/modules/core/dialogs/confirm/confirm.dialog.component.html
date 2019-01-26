@@ -1,6 +1,17 @@
-<h2 mat-dialog-title>{{ data.title }}</h2>
-<mat-dialog-content>{{ data.message }}</mat-dialog-content>
-<mat-dialog-actions fxLayoutAlign="center center">
-    <button mat-button mat-dialog-close style="margin-right: 10px;">No</button>
-    <button mat-button (click)="confirmAction()">Yes</button>
-</mat-dialog-actions>
+<div *ngIf="!(loading$ | async)" matDialogTitle>
+    {{ data.title }}
+</div>
+
+<div matDialogContent>
+    <div *ngIf="!(loading$ | async)" style="width: 100%;" [innerHTML]="data.message"></div>
+
+    <div *ngIf="(loading$ | async)" class="loading">
+        <mat-progress-spinner [strokeWidth]="4" mode="indeterminate"></mat-progress-spinner>
+    </div>
+</div>
+
+<div *ngIf="!(loading$ | async)" matDialogActions align="center">
+    <button mat-button (click)="confirm(false)" style="margin-right: 10px;">No</button>
+    <button mat-button mat-raised-button color="warn" (click)="confirm(true)">Yes</button>
+</div>
+

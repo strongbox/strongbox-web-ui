@@ -1,0 +1,44 @@
+<table mat-table [dataSource]="directoryListing" [multiTemplateDataRows]="true" style="width: 100%;">
+    <ng-container *ngFor="let column of columns;">
+        <ng-container [matColumnDef]="column">
+            <th mat-header-cell *matHeaderCellDef>{{ column | camelCaseToSpace | titlecase }}</th>
+            <td mat-cell *matCellDef="let record" (click)="navigate(record)" class="clickable">
+                <ng-container *ngIf="column !== 'lastModified' && column !== 'size' && column !== 'name'">
+                    {{ record[column] }}
+                </ng-container>
+                <ng-container *ngIf="column === 'name'">
+                    {{ record[column] }}<ng-container *ngIf="record[column]['type'] === 'directory'">/</ng-container>
+                </ng-container>
+                <ng-container *ngIf="column === 'lastModified'">
+                    {{ record[column] | date:'MMM dd, yyyy, H:mm:ss' }}
+                </ng-container>
+                <ng-container *ngIf="column === 'size'">
+                    {{ record[column] | filesize }}
+                </ng-container>
+            </td>
+        </ng-container>
+    </ng-container>
+
+    <!-- // TODO:  -->
+    <ng-container matColumnDef="actions">
+        <th class="actions" mat-header-cell *matHeaderCellDef>Actions</th>
+        <td class="actions text-center" mat-cell *matCellDef="let repository">
+            <ul *ngIf="repository.type !== 'back'">
+                <li>
+                    <a (click)="confirmDelete(repository)" title="Delete repository">
+                        <i class="icon ion-md-trash"></i>
+                    </a>
+                </li>
+            </ul>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsWithActions; sticky: true"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsWithActions;"></tr>
+</table>
+
+<ng-container *ngIf="directoryListing.data.length < 1">
+    <div fxLayout="column" style="padding: 15px; justify-content: center; align-items: center;">
+        No files/directories found.
+    </div>
+</ng-container>

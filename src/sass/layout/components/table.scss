@@ -30,6 +30,10 @@
     }
   }
 
+  thead .mat-header-cell {
+    font-size: 15px;
+  }
+
   tbody, tfoot {
     background: transparent;
   }
@@ -67,7 +71,6 @@
   }
 
   th.actions, td.actions {
-    width: 90px;
     text-align: center;
 
     $icon-size: 30px;
@@ -103,5 +106,20 @@
         top: 21px;
       }
     }
+
+    ul {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+
+      li {
+        display: block;
+        flex: 0 1 auto; /* Default */
+        margin-right: 15px;
+        list-style: none;
+      }
+    }
+
   }
 }

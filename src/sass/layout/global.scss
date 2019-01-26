@@ -10,12 +10,14 @@ body {
   font-family: $font-family;
 
   background: $body-background-color;
-  background: -moz-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* ff3.6+ */
-  background: -webkit-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* safari4+,chrome */
-  background: -webkit-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* safari5.1+,chrome10+ */
-  background: -ms-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* ie10+ */
-  background: -o-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* opera 11.10+ */
   background: linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* common. */
+  background: -o-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* opera 11.10+ */
+  // firefox, safari and epiphany do not work properly with this gradient.
+  // TODO: Fix background gradient.
+  background: -webkit-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-0 100%); /* safari4+,chrome */
+  background: -webkit-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-0 100%); /* safari5.1+,chrome10+ */
+  background: -ms-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-0 100%); /* ie10+ */
+  background: -moz-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-0 100%); /* ff3.6+ */
   -webkit-background-size: cover;
   background-size: cover;
   background-repeat: no-repeat;
@@ -39,13 +41,18 @@ a {
   text-decoration: none;
   transition: color .3s;
   display: inline-block;
+  outline: 0; // remove dotted outline (firefox)
 }
 
-a:not(.mat-tab-link).active, a:not(.mat-tab-link):hover {
+// https://github.com/angular/angular/issues/22588
+a:not(.mat-tab-link).active, a:not(.mat-tab-link):hover,
+div.active > a, div.active > a:hover {
   color: $nav-link-hover;
 }
 
-a:not(.mat-tab-link).active::after, a:not(.mat-tab-link)::after {
+// https://github.com/angular/angular/issues/22588
+a:not(.mat-tab-link).active::after, a:not(.mat-tab-link)::after,
+div.active > a::after {
   content: '';
   display: block;
   width: 0;
@@ -54,7 +61,9 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link)::after {
   transition: width .2s;
 }
 
-a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
+// https://github.com/angular/angular/issues/22588
+a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after,
+div.active > a::after, div.active > a:hover::after {
   width: 100%;
 }
 
@@ -109,6 +118,10 @@ a:not(.mat-tab-link).active::after, a:not(.mat-tab-link):hover::after {
       margin-bottom: 10px;
     }
   }
+}
+
+div.not-found {
+  padding: 10px;
 }
 
 div.blue-border {

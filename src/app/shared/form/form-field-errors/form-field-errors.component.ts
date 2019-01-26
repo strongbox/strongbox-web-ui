@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
 import {ApiFormError} from '../../../modules/core/core.model';
@@ -9,7 +9,7 @@ import {ApiFormError} from '../../../modules/core/core.model';
     templateUrl: './form-field-errors.component.html',
     styleUrls: ['./form-field-errors.component.scss']
 })
-export class FormFieldErrorsComponent implements OnInit {
+export class FormFieldErrorsComponent {
 
     @Input()
     field: FormGroup = null;
@@ -52,9 +52,6 @@ export class FormFieldErrorsComponent implements OnInit {
         }
 
         return [];
-    }
-
-    ngOnInit() {
     }
 
 }

@@ -1,18 +1,34 @@
 .mat-dialog-container {
   background: saturate(darken($body-background-color, 4%), 7%);
   position: relative;
+  padding: 0px 0px 0px 0px !important;
+  overflow: hidden !important;
+
+  .mat-dialog-title.noPadding {
+    padding: 0px 0px 10px 0px;
+  }
 
   .mat-dialog-title {
-    padding: 0px 0px 10px 0px;
-    margin: auto;
+    // border-bottom: 1px solid #2c82bc;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    background: rgba(0,0,0,0.2);
+    padding: 10px 0px 8px 10px;
   }
 
   .mat-dialog-content {
-    padding: 10px 24px 14px 24px;
+    padding: 10px 40px 10px 40px;
+  }
+
+  .mat-dialog-actions {
+    padding-bottom: 30px;
   }
 }
 
-.deleteDialog .mat-dialog-container {
-  //background: #af2e25;
-  background: linear-gradient(180deg, hsla(0, 60%, 43%, 1) 0%, hsla(0, 60%, 25%, 1) 100%);
+.deleteDialog {
+  .mat-dialog-container {
+    //background: #af2e25;
+    background: linear-gradient(180deg, hsla(0, 60%, 43%, 1) 0%, hsla(0, 60%, 25%, 1) 100%);
+    padding: 0px 0px 0px 0px;
+  }
+
 }

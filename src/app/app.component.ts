@@ -91,7 +91,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
     public navigation = [
         {title: 'Dashboard', url: ['/admin/dashboard'], icon: 'ion-md-desktop'},
-        {title: 'Storages', url: ['/admin/storages'], icon: 'ion-md-cube'},
+        {
+            title: 'Storages',
+            url: ['/admin/storages'],
+            icon: 'ion-md-cube',
+            // https://github.com/angular/angular/issues/22588
+            alternatives: [
+                ['/admin/storages']
+            ]
+        },
         {title: 'Security', url: ['/admin/security'], icon: 'ion-md-lock', marginLeft: '2px'},
         {title: 'Users', url: ['/admin/users'], icon: 'ion-md-people'},
         {title: 'System', url: ['/admin/server-settings'], icon: 'ion-md-build'},

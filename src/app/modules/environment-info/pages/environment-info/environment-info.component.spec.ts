@@ -4,12 +4,11 @@ import {CommonModule} from '@angular/common';
 import {EnvironmentInfoComponent} from './environment-info.component';
 import {MaterialModule} from '../../../../shared/material.module';
 import {LayoutModule} from '../../../../shared/layout/layout.module';
-import {HttpClientModule} from '@angular/common/http';
 import {ToastrModule} from 'ngx-toastr';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 
-describe('EnvironmentInfoComponent', () => {
+describe('Component: EnvironmentInfoComponent', () => {
     let component: EnvironmentInfoComponent;
     let fixture: ComponentFixture<EnvironmentInfoComponent>;
 

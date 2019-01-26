@@ -1,0 +1,77 @@
+<div style="width: 100%; height: 73vh; position:relative; overflow: hidden;" fxLayout="column">
+    <table mat-table [dataSource]="repositoriesSource" style="width: 100%;">
+        <ng-container *ngFor="let column of repositoryColumns;">
+            <ng-container [matColumnDef]="column">
+                <th mat-header-cell *matHeaderCellDef>{{ column | titlecase }}</th>
+                <td mat-cell *matCellDef="let repository" (click)="navigateToDirectoryListing(repository)" class="clickable">
+                    {{repository[column]}}
+                </td>
+            </ng-container>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th class="actions" mat-header-cell *matHeaderCellDef>Actions</th>
+            <td class="actions text-center" mat-cell *matCellDef="let repository">
+                <ul>
+                    <li>
+                        <a (click)="navigateToDirectoryListing(repository)" title="Directory listing">
+                            <i class="icon ion-md-filing"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="navigateToRepositoryUpdate(repository)" title="Edit repository configuration">
+                            <i class="icon ion-md-create"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="confirmDeletion(repository)" title="Delete repository">
+                            <i class="icon ion-md-trash"></i>
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="repositoryColumnsWithActions"></tr>
+        <ng-container *ngIf="(selectedStorage$ | async)">
+            <tr mat-row *matRowDef="let element; columns: repositoryColumnsWithActions;"></tr>
+        </ng-container>
+    </table>
+
+    <ng-container *ngIf="(loadingRepositories$ | async)">
+        <div class="overlay">
+            <mat-progress-spinner color="primary" mode="indeterminate" [strokeWidth]="4"></mat-progress-spinner>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="!(loadingRepositories$ | async)">
+        <div *ngIf="repositoriesSource.filteredData.length < 1 && (selectedStorage$ | async)" class="overlay">
+            <div fxLayout="column">
+                <span>No repositories were found in {{ (selectedStorage$ | async) }}.</span>
+                <div style="margin-top: 15px;">
+                    <mat-menu #matMenuContent="matMenu" xPosition="before" class="menu-2-offset">
+                        <button mat-menu-item *ngFor="let type of repositoryTypes"
+                                [routerLink]="createRepositoryLink(type)">
+                            {{ type | titlecase }} repository
+                        </button>
+                    </mat-menu>
+                    <!--  -->
+                    <button mat-raised-button color="primary"
+                            [matMenuTriggerFor]="matMenuContent"
+                            #matMenuTriggerContent="matMenuTrigger">
+                        Add a repository
+                        <i class="ion splitter"
+                           [class.ion-md-arrow-dropdown]="!matMenuTriggerContent.menuOpen"
+                           [class.ion-md-arrow-dropup]="matMenuTriggerContent.menuOpen"
+                        ></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!(selectedStorage$ | async)" class="overlay">
+            Select a storage to show repositories.
+        </div>
+    </ng-container>
+
+</div>

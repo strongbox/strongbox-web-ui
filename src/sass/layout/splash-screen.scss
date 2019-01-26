@@ -5,12 +5,14 @@
   height: 100vh;
   width: 100vw;
   background: $body-background-color;
-  background: -moz-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* ff3.6+ */
-  background: -webkit-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* safari4+,chrome */
-  background: -webkit-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* safari5.1+,chrome10+ */
-  background: -ms-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* ie10+ */
-  background: -o-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* opera 11.10+ */
   background: linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* common. */
+  background: -o-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* opera 11.10+ */
+  // firefox, safari and epiphany do not work properly with this gradient.
+  // TODO: Fix background gradient.
+  background: -webkit-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-0 100%); /* safari4+,chrome */
+  background: -webkit-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-0 100%); /* safari5.1+,chrome10+ */
+  background: -ms-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-0 100%); /* ie10+ */
+  background: -moz-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-0 100%); /* ff3.6+ */
   -webkit-background-size: cover;
   background-size: cover;
   background-repeat: no-repeat;

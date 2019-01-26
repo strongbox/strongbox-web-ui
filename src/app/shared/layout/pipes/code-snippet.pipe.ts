@@ -5,7 +5,7 @@ import {DomSanitizer} from '@angular/platform-browser';
     name: 'codeSnippet',
     pure: false
 })
-export class CodeSnippet implements PipeTransform {
+export class CodeSnippetPipePipe implements PipeTransform {
 
     constructor(private sanitizer: DomSanitizer) {
     }

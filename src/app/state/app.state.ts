@@ -1,5 +1,5 @@
 import {MatDialog} from '@angular/material/dialog';
-import {MediaChange, ObservableMedia} from '@angular/flex-layout';
+import {MediaChange, MediaObserver} from '@angular/flex-layout';
 import {Action, NgxsOnInit, Select, Selector, State, StateContext} from '@ngxs/store';
 import {Navigate, RouterNavigation} from '@ngxs/router-plugin';
 import {filter, take} from 'rxjs/operators';
@@ -65,12 +65,12 @@ export class AppState implements NgxsOnInit {
     }
 
     constructor(private dialog: MatDialog,
-                private media: ObservableMedia,
+                private mediaObserver: MediaObserver,
                 private router: Router) {
     }
 
     ngxsOnInit(ctx: StateContext<AppStateModel>) {
-        this.media.subscribe((change: MediaChange) => {
+        this.mediaObserver.media$.subscribe((change: MediaChange) => {
             const isMobile = (change.mqAlias === 'xs' || change.mqAlias === 'sm' || change.mqAlias === 'md');
 
             const sideNav: SideNavStateModel = {
