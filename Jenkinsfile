@@ -38,6 +38,7 @@ pipeline {
                     def npmCachePath = workspace().getNPMCachePath()
                     sh "npm config set cache ${npmCachePath}"
                     sh "npm install"
+                    sh "npm ls --depth=0"
                 }
             }
         }
