@@ -3,7 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
 import {MatTableDataSource} from '@angular/material';
 
-import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
+import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 import {EnvironmentInfoService} from '../../services/environment-info.service';
 import {EnvironmentInfo} from '../../environment-info.model';
 

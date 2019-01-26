@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, ParamMap, Router, RouterEvent} from '@angular/router';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
-import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
+import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 
 @Component({
     selector: 'app-browse-repository',

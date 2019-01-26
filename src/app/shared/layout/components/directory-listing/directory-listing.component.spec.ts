@@ -6,10 +6,10 @@ import {NgxsModule} from '@ngxs/store';
 import {ChangeDetectorRef} from '@angular/core';
 
 import {DirectoryListingComponent} from './directory-listing.component';
-import {MaterialModule} from '../../material.module';
-import {DirectoryListingService} from '../services/directory-listing.service';
-import {CamelCaseToSpacePipe} from '../pipes/camel-case-to-space.pipe';
-import {FilesizePipe} from '../pipes/filesize.pipe';
+import {MaterialModule} from '../../../material.module';
+import {DirectoryListingService} from '../../services/directory-listing.service';
+import {CamelCaseToSpacePipe} from '../../pipes/camel-case-to-space.pipe';
+import {FilesizePipe} from '../../pipes/filesize.pipe';
 
 describe('Component: DirectoryListingComponent', () => {
     let component: DirectoryListingComponent;

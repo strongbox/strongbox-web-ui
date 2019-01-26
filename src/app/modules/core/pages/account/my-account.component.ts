@@ -11,7 +11,7 @@ import {AccountService} from './account.service';
 import {AccountUpdateData} from './account.model';
 import {SessionState} from '../../auth/state/session.state';
 import {AccountFormState} from './state/accountFormState';
-import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
+import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 
 @Component({
     selector: 'app-my-account',

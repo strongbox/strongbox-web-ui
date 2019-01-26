@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
 
 import {CodeSnippet, SearchResponse, SearchResult} from './search-result-interfaces';
-import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
+import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 
 @Component({
     selector: 'app-repository-search-results',

@@ -9,7 +9,7 @@ import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 
-import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
+import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 import {StorageManagerService} from '../../services/storage-manager.service';
 import {
     RemoteRepositoryChecksumPolicyEnum,

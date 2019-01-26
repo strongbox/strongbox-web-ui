@@ -5,7 +5,7 @@ import {Observable, Subject} from 'rxjs';
 import {Select, Store} from '@ngxs/store';
 import {takeUntil} from 'rxjs/operators';
 
-import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
+import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 import {BrowseStoragesState} from './state/browse-storages.state.model';
 import {BrowseStoragesLoadStorages, BrowseStoragesSelectStorage} from './state/browse-storages.actions';
 import {RepositoryTypeEnum} from '../../repository.model';

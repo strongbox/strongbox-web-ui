@@ -9,7 +9,7 @@ import {User} from '../../user.model';
 import {UserManagementService} from '../../services/user-management.service';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {ConfirmDialogComponent} from '../../../core/dialogs/confirm/confirm.dialog.component';
-import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
+import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 
 @Component({
     selector: 'app-list-users',

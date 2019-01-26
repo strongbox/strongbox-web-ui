@@ -5,7 +5,7 @@ import {Actions, Store} from '@ngxs/store';
 import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 
-import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
+import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 import {ServerSettingsService} from '../../services/server-settings.service';
 import {ApiResponse, handleFormError} from '../../../core/core.model';
 

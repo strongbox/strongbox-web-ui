@@ -6,8 +6,8 @@ import {Navigate} from '@ngxs/router-plugin';
 import {Store} from '@ngxs/store';
 import {HttpClient} from '@angular/common/http';
 
-import {DirectoryListingService, PathContent, PathRecord} from '../services/directory-listing.service';
-import {ConfirmDialogComponent} from '../../../modules/core/dialogs/confirm/confirm.dialog.component';
+import {DirectoryListingService, PathContent, PathRecord} from '../../services/directory-listing.service';
+import {ConfirmDialogComponent} from '../../../../modules/core/dialogs/confirm/confirm.dialog.component';
 
 @Component({
     selector: 'app-directory-listing',

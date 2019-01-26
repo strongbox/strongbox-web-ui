@@ -1,26 +1,25 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 
-import {PageContainerComponent} from './page-container.component';
-import {MaterialModule} from '../../material.module';
-import {BreadcrumbComponent} from '../breadcrumb/breadcrumb.component';
+import {BreadcrumbComponent} from './breadcrumb.component';
+import {MaterialModule} from '../../../material.module';
 
-describe('PageContainerComponent', () => {
-    let component: PageContainerComponent;
-    let fixture: ComponentFixture<PageContainerComponent>;
+describe('BreadcrumbComponent', () => {
+    let component: BreadcrumbComponent;
+    let fixture: ComponentFixture<BreadcrumbComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
-                MaterialModule
+                MaterialModule,
             ],
-            declarations: [PageContainerComponent, BreadcrumbComponent]
+            declarations: [BreadcrumbComponent]
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(PageContainerComponent);
+        fixture = TestBed.createComponent(BreadcrumbComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

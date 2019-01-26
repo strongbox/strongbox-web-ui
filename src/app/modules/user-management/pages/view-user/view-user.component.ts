@@ -10,7 +10,7 @@ import {User, UserForm, UserOperations, UserPrivilege, UserResponse, UserRole} f
 import {UserManagementService} from '../../services/user-management.service';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {handle404error} from '../../../core/core.model';
-import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
+import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 
 @Component({
     selector: 'app-view-user',

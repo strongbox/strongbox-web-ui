@@ -14,7 +14,7 @@ import {UserManagementService} from '../../services/user-management.service';
 import {SessionState} from '../../../core/auth/state/session.state';
 import {ApiResponse, handle404error} from '../../../core/core.model';
 import {FADE_IN_OUT_OVERLAP} from '../../../../shared/animations';
-import {Breadcrumb} from '../../../../shared/layout/breadcrumb/breadcrumb.model';
+import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 
 @Component({
     selector: 'app-manage-user',
