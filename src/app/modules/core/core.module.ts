@@ -72,15 +72,15 @@ import {NgProgressRouterModule} from '@ngx-progressbar/router';
         (environment.production === false ? NgxsLoggerPluginModule.forRoot() : []),
 
         // Fancy progress loader.
-        NgProgressModule.forRoot({
+        NgProgressModule.withConfig({
             color: '#2684bd',
             spinner: false,
             thick: false,
             fixed: true,
             debounceTime: 50
         }),
-        NgProgressHttpModule.forRoot(),
-        NgProgressRouterModule.forRoot()
+        NgProgressHttpModule,
+        NgProgressRouterModule
     ],
     exports: [
         CommonModule,
