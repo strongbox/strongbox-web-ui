@@ -34,8 +34,7 @@ export class StorageManagerService {
     saveStorage(storageId: string | null, data: StorageEntity): Observable<ApiResponse> {
         let url = `/api/configuration/strongbox/storages`;
         if (storageId) {
-            // TODO: https://youtrack.carlspring.org/issue/SB-1327
-            // url = `${url}/${storageId}`;
+            url = `${url}/${storageId}`;
         }
 
         return this.http

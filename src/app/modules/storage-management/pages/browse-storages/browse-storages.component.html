@@ -8,7 +8,7 @@
         <!--  -->
         <button mat-raised-button color="primary"
                 [matMenuTriggerFor]="matMenuHeader"
-                [disabled]="(selectedStorage$ | async) == null"
+                [disabled]="(selectedStorage$ | async) == null || (selectedStorage$ | async) == ''"
                 #matMenuTriggerHeader="matMenuTrigger">
             Add a repository
             <i class="ion splitter"

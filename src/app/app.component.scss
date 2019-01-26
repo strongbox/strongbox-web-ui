@@ -84,18 +84,10 @@ a:hover {
 
     ::ng-deep .mat-focused {
       .mat-form-field-flex {
-        background-color: rgba(255, 255, 255, .8);
+        border: 1px solid darken(hsla(203, 67%, 45%, 1), 20);
       }
 
-      @include input-placeholder(rgba(255, 255, 255, 0.85), #1a2f3e);
-
-      input {
-        color: #323232;
-      }
-
-      .mat-form-field-prefix {
-        color: #323232;
-      }
+      @include input-placeholder(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85));
     }
   }
 }

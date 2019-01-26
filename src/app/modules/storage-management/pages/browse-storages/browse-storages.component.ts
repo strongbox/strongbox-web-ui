@@ -24,9 +24,6 @@ export class BrowseStoragesComponent implements OnInit, OnDestroy {
     @Select(BrowseStoragesState.isInitialLoading)
     initialLoading$: Observable<boolean>;
 
-    @Select(BrowseStoragesState.isInitialLoading)
-    loadingStates$: Observable<any>;
-
     @Select(BrowseStoragesState.selectedStorage)
     selectedStorage$: Observable<string>;
 

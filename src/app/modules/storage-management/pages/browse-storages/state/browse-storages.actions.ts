@@ -1,3 +1,5 @@
+import {StorageEntity} from '../../../storage.model';
+
 const name = '[StorageManagement][BrowseStorages]';
 
 export class BrowseStoragesToggleStoragesSearchInput {
@@ -17,5 +19,13 @@ export class BrowseStoragesSelectStorage {
 
 export class BrowseStoragesLoadStorages {
     static readonly type = name + ' Loading storages';
+}
+
+export class BrowseStoragesAddStorage {
+    static readonly type = name + ' Adding storages';
+
+    constructor(public payload: StorageEntity) {
+
+    }
 }
 

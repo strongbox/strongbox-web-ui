@@ -37,7 +37,7 @@ $btn-warn-gradient-0: hsla(4, 70%, 52%, 1);
 $btn-warn-gradient-1: darken(desaturate($btn-warn-gradient-0, 7%), 20%);
 
 // Tables
-$table-row-color: rgba(0, 0, 0, 0.1);
+$table-row-color: darken($header-nav-background, 4);
 
 // Panels (i.e. menu, autocomplete, select, etc)
 $panel-background: #334554;

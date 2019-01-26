@@ -4,16 +4,16 @@ import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Navigate} from '@ngxs/router-plugin';
 
-import {BrowseStoragesLoadStorages, BrowseStoragesSelectStorage, BrowseStoragesToggleStoragesSearchInput} from './browse-storages.actions';
+import {
+    BrowseStoragesAddStorage,
+    BrowseStoragesLoadStorages,
+    BrowseStoragesSelectStorage,
+    BrowseStoragesToggleStoragesSearchInput
+} from './browse-storages.actions';
 import {StorageManagerService} from '../../../services/storage-manager.service';
 import {StorageEntity} from '../../../storage.model';
 import {Repository} from '../../../repository.model';
 import {ApiResponse} from '../../../../core/core.model';
-
-export interface BrowseStoragesLoadingStateModel {
-    storages: boolean;
-    repositories: boolean;
-}
 
 export interface BrowseStoragesStateModel {
     selectedStorage: string;
@@ -93,6 +93,17 @@ export class BrowseStoragesState {
                     });
                 })
             );
+    }
+
+    @Action(BrowseStoragesAddStorage)
+    addStorage(ctx: StateContext<BrowseStoragesStateModel>, {payload}: BrowseStoragesAddStorage) {
+        ctx.patchState({
+            ...ctx.getState(),
+            storages: [
+                ...ctx.getState().storages,
+                payload
+            ]
+        });
     }
 
     @Action(BrowseStoragesSelectStorage)

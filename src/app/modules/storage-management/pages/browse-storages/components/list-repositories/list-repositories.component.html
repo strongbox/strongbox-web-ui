@@ -14,12 +14,17 @@
             <td class="actions text-center" mat-cell *matCellDef="let repository">
                 <ul>
                     <li>
-                        <a (click)="navigateToRepositoryUpdate(repository)">
+                        <a (click)="navigateToDirectoryListing(repository)" title="Directory listing">
+                            <i class="icon ion-md-filing"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="navigateToRepositoryUpdate(repository)" title="Edit repository configuration">
                             <i class="icon ion-md-create"></i>
                         </a>
                     </li>
                     <li>
-                        <a (click)="confirmDeletion(repository)">
+                        <a (click)="confirmDeletion(repository)" title="Delete repository">
                             <i class="icon ion-md-trash"></i>
                         </a>
                     </li>
@@ -27,7 +32,7 @@
             </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="repositoryColumnsWithActions; sticky: true"></tr>
+        <tr mat-header-row *matHeaderRowDef="repositoryColumnsWithActions"></tr>
         <ng-container *ngIf="(selectedStorage$ | async)">
             <tr mat-row *matRowDef="let element; columns: repositoryColumnsWithActions;"></tr>
         </ng-container>

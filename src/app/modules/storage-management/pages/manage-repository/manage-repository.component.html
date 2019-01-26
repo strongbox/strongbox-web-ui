@@ -1,0 +1,249 @@
+<app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$">
+
+    <form class="inputFullWidth" fxLayout="column" [formGroup]="form" (submit)="submit()" *ngIf="form">
+
+        <mat-tab-group dynamicHeight="true">
+            <mat-tab label="Basic configuration">
+                <div class="tabContent">
+                    <mat-form-field>
+                        <input matInput placeholder="Repository ID" formControlName="id">
+                        <mat-error *ngIf="form.get('id').invalid">
+                            <form-field-errors [field]="form.get('id')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput placeholder="Base path" formControlName="basedir">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-select placeholder="Layout" formControlName="layout" [disableOptionCentering]="true">
+                            <mat-option *ngFor="let layout of getLayouts()" [value]="layout">
+                                {{ layout }}
+                            </mat-option>
+                        </mat-select>
+
+                        <mat-error *ngIf="form.get('layout').invalid">
+                            <form-field-errors [field]="form.get('layout')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-select placeholder="Implementation" formControlName="implementation"
+                                    [disableOptionCentering]="true">
+                            <mat-option value="file-system">file-system</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput placeholder="Max artifact size (in bytes)" formControlName="artifactMaxSize"
+                               type="number">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-select placeholder="Policy" formControlName="policy" [disableOptionCentering]="true">
+                            <mat-option *ngFor="let policy of getPolicies()" [value]="policy">
+                                {{ policy }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-select placeholder="Status" formControlName="status" [disableOptionCentering]="true">
+                            <mat-option *ngFor="let status of getRepositoryStatuses()" [value]="status">
+                                {{ status }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <section>
+                        <mat-checkbox formControlName="trashEnabled" color="primary">
+                            Enable trash
+                        </mat-checkbox>
+                    </section>
+
+                    <section>
+                        <mat-checkbox formControlName="allowsDelete" color="primary">
+                            Allow delete
+                        </mat-checkbox>
+                    </section>
+
+                    <section>
+                        <mat-checkbox formControlName="allowsForceDeletion" color="primary">
+                            Allow force deletion
+                        </mat-checkbox>
+                    </section>
+
+                    <section>
+                        <mat-checkbox formControlName="allowsDeployment" color="primary">
+                            Allow deployment
+                        </mat-checkbox>
+                    </section>
+
+                    <section>
+                        <mat-checkbox formControlName="allowsRedeployment" color="primary">
+                            Allow re-deployment
+                        </mat-checkbox>
+                    </section>
+
+                    <section>
+                        <mat-checkbox formControlName="allowsDirectoryBrowsing" color="primary">
+                            Allow directory browsing
+                        </mat-checkbox>
+                    </section>
+                </div>
+            </mat-tab>
+            <mat-tab label="Group repositories" *ngIf="isGroupRepository()">
+                <div fxLayout="row" class="tabContent">
+                    <div class="list-container">
+                        <h3 class="blue-border">Available repositories</h3>
+                        <div class="list-block"
+                             cdkDropList
+                             #todoList="cdkDropList"
+                             [cdkDropListData]="availableGroupRepositories"
+                             [cdkDropListConnectedTo]="[doneList]"
+                             (cdkDropListDropped)="drop($event)">
+                            <div class="list-box" *ngFor="let item of availableGroupRepositories" cdkDrag>{{item}}</div>
+                        </div>
+                    </div>
+
+                    <div class="list-container">
+                        <h3 class="blue-border">Active ordered repositories</h3>
+                        <div class="list-block"
+                             cdkDropList
+                             #doneList="cdkDropList"
+                             [cdkDropListData]="activeGroupRepositories"
+                             [cdkDropListConnectedTo]="[todoList]"
+                             (cdkDropListDropped)="drop($event)">
+                            <div class="list-box" *ngFor="let item of activeGroupRepositories" cdkDrag>{{item}}</div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Remote repository" *ngIf="isProxyRepository()">
+                <div class="tabContent" [formGroup]="form.get('remoteRepository')">
+                    <mat-form-field>
+                        <input matInput placeholder="Remote URL" formControlName="url">
+                        <mat-error *ngIf="form.get('remoteRepository').get('url').invalid">
+                            <form-field-errors [field]="form.get('remoteRepository').get('url')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Username" formControlName="username">
+                        <mat-error *ngIf="form.get('remoteRepository').get('username').invalid">
+                            <form-field-errors
+                                    [field]="form.get('remoteRepository').get('username')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Password" type="password" formControlName="password">
+                        <mat-error *ngIf="form.get('remoteRepository').get('password').invalid">
+                            <form-field-errors
+                                    [field]="form.get('remoteRepository').get('password')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput placeholder="Check interval (in seconds)"
+                               type="number"
+                               formControlName="checkIntervalSeconds">
+                        <mat-error *ngIf="form.get('remoteRepository').get('checkIntervalSeconds').invalid">
+                            <form-field-errors
+                                    [field]="form.get('remoteRepository').get('checkIntervalSeconds')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-select placeholder="Checksum policy" formControlName="checksumPolicy"
+                                    [disableOptionCentering]="true">
+                            <mat-option [value]="null">None</mat-option>
+                            <mat-option *ngFor="let policy of getChecksumPolicies()" [value]="policy">
+                                {{ policy }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <section>
+                        <!-- TODO: Remove this option from the backend - it duplicates the one from `Basic configuration` -->
+                        <mat-checkbox formControlName="allowsDirectoryBrowsing" color="primary">
+                            Allow directory browsing
+                        </mat-checkbox>
+                    </section>
+
+                    <section>
+                        <mat-checkbox formControlName="autoBlocking" color="primary">
+                            Auto blocking
+                        </mat-checkbox>
+                    </section>
+
+                    <section>
+                        <mat-checkbox formControlName="checksumValidation" color="primary">
+                            Checksum validation
+                        </mat-checkbox>
+                    </section>
+
+                    <section>
+                        <mat-checkbox formControlName="downloadRemoteIndexes" color="primary">
+                            Download remote indexes?
+                        </mat-checkbox>
+                    </section>
+
+                </div>
+            </mat-tab>
+            <mat-tab label="Proxy settings" *ngIf="isProxyRepository()">
+                <div class="tabContent" [formGroup]="form.get('proxyConfiguration')">
+                    <mat-form-field>
+                        <input matInput placeholder="Host" formControlName="host">
+                        <mat-error *ngIf="form.get('proxyConfiguration').get('host').invalid">
+                            <form-field-errors [field]="form.get('proxyConfiguration').get('host')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Port" formControlName="port">
+                        <mat-error *ngIf="form.get('proxyConfiguration').get('port').invalid">
+                            <form-field-errors [field]="form.get('proxyConfiguration').get('port')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select placeholder="Type" formControlName="type" [disableOptionCentering]="true">
+                            <mat-option *ngFor="let type of getProxyConfigurationTypes()" [value]="type">
+                                {{ type }}
+                            </mat-option>
+                            <mat-error *ngIf="form.get('proxyConfiguration').get('type').invalid">
+                                <form-field-errors
+                                        [field]="form.get('proxyConfiguration').get('type')"></form-field-errors>
+                            </mat-error>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Username" formControlName="username">
+                        <mat-error *ngIf="form.get('proxyConfiguration').get('username').invalid">
+                            <form-field-errors
+                                    [field]="form.get('proxyConfiguration').get('username')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Password" formControlName="password">
+                        <mat-error *ngIf="form.get('proxyConfiguration').get('password').invalid">
+                            <form-field-errors
+                                    [field]="form.get('proxyConfiguration').get('password')"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+        <div fxLayoutAlign="center center" class="formSubmitButtons noBorder">
+            <button mat-button [routerLink]='getUrlForStorageBrowsing()' type="button">
+                Back
+            </button>
+
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+                Save
+            </button>
+        </div>
+        <div>&nbsp;</div>
+
+    </form>
+
+</app-page-container>

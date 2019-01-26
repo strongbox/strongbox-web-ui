@@ -1,0 +1,3 @@
+<app-page-container [loading]="loading$" [breadcrumbs]="breadcrumbs" class="noPadding">
+    <app-directory-listing [path]="(path$ | async)" [allowBack]="(allowBack$ | async)"></app-directory-listing>
+</app-page-container>

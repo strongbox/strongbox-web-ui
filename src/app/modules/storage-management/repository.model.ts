@@ -32,6 +32,12 @@ export enum RepositoryLayoutEnum {
     RAW = 'Raw'
 }
 
+export enum RemoteRepositoryChecksumPolicyEnum {
+    STRICT = 'Strict',
+    LOG = 'Log',
+    WARN = 'Warn'
+}
+
 export class Repository {
     // this is used only internally to store the "owning" storage id - not actually received from the api.
     public storageId: string = null;
@@ -62,6 +68,7 @@ export class Repository {
     @Type(() => HttpConnectionPoolConfiguration)
     public httpConnectionPool: HttpConnectionPoolConfiguration;
 
+    // TODO: Figure out how this should work.
     @Type(() => CustomStorageConfiguration)
     public customConfigurations: CustomStorageConfiguration[];
 
@@ -69,20 +76,30 @@ export class Repository {
     public repositoryConfiguration: CustomRepositoryConfiguration;
 
     public groupRepositories: string[];
+
+    constructor(type: RepositoryTypeEnum = null) {
+        this.type = type;
+
+        if (type === RepositoryTypeEnum.PROXY) {
+            this.proxyConfiguration = new ProxyConfiguration();
+            this.remoteRepository = new RemoteRepositoryConfiguration();
+        }
+    }
 }
 
 export class RemoteRepositoryConfiguration {
-    public downloadRemoteIndexes: boolean;
-    public autoBlocking: boolean;
-    public checksumValidation: boolean;
+    public url: string;
     public username: string;
     public password: string;
-    public checksumPolicy: string;
-    public checkIntervalSeconds: number;
     public allowsDirectoryBrowsing: boolean;
     public autoImportRemoteSSLCertificate: boolean;
-    public customConfiguration: any = null; // what does this do exactly?
-    public url: string;
+    public autoBlocking: boolean;
+    public checkIntervalSeconds = 60;
+    public checksumPolicy: RemoteRepositoryChecksumPolicyEnum;
+    public checksumValidation: boolean;
+    // TODO: Figure out how this should work.
+    // public customConfiguration: any = null;
+    public downloadRemoteIndexes: boolean;
 }
 
 export class HttpConnectionPoolConfiguration {

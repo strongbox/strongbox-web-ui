@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgxsModule} from '@ngxs/store';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 import {StorageManagementRoutingModule} from './storage-management-routing.module';
 import {MaterialModule} from '../../shared/material.module';
@@ -12,10 +13,8 @@ import {BrowseStoragesComponent} from './pages/browse-storages/browse-storages.c
 import {ListStoragesComponent} from './pages/browse-storages/components/list-storages/list-storages.component';
 import {ListRepositoriesComponent} from './pages/browse-storages/components/list-repositories/list-repositories.component';
 import {StorageFormDialogComponent} from './dialogs/storage-form/storage-form.dialog.component';
-import {ManageHostedRepositoryComponent} from './pages/manage-repository/manage-hosted-repository/manage-hosted-repository.component';
-import {ManageGroupRepositoryComponent} from './pages/manage-repository/manage-group-repository/manage-group-repository.component';
-import {ManageProxyRepositoryComponent} from './pages/manage-repository/manage-proxy-repository/manage-proxy-repository.component';
 import {BrowseStoragesState} from './pages/browse-storages/state/browse-storages.state.model';
+import {BrowseRepositoryComponent} from './pages/browse-repository/browse-repository.component';
 
 @NgModule({
     imports: [
@@ -23,6 +22,7 @@ import {BrowseStoragesState} from './pages/browse-storages/state/browse-storages
         FormsModule,
         ReactiveFormsModule,
 
+        DragDropModule,
         LayoutModule,
         MaterialModule,
         FormHelperModule,
@@ -37,9 +37,7 @@ import {BrowseStoragesState} from './pages/browse-storages/state/browse-storages
         ListRepositoriesComponent,
         ManageRepositoryComponent,
         StorageFormDialogComponent,
-        ManageHostedRepositoryComponent,
-        ManageGroupRepositoryComponent,
-        ManageProxyRepositoryComponent,
+        BrowseRepositoryComponent
     ],
     entryComponents: [
         StorageFormDialogComponent

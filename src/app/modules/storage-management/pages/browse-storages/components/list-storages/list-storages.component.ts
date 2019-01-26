@@ -13,7 +13,11 @@ import {StorageFormDialogComponent} from '../../../../dialogs/storage-form/stora
 import {ConfirmDialogComponent, ConfirmDialogData, ConfirmDialogEvents} from '../../../../../core/dialogs/confirm/confirm.dialog.component';
 import {StorageManagerService} from '../../../../services/storage-manager.service';
 import {ApiResponse} from '../../../../../core/core.model';
-import {BrowseStoragesSelectStorage, BrowseStoragesToggleStoragesSearchInput} from '../../state/browse-storages.actions';
+import {
+    BrowseStoragesLoadStorages,
+    BrowseStoragesSelectStorage,
+    BrowseStoragesToggleStoragesSearchInput
+} from '../../state/browse-storages.actions';
 import {BrowseStoragesState} from '../../state/browse-storages.state.model';
 
 @Component({
@@ -67,6 +71,10 @@ export class ListStoragesComponent implements OnInit, OnDestroy {
                 public route: ActivatedRoute,
                 private storageService: StorageManagerService,
                 private store: Store) {
+    }
+
+    refreshStorages() {
+        this.store.dispatch(new BrowseStoragesLoadStorages());
     }
 
     toggleStorageSearch() {
