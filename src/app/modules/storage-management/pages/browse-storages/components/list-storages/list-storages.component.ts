@@ -129,7 +129,7 @@ export class ListStoragesComponent implements OnInit, OnDestroy {
                             this.storagesSource.data = this.storagesSource.data.filter((s) => s.id !== storage.id);
                             this.cdk.detectChanges();
                             this.notify.success(result.message);
-                            this.store.dispatch(new Navigate(['/admin/storages/browse/']));
+                            this.store.dispatch(new Navigate(['/admin/storages']));
                         } else {
                             this.notify.error(result.message);
                         }

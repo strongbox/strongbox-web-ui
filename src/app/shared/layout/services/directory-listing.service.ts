@@ -65,8 +65,4 @@ export class DirectoryListingService {
             );
 
     }
-
-    getLogsDirectoryListing(path: string = null) {
-
-    }
 }

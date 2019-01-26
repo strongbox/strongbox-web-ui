@@ -1,12 +1,15 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { StorageManagerService } from './storage-manager.service';
+import {StorageManagerService} from './storage-manager.service';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
-describe('StorageManagerService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+describe('Service: StorageManagerService', () => {
+    beforeEach(() => TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule]
+    }));
 
-  it('should be created', () => {
-    const service: StorageManagerService = TestBed.get(StorageManagerService);
-    expect(service).toBeTruthy();
-  });
+    it('should be created', () => {
+        const service: StorageManagerService = TestBed.get(StorageManagerService);
+        expect(service).toBeTruthy();
+    });
 });
