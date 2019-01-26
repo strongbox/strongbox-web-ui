@@ -17,13 +17,9 @@ export class FormFieldErrorsComponent {
     constructor() {
     }
 
-    isFieldSet() {
-        return this.field instanceof FormGroup;
-    }
-
     getApiErrors() {
-        if (this.isFieldSet()) {
-            if (this.field.invalid && this.field.errors instanceof ApiFormError) {
+        if (this.field !== null) {
+            if (this.field.errors && this.field.errors instanceof ApiFormError) {
                 return this.field.errors.messages;
             }
         }
@@ -32,8 +28,8 @@ export class FormFieldErrorsComponent {
     }
 
     getFormErrors() {
-        if (this.isFieldSet()) {
-            if (this.field.invalid && !(this.field.errors instanceof ApiFormError)) {
+        if (this.field !== null) {
+            if (this.field.errors && !(this.field.errors instanceof ApiFormError)) {
                 let errors = [];
 
                 Object.keys(this.field.errors).forEach((key) => {
