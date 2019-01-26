@@ -21,7 +21,7 @@ describe('AppComponent', () => {
                 BrowserModule,
                 NoopAnimationsModule,
                 HttpClientTestingModule,
-                NgProgressModule.forRoot(),
+                NgProgressModule,
                 NgProgressHttpModule,
                 NgxsModule.forRoot([AppState, SessionState]),
                 MaterialModule,

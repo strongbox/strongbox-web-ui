@@ -39,7 +39,7 @@ describe('Component: ManageRepositoryComponent', () => {
                 HttpClientTestingModule,
                 NgxsModule.forRoot([AppState, SessionState]),
                 NgxsFormPluginModule,
-                NgProgressModule.forRoot(),
+                NgProgressModule,
                 NgProgressHttpModule,
                 NoopAnimationsModule,
                 ToastrModule.forRoot(),

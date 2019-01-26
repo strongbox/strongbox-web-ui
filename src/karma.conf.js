@@ -12,7 +12,6 @@ module.exports = function (config) {
             require('karma-jasmine-html-reporter'),
             require('karma-junit-reporter'),
             require('karma-coverage-istanbul-reporter'),
-            require('karma-summary-reporter'),
             require('@angular-devkit/build-angular/plugins/karma')
         ],
         client: {
@@ -20,11 +19,11 @@ module.exports = function (config) {
         },
         coverageIstanbulReporter: {
             dir: require('path').join(__dirname, '../coverage'),
-            reports: ['html', 'lcovonly'],
+            reports: ['html', 'lcovonly', 'text-summary'],
             fixWebpackSourcePaths: true
         },
         //reporters: ['progress', 'kjhtml'],
-        reporters: ['progress', 'kjhtml', 'junit', 'summary'],
+        reporters: ['progress', 'kjhtml',  'junit'],
         // the default configuration
         junitReporter: {
             outputDir: '../dist/', // results will be saved as $outputDir/$browserName.xml
@@ -35,14 +34,6 @@ module.exports = function (config) {
             classNameFormatter: undefined, // function (browser, result) to customize the classname attribute in xml testcase element
             properties: {}, // key value pair of properties to add to the <properties> section of the report
             xmlVersion: null // use '1' if reporting to be per SonarQube 6.2 XML format
-        },
-        summaryReporter: {
-            // 'failed', 'skipped' or 'all'
-            show: 'all',
-            // Limit the spec label to this length
-            specLength: 50,
-            // Show an 'all' column as a summary
-            overviewColumn: true
         },
         port: 9876,
         colors: true,
