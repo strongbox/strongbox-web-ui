@@ -7,8 +7,8 @@
                 <div class="tabContent">
                     <mat-form-field>
                         <input matInput placeholder="Repository ID" formControlName="id">
-                        <mat-error *ngIf="form.get('id').invalid">
-                            <form-field-errors [field]="form.get('id')"></form-field-errors>
+                        <mat-error>
+                            <form-field-errors formControlName="id"></form-field-errors>
                         </mat-error>
                     </mat-form-field>
 
@@ -23,8 +23,8 @@
                             </mat-option>
                         </mat-select>
 
-                        <mat-error *ngIf="form.get('layout').invalid">
-                            <form-field-errors [field]="form.get('layout')"></form-field-errors>
+                        <mat-error>
+                            <form-field-errors formControlName="layout"></form-field-errors>
                         </mat-error>
                     </mat-form-field>
 
@@ -124,22 +124,20 @@
                 <div class="tabContent" [formGroup]="form.get('remoteRepository')">
                     <mat-form-field>
                         <input matInput placeholder="Remote URL" formControlName="url">
-                        <mat-error *ngIf="form.get('remoteRepository').get('url').invalid">
-                            <form-field-errors [field]="form.get('remoteRepository').get('url')"></form-field-errors>
+                        <mat-error>
+                            <form-field-errors formControlName="url"></form-field-errors>
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
                         <input matInput placeholder="Username" formControlName="username">
-                        <mat-error *ngIf="form.get('remoteRepository').get('username').invalid">
-                            <form-field-errors
-                                    [field]="form.get('remoteRepository').get('username')"></form-field-errors>
+                        <mat-error>
+                            <form-field-errors formControlName="username"></form-field-errors>
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
                         <input matInput placeholder="Password" type="password" formControlName="password">
-                        <mat-error *ngIf="form.get('remoteRepository').get('password').invalid">
-                            <form-field-errors
-                                    [field]="form.get('remoteRepository').get('password')"></form-field-errors>
+                        <mat-error>
+                            <form-field-errors formControlName="password"></form-field-errors>
                         </mat-error>
                     </mat-form-field>
 
@@ -147,9 +145,8 @@
                         <input matInput placeholder="Check interval (in seconds)"
                                type="number"
                                formControlName="checkIntervalSeconds">
-                        <mat-error *ngIf="form.get('remoteRepository').get('checkIntervalSeconds').invalid">
-                            <form-field-errors
-                                    [field]="form.get('remoteRepository').get('checkIntervalSeconds')"></form-field-errors>
+                        <mat-error>
+                            <form-field-errors formControlName="checkIntervalSeconds"></form-field-errors>
                         </mat-error>
                     </mat-form-field>
 
@@ -194,14 +191,14 @@
                 <div class="tabContent" [formGroup]="form.get('proxyConfiguration')">
                     <mat-form-field>
                         <input matInput placeholder="Host" formControlName="host">
-                        <mat-error *ngIf="form.get('proxyConfiguration').get('host').invalid">
-                            <form-field-errors [field]="form.get('proxyConfiguration').get('host')"></form-field-errors>
+                        <mat-error>
+                            <form-field-errors formControlName="host')"></form-field-errors>
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
                         <input matInput placeholder="Port" formControlName="port">
-                        <mat-error *ngIf="form.get('proxyConfiguration').get('port').invalid">
-                            <form-field-errors [field]="form.get('proxyConfiguration').get('port')"></form-field-errors>
+                        <mat-error>
+                            <form-field-errors formControlName="port"></form-field-errors>
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
@@ -209,24 +206,21 @@
                             <mat-option *ngFor="let type of getProxyConfigurationTypes()" [value]="type">
                                 {{ type }}
                             </mat-option>
-                            <mat-error *ngIf="form.get('proxyConfiguration').get('type').invalid">
-                                <form-field-errors
-                                        [field]="form.get('proxyConfiguration').get('type')"></form-field-errors>
+                            <mat-error>
+                                <form-field-errors formControlName="type"></form-field-errors>
                             </mat-error>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field>
                         <input matInput placeholder="Username" formControlName="username">
-                        <mat-error *ngIf="form.get('proxyConfiguration').get('username').invalid">
-                            <form-field-errors
-                                    [field]="form.get('proxyConfiguration').get('username')"></form-field-errors>
+                        <mat-error>
+                            <form-field-errors formControlName="username"></form-field-errors>
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field>
                         <input matInput placeholder="Password" formControlName="password">
-                        <mat-error *ngIf="form.get('proxyConfiguration').get('password').invalid">
-                            <form-field-errors
-                                    [field]="form.get('proxyConfiguration').get('password')"></form-field-errors>
+                        <mat-error>
+                            <form-field-errors formControlName="password"></form-field-errors>
                         </mat-error>
                     </mat-form-field>
                 </div>

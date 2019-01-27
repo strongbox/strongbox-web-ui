@@ -7,8 +7,8 @@
         <form (submit)="submit()" [formGroup]="form">
             <mat-form-field>
                 <input formControlName="id" matInput placeholder="Storage ID" required>
-                <mat-error *ngIf="form.get('id').invalid">
-                    <form-field-errors [field]="form.get('id')"></form-field-errors>
+                <mat-error>
+                    <form-field-errors formControlName="id"></form-field-errors>
                 </mat-error>
             </mat-form-field>
             <div class="spacer">&nbsp;</div>
@@ -20,8 +20,8 @@
                           cdkAutosizeMinRows="1"
                           placeholder="Base directory">
                 </textarea>
-                <mat-error *ngIf="form.get('basedir').invalid">
-                    <form-field-errors [field]="form.get('basedir')"></form-field-errors>
+                <mat-error>
+                    <form-field-errors formControlName="basedir"></form-field-errors>
                 </mat-error>
             </mat-form-field>
         </form>

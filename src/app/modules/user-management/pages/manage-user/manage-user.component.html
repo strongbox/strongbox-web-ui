@@ -6,14 +6,14 @@
             <mat-form-field>
                 <input matInput placeholder="Username" formControlName="username">
                 <mat-error *ngIf="userForm.get('username').invalid">
-                    <form-field-errors [field]="userForm.get('username')"></form-field-errors>
+                    <form-field-errors formControlName="username"></form-field-errors>
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field>
                 <input matInput placeholder="Password" formControlName="password" type="password">
                 <mat-error *ngIf="userForm.get('password').invalid">
-                    <form-field-errors [field]="userForm.get('password')"></form-field-errors>
+                    <form-field-errors formControlName="password"></form-field-errors>
                 </mat-error>
             </mat-form-field>
 

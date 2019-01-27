@@ -145,8 +145,8 @@
                                 <mat-form-field floatLabel="always">
                                     <input matInput placeholder="Path" formControlName="path" type="search"/>
 
-                                    <mat-error *ngIf="privilegeForm.get('path').invalid">
-                                        <form-field-errors [field]="privilegeForm.get('path')"></form-field-errors>
+                                    <mat-error>
+                                        <form-field-errors formControlName="path"></form-field-errors>
                                     </mat-error>
                                 </mat-form-field>
                             </div>

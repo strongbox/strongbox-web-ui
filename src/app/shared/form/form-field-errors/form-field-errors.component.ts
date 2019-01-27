@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {Component, Input, Optional, Self} from '@angular/core';
+import {ControlValueAccessor, FormGroup, NgControl} from '@angular/forms';
 
 import {ApiFormError} from '../../../modules/core/core.model';
 
@@ -9,18 +9,33 @@ import {ApiFormError} from '../../../modules/core/core.model';
     templateUrl: './form-field-errors.component.html',
     styleUrls: ['./form-field-errors.component.scss']
 })
-export class FormFieldErrorsComponent {
+export class FormFieldErrorsComponent implements ControlValueAccessor {
 
     @Input()
     field: FormGroup = null;
 
-    constructor() {
+    // tslint:disable:semicolon
+    onChange = (_: any) => {
+    };
+
+    onTouched = () => {
+    };
+
+    // tslint:enable:semicolon
+
+    constructor(@Optional() @Self() public ngControl: NgControl) {
+        // Setting the value accessor directly (instead of using
+        // the providers) to avoid running into a circular import.
+        if (this.ngControl != null) {
+            this.ngControl.valueAccessor = this;
+        }
     }
 
     getApiErrors() {
-        if (this.field !== null) {
-            if (this.field.errors && this.field.errors instanceof ApiFormError) {
-                return this.field.errors.messages;
+        const field = this.field === null ? this.ngControl : this.field;
+        if (field !== null) {
+            if (field.errors && field.errors instanceof ApiFormError) {
+                return field.errors.messages;
             }
         }
 
@@ -28,12 +43,13 @@ export class FormFieldErrorsComponent {
     }
 
     getFormErrors() {
-        if (this.field !== null) {
-            if (this.field.errors && !(this.field.errors instanceof ApiFormError)) {
+        const field = this.field === null ? this.ngControl : this.field;
+        if (field !== null) {
+            if (field.errors && !(field.errors instanceof ApiFormError)) {
                 let errors = [];
 
-                Object.keys(this.field.errors).forEach((key) => {
-                    const error = this.field.errors[key];
+                Object.keys(field.errors).forEach((key) => {
+                    const error = field.errors[key];
                     if (key === 'required') {
                         errors.push('This field is required!');
                     } else if (key === 'minlength') {
@@ -43,7 +59,7 @@ export class FormFieldErrorsComponent {
                     } else if (key === 'pattern') {
                         errors.push('This field requires the following pattern ' + error.requiredPattern + ' but got ' + error.actualValue);
                     } else {
-                        errors.push(this.field.errors[key]);
+                        errors.push(field.errors[key]);
                     }
                 });
 
@@ -52,6 +68,20 @@ export class FormFieldErrorsComponent {
         }
 
         return [];
+    }
+
+    registerOnChange(fn: any): void {
+        this.onChange = fn;
+    }
+
+    registerOnTouched(fn: any): void {
+        this.onTouched = fn;
+    }
+
+    setDisabledState(isDisabled: boolean): void {
+    }
+
+    writeValue(obj: any): void {
     }
 
 }
