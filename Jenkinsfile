@@ -7,7 +7,7 @@ def PR_SERVER_URL = 'https://repo.carlspring.org/content/repositories/carlspring
 
 // Notification settings for "master" and "branch/pr"
 def notifyMaster = [notifyAdmins: true, recipients: [culprits(), requestor()]]
-def notifyBranch = [recipients: [brokenTestsSuspects(), requestor()]]
+def notifyBranch = [recipients: [brokenTestsSuspects(), requestor()], notifyByChat: false]
 
 pipeline {
     agent {
@@ -17,7 +17,8 @@ pipeline {
         }
     }
     parameters {
-        booleanParam(defaultValue: true, description: 'Trigger strongbox-webapp? (has no effect on branches/prs)', name: 'TRIGGER_WEBAPP')
+        booleanParam(defaultValue: false, description: 'Force deploy?', name: 'FORCE_DEPLOY')
+        booleanParam(defaultValue: true, description: 'Trigger strongbox? (has no effect on branches/prs)', name: 'TRIGGER_STRONGBOX')
         booleanParam(defaultValue: true, description: 'Send email notification?', name: 'NOTIFY_EMAIL')
     }
     options {
@@ -53,20 +54,36 @@ pipeline {
             parallel {
                 stage('ci-test') {
                     steps {
-                        sh "npm run ci-test"
+                        script {
+                            try {
+                                sh "npm run ci-test"
+                            } catch (e) {
+                                if(!params.FORCE_DEPLOY) {
+                                    throw e
+                                }
+                            }
+                        }
                     }
                 }
 
                 stage('ci-e2e') {
                     steps {
-                        sh "npm run ci-e2e"
+                        script {
+                            try {
+                                sh "npm run ci-e2e"
+                            } catch (e) {
+                                if(!params.FORCE_DEPLOY) {
+                                    throw e
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
         stage('Deploy') {
             when {
-                expression { (currentBuild.result == null || currentBuild.result == 'SUCCESS') }
+                expression { (params.FORCE_DEPLOY || currentBuild.result == null || currentBuild.result == 'SUCCESS') }
             }
             steps {
                 script {
@@ -126,6 +143,29 @@ pipeline {
         }
         always {
             junit 'dist/TESTS-*.xml'
+
+            script {
+
+                def isSuccessful = currentBuild.resultIsBetterOrEqualTo("SUCCESSFUL");
+
+                if(params.TRIGGER_STRONGBOX || params.FORCE_DEPLOY) {
+                    if(BRANCH_NAME == "master") {
+                        build job: 'strongbox/strongbox/master',
+                              wait: true,
+                              parameters: [
+                                booleanParam(name: 'NOTIFY_EMAIL', value: params.NOTIFY_EMAIL),
+                                booleanParam(name: 'TRIGGER_OS_BUILD', value: false)
+                              ]
+
+                        build job: 'strongbox/strongbox-deploy-snapshot/',
+                              wait: false,
+                              parameters: [
+                                booleanParam(name: 'TRIGGER_BENCHMARKS', value: false)
+                              ]
+                    }
+                }
+            }
+
         }
         cleanup {
             script {
