@@ -59,6 +59,7 @@ pipeline {
                                 sh "npm run ci-test"
                             } catch (e) {
                                 if(!params.FORCE_DEPLOY) {
+                                    currentBuild.result = 'FAILURE'
                                     throw e
                                 }
                             }
@@ -73,6 +74,7 @@ pipeline {
                                 sh "npm run ci-e2e"
                             } catch (e) {
                                 if(!params.FORCE_DEPLOY) {
+                                    currentBuild.result = 'FAILURE'
                                     throw e
                                 }
                             }
@@ -87,7 +89,7 @@ pipeline {
             }
             steps {
                 script {
-                    withMavenPlus(mavenLocalRepo: workspace().getM2LocalRepoPath(), mavenSettingsConfig: 'a5452263-40e5-4d71-a5aa-4fc94a0e6833', publisherStrategy: 'EXPLICIT')
+                    withMavenPlus(mavenLocalRepo: workspace().getM2LocalRepoPath(), mavenSettingsConfig: 'a5452263-40e5-4d71-a5aa-4fc94a0e6833', publisherStrategy: 'EXPLICIT', options: [artifactsPublisher(), mavenLinkerPublisher()])
                     {
                         def SERVER_URL;
                         def VERSION_ID;
@@ -146,9 +148,9 @@ pipeline {
 
             script {
 
-                def isSuccessful = currentBuild.resultIsBetterOrEqualTo("SUCCESSFUL");
+                def isSuccessful = currentBuild.result == 'SUCCESS';
 
-                if(params.TRIGGER_STRONGBOX || params.FORCE_DEPLOY) {
+                if((params.TRIGGER_STRONGBOX && isSuccessful) || params.FORCE_DEPLOY) {
                     if(BRANCH_NAME == "master") {
                         build job: 'strongbox/strongbox/master',
                               wait: true,
