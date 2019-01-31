@@ -14,8 +14,9 @@ import {ConfirmDialogComponent, ConfirmDialogData, ConfirmDialogEvents} from '..
 import {StorageManagerService} from '../../../../services/storage-manager.service';
 import {ApiResponse} from '../../../../../core/core.model';
 import {
+    BrowseStoragesAddStorage,
+    BrowseStoragesDeleteStorage,
     BrowseStoragesLoadStorages,
-    BrowseStoragesSelectStorage,
     BrowseStoragesToggleStoragesSearchInput
 } from '../../state/browse-storages.actions';
 import {BrowseStoragesState} from '../../state/browse-storages.state.model';
@@ -96,14 +97,8 @@ export class ListStoragesComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe(result => {
                 if (result instanceof StorageEntity) {
-                    const exists = this.storagesSource.data.find((value: StorageEntity, index: number) => {
-                        return value.id === result.id;
-                    });
-
-                    if (!exists) {
-                        this.storagesSource.data = [...this.storagesSource.data, result].sort((a, b) => a.id.localeCompare(b.id));
-                        this.cdk.detectChanges();
-                    }
+                    this.store.dispatch(new BrowseStoragesAddStorage(result));
+                    this.cdk.detectChanges();
                 }
             });
     }
@@ -126,20 +121,14 @@ export class ListStoragesComponent implements OnInit, OnDestroy {
                     .subscribe((result: ApiResponse) => {
                         instance.close(result.isValid());
                         if (result.isValid()) {
-                            this.storagesSource.data = this.storagesSource.data.filter((s) => s.id !== storage.id);
-                            this.cdk.detectChanges();
+                            this.store.dispatch([new BrowseStoragesDeleteStorage(storage.id), new Navigate(['/admin/storages'])]);
                             this.notify.success(result.message);
-                            this.store.dispatch(new Navigate(['/admin/storages']));
                         } else {
                             this.notify.error(result.message);
                         }
                     });
             }
         });
-    }
-
-    updateSelectedStorage(storageId: string) {
-        this.store.dispatch(new BrowseStoragesSelectStorage(storageId));
     }
 
     ngOnInit(): void {

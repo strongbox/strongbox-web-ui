@@ -39,17 +39,22 @@
             >
                 <div fxLayout="row" class="list-row">
                     <div class="link" fxFlex="1 1 auto">
-                        <a [routerLink]="getStorageRoute(storage.id)" routerLinkActive="active" (click)="updateSelectedStorage(storage.id)">
+                        <a [routerLink]="getStorageRoute(storage.id)" routerLinkActive="active">
                             {{ storage.id }}
                         </a>
                     </div>
                     <div class="actions" fxFlex="48px">
                         <ul>
+<!--
+                            TODO: This functionality is not entirely completed in the backend yet.
+                                  Uncomment and make necessary changes when SB-1355 and SB-1349 are fixed.
+
                             <li>
                                 <a (click)="openStorageForm(storage)">
                                     <i class="icons ion-md-create" style="font-size: 18px;"></i>
                                 </a>
                             </li>
+-->
                             <li>
                                 <a (click)="deleteStorage(storage)">
                                     <i class="icons ion-md-trash" style="font-size: 18px; color: hsla(0, 60%, 50%, 1);"></i>

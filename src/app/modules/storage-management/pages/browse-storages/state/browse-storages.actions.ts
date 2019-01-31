@@ -24,7 +24,15 @@ export class BrowseStoragesLoadStorages {
 export class BrowseStoragesAddStorage {
     static readonly type = name + ' Adding storages';
 
-    constructor(public payload: StorageEntity) {
+    constructor(public storage: StorageEntity) {
+
+    }
+}
+
+export class BrowseStoragesDeleteStorage {
+    static readonly type = name + ' Deleting storage';
+
+    constructor(public id: string) {
 
     }
 }

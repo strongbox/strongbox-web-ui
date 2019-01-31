@@ -6,6 +6,7 @@ import {Navigate} from '@ngxs/router-plugin';
 
 import {
     BrowseStoragesAddStorage,
+    BrowseStoragesDeleteStorage,
     BrowseStoragesLoadStorages,
     BrowseStoragesSelectStorage,
     BrowseStoragesToggleStoragesSearchInput
@@ -96,18 +97,28 @@ export class BrowseStoragesState {
     }
 
     @Action(BrowseStoragesAddStorage)
-    addStorage(ctx: StateContext<BrowseStoragesStateModel>, {payload}: BrowseStoragesAddStorage) {
+    addStorage(ctx: StateContext<BrowseStoragesStateModel>, {storage}: BrowseStoragesAddStorage) {
         ctx.patchState({
             ...ctx.getState(),
             storages: [
                 ...ctx.getState().storages,
-                payload
+                storage
+            ].sort((a, b) => a.id.toLocaleLowerCase().localeCompare(b.id.toLocaleLowerCase()))
+        });
+    }
+
+    @Action(BrowseStoragesDeleteStorage)
+    deleteStorage(ctx: StateContext<BrowseStoragesStateModel>, {id}: BrowseStoragesDeleteStorage) {
+        ctx.patchState({
+            ...ctx.getState(),
+            storages: [
+                ...ctx.getState().storages.filter((s) => s.id !== id)
             ]
         });
     }
 
     @Action(BrowseStoragesSelectStorage)
-    updateRepositoriesOnStorageChange(ctx: StateContext<BrowseStoragesStateModel>, {payload}: BrowseStoragesSelectStorage) {
+    loadRepositoriesOnStorageChange(ctx: StateContext<BrowseStoragesStateModel>, {payload}: BrowseStoragesSelectStorage) {
         const loadRepositories = payload !== null;
 
         ctx.patchState({
@@ -136,7 +147,7 @@ export class BrowseStoragesState {
                             repositories = storageEntity.repositories.map((repo) => {
                                 repo.storageId = payload;
                                 return repo;
-                            });
+                            }).sort((a, b) => a.id.toLocaleLowerCase().localeCompare(b.id.toLocaleLowerCase()));
                         }
 
                         ctx.patchState({
