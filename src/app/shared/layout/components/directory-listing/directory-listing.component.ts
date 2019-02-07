@@ -27,6 +27,12 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
         this.emitPathChange.emit(path);
     }
 
+    @Input()
+    baseUrl;
+
+    @Input()
+    showActions = false;
+
     @Output()
     emitPathChange: EventEmitter<string> = new EventEmitter();
 
@@ -36,8 +42,6 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
     columns = ['name', 'lastModified', 'size', 'description'];
     columnsWithActions = [...this.columns, 'actions'];
 
-    private storageId = '';
-    private repositoryId = '';
     private path = '';
 
     private destroy$: Subject<any> = new Subject();
@@ -52,15 +56,8 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
         this.emitPathChange
             .pipe(takeUntil(this.destroy$))
             .subscribe((fullPath) => {
-                const fullPathArray = fullPath.split('/');
-                this.storageId = fullPathArray[0];
-                this.repositoryId = fullPathArray[1];
-
-                fullPathArray.shift(); // remove storageId
-                fullPathArray.shift(); // remove repositoryId
-
+                const fullPathArray = fullPath.replace(new RegExp('^' + this.baseUrl, 'gi'), '').split('/');
                 this.path = fullPathArray.join('/');
-
                 this.service
                     .getStorageDirectoryListing(fullPath ? fullPath : '', this.allowBack)
                     .subscribe((pathContent: PathContent) => {
@@ -90,9 +87,7 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
         }
 
         const route = [
-            '/admin/storages',
-            this.storageId,
-            this.repositoryId,
+            this.baseUrl,
             ...path,
             pathRecord.name
         ].filter(s => s !== '');

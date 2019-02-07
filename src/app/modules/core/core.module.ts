@@ -34,6 +34,7 @@ import {ConfirmDialogComponent} from './dialogs/confirm/confirm.dialog.component
 import {FormHelperModule} from '../../shared/form/form-helper.module';
 import {LayoutModule} from '../../shared/layout/layout.module';
 import {NgProgressRouterModule} from '@ngx-progressbar/router';
+import { BrowseComponent } from './pages/browse/browse.component';
 
 @NgModule({
     imports: [
@@ -105,7 +106,8 @@ import {NgProgressRouterModule} from '@ngx-progressbar/router';
         ConfirmDialogComponent,
         RepositorySearchResultsComponent,
         PageNotFoundComponent,
-        MyAccountComponent
+        MyAccountComponent,
+        BrowseComponent
     ],
     entryComponents: [
         LoginDialogComponent,
