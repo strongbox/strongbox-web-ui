@@ -12,7 +12,7 @@ def notifyBranch = [recipients: [brokenTestsSuspects(), requestor()], notifyByCh
 pipeline {
     agent {
         node {
-            label 'ubuntu:jdk8-mvn-3.5-node-8.11-browsers'
+            label 'ubuntu:jdk8-mvn-3.5-node-10-browsers'
             customWorkspace workspace().getUniqueWorkspacePath()
         }
     }
