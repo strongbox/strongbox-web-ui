@@ -7,10 +7,22 @@ import {PageNotFoundComponent} from './modules/core/pages/page-not-found/page-no
 import {RepositorySearchResultsComponent} from './modules/core/pages/search/repository-search-results.component';
 import {MyAccountComponent} from './modules/core/pages/account/my-account.component';
 import {RepositorySearchResultResolver} from './modules/core/resolvers/RepositorySearchResultResolver';
+import {BrowseComponent} from './modules/core/pages/browse/browse.component';
 
 const routes: Routes = [
     // Public
-    {path: '', component: HomepageComponent},
+    {path: '', pathMatch: 'full', component: HomepageComponent},
+    {
+        path: 'browse',
+        children: [
+            // This has been done for a reason.
+            // https://www.bennadel.com/blog/3347-a-single-route-parameter-can-match-multiple-url-segments-in-angular-4-4-4.htm
+            {
+                path: '**',
+                component: BrowseComponent
+            }
+        ]
+    },
     {path: 'search', redirectTo: 'search/', pathMatch: 'full'},
     {
         path: 'search/:query',
@@ -43,7 +55,7 @@ const routes: Routes = [
 
 @NgModule({
     // TODO Preload modules to which we actually have access to.
-    imports: [RouterModule.forRoot(routes, {urlUpdateStrategy: 'eager'})],
+    imports: [RouterModule.forRoot(routes, {urlUpdateStrategy: 'eager', scrollPositionRestoration: 'top'})],
     exports: [RouterModule],
     providers: [
         RepositorySearchResultResolver

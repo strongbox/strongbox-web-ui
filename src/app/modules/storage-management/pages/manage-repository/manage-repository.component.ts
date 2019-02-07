@@ -193,7 +193,7 @@ export class ManageRepositoryComponent implements OnInit {
 
             this.service
                 .saveRepository(this.storageId$.getValue(), repository)
-                .pipe(catchError(err => handleFormError(err, this.form)))
+                .pipe(catchError(err => handleFormError(err, this.form, this.loading$)))
                 .subscribe((response: ApiResponse) => {
                     if (response.isValid()) {
                         this.notify.success(response.message);

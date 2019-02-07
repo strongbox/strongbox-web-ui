@@ -15,6 +15,7 @@ export class BrowseRepositoryComponent implements OnInit, OnDestroy {
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
     path$: BehaviorSubject<string> = new BehaviorSubject(null);
     allowBack$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    baseUrl = '/admin/storages';
 
     storageId;
     repositoryId;
@@ -26,15 +27,19 @@ export class BrowseRepositoryComponent implements OnInit, OnDestroy {
             .events
             .pipe(takeUntil(this.destroy$), filter((e: RouterEvent) => e instanceof NavigationEnd))
             .subscribe((event: NavigationEnd) => {
-                const fullPath = event.url.replace(/^\/admin\/storages\//, '');
-                const fullPathArray = fullPath.split('/');
+                const fullPath = event.url;
+                const fullPathArray = fullPath
+                    .replace(new RegExp('^' + this.baseUrl, 'gi'), '')
+                    .split('/')
+                    .filter(v => v != null && v !== '' && v.trim() !== '');
                 const storageId = fullPathArray[0];
                 const repositoryId = fullPathArray[1];
-                fullPathArray.shift(); // remove storageId
-                fullPathArray.shift(); // remove repositoryId
                 const path = fullPathArray.join('/');
 
-                if (path === '/' || path === null || path === '') {
+                if (path === storageId
+                    || path === storageId + '/' + repositoryId
+                    || path === null
+                    || path === '') {
                     this.allowBack$.next(false);
                 } else {
                     this.allowBack$.next(true);
@@ -47,7 +52,7 @@ export class BrowseRepositoryComponent implements OnInit, OnDestroy {
                     {url: ['/admin/storages', storageId, repositoryId], label: 'Directory listing', active: true}
                 ];
 
-                this.path$.next(fullPath);
+                this.path$.next(path);
             });
     }
 
