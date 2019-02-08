@@ -62,7 +62,11 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
                     .getStorageDirectoryListing(fullPath ? fullPath : '', this.allowBack)
                     .subscribe((pathContent: PathContent) => {
                         this.pathContent = pathContent;
-                        this.directoryListing.data = [...pathContent.directories.sort(), ...pathContent.files.sort()];
+
+                        this.directoryListing.data = [
+                            ...pathContent.directories.sort((a, b) => a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase())),
+                            ...pathContent.files.sort((a, b) => a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase()))
+                        ];
                     });
             });
     }
@@ -113,7 +117,6 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
         document.body.removeChild(a);
         URL.revokeObjectURL(objectUrl);
     }
-
 
     confirmDelete(pathRecord: PathRecord) {
         const message = 'You are about to delete <br><br><b>' + pathRecord.artifactPath + '</b>' +
