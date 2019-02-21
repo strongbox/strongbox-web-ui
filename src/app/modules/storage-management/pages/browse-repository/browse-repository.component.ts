@@ -52,6 +52,8 @@ export class BrowseRepositoryComponent implements OnInit, OnDestroy {
                     {url: ['/admin/storages', storageId, repositoryId], label: 'Directory listing', active: true}
                 ];
 
+                console.log(fullPathArray);
+
                 this.path$.next(path);
             });
     }
