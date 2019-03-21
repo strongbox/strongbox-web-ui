@@ -185,7 +185,7 @@ export class ManageRepositoryComponent implements OnInit {
         if (this.form.valid) {
             this.loading$.next(true);
 
-            const repository: Repository = plainToClass(Repository, this.form.getRawValue()) as any;
+            const repository: Repository = plainToClass(Repository, this.form.getRawValue(), {groups: ['submit']}) as any;
 
             if (this.isGroupRepository()) {
                 repository.groupRepositories = this.activeGroupRepositories;
