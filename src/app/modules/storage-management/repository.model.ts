@@ -1,4 +1,4 @@
-import {Type} from 'class-transformer';
+import {Transform, Type} from 'class-transformer';
 import {ProxyConfiguration} from './proxyConfiguration.model';
 
 // Check org.carlspring.strongbox.storage.repository.RepositoryTypeEnum
@@ -60,6 +60,17 @@ export class Repository {
     public checksumHeadersEnabled = true;
 
     @Type(() => ProxyConfiguration)
+    @Transform(
+        (proxyConfiguration: ProxyConfiguration) => {
+            // We need to send `null` here or backend form validation will cause issues.
+            let data = null;
+            if (proxyConfiguration.hasData()) {
+                data = proxyConfiguration;
+            }
+            return data;
+        },
+        {toClassOnly: true, groups: ['submit']}
+    )
     public proxyConfiguration: ProxyConfiguration;
 
     @Type(() => RemoteRepositoryConfiguration)

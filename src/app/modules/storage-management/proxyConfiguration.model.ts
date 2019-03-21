@@ -10,4 +10,19 @@ export class ProxyConfiguration {
     public username: string;
     public password: string;
     public nonProxyHosts: string[];
+
+    hasData(): boolean {
+        const properties = Object.getOwnPropertyNames(this).filter((v) => v !== 'nonProxyHosts');
+
+        if (properties) {
+            for (let i = 0; i < properties.length; i++) {
+                const value = this[properties[i]];
+                if (value !== '' && value !== null) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
