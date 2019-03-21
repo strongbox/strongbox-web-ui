@@ -128,22 +128,23 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
                 if (fullPath != null && fullPath.length > 0) {
                     const fullPathArray = fullPath.replace(new RegExp('^' + this.baseUrl, 'gi'), '').split('/');
                     this.path = fullPathArray.join('/');
-                    this.service
-                        .getStorageDirectoryListing(fullPath ? fullPath : '', this.allowBack)
-                        .subscribe((pathContent: PathContent) => {
-                            this.pathContent = pathContent;
-
-                            this.directoryListing.data = [
-                                ...pathContent.directories.sort(
-                                    (a, b) => a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase())
-                                ),
-                                ...pathContent.files.sort(
-                                    (a, b) => a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase())
-                                )
-                            ];
-                        });
+                } else {
+                    this.path = '/';
                 }
+
+                this.emitPathChange.emit(fullPath);
+
+                this.service
+                    .getStorageDirectoryListing(fullPath ? fullPath : '', this.allowBack)
+                    .subscribe((pathContent: PathContent) => {
+                        this.pathContent = pathContent;
+                        this.directoryListing.data = [
+                            ...pathContent.directories.sort((a, b) => a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase())),
+                            ...pathContent.files.sort((a, b) => a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase()))
+                        ];
+                    });
             });
+
     }
 
     ngOnDestroy(): void {
