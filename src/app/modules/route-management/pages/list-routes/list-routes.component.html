@@ -1,0 +1,48 @@
+<app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding">
+
+    <table mat-table [dataSource]="routes" multiTemplateDataRows>
+        
+        <ng-container matColumnDef="pattern">
+            <th mat-header-cell *matHeaderCellDef>Pattern</th>
+            <td mat-cell *matCellDef="let row">{{row.pattern}}</td>
+        </ng-container> 
+
+        <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let row">{{row.type}}</td>
+        </ng-container> 
+
+        <ng-container matColumnDef="storageId">
+                <th mat-header-cell *matHeaderCellDef>Storage ID</th>
+                <td mat-cell *matCellDef="let row">{{row.storageId? row.storageId : "any"}}</td>
+        </ng-container> 
+
+        <ng-container matColumnDef="repositoryId">
+            <th mat-header-cell *matHeaderCellDef>Repository ID</th>
+            <td mat-cell *matCellDef="let row">{{row.repositoryId? row.repositoryId : "any"}}</td>
+        </ng-container> 
+
+        <ng-container matColumnDef="actions">
+            <th class="actions" mat-header-cell *matHeaderCellDef>Actions</th>
+            <td class="actions text-center" mat-cell *matCellDef="let route">
+                <ul>
+                    <li>
+                        <a (click)="navigateToRouteUpdate(route)" title="Edit route">
+                            <i class="icon ion-md-create"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="confirmDeletion(route)" title="Delete route">
+                            <i class="icon ion-md-trash"></i>
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+</app-page-container> 
