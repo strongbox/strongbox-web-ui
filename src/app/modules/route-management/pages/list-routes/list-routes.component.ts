@@ -3,6 +3,10 @@ import {Breadcrumb} from 'src/app/shared/layout/components/breadcrumb/breadcrumb
 import {BehaviorSubject} from 'rxjs';
 import {RouteManagementService} from '../../services/route-management.service';
 import {Route} from '../../route.model';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { ConfirmDialogComponent } from 'src/app/modules/core/dialogs/confirm/confirm.dialog.component';
+import { ToastrService } from 'ngx-toastr';
+import { ApiResponse } from 'src/app/modules/core/core.model';
 
 @Component({
     selector: 'app-list-routes',
@@ -20,8 +24,41 @@ export class ListRoutesComponent implements OnInit {
 
     public displayedColumns: string[] = ['pattern', 'type', 'storageId', 'repositoryId', 'actions'];
 
-    constructor(private routingService: RouteManagementService) {
+    constructor(private routingService: RouteManagementService,
+                private dialog: MatDialog,
+                private notify: ToastrService) {
     };
+
+    confirmDeletion(route: Route) {
+        this.dialog.open(
+            ConfirmDialogComponent,
+            {
+                panelClass: 'deleteDialog',
+                data: {
+                    dangerConfirm: true,
+                    message: 'You are about to delete this route!',
+                    onConfirm: (ref: MatDialogRef<ConfirmDialogComponent>) => {
+                        this.routingService
+                            .deleteRoute(route)
+                            .subscribe((result: ApiResponse) => {
+                                ref.close(true);
+                                if (result.isValid()) {
+                                    this.routes.next(
+                                        this.routes
+                                        .getValue()
+                                        .filter((value: Route) => {
+                                            return value.uuid !== route.uuid;
+                                        })
+                                    );
+                                    this.notify.success('Route has been successfully deleted!');
+                                } else {
+                                    this.notify.error(result.message);
+                                }
+                            });
+                    }
+                }
+            });
+    }
 
     ngOnInit() {
         this.routingService.getRoutes().subscribe((results: Route[]) => {
