@@ -1,9 +1,15 @@
 <app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding">
 
+    <div page-actions>
+        <button mat-raised-button color="primary" routerLink="create">
+            <i class="icon ion-md-add"></i> &nbsp; Add
+        </button>
+    </div>
+
     <table mat-table [dataSource]="routes" multiTemplateDataRows>
         
         <ng-container matColumnDef="pattern">
-            <th mat-header-cell *matHeaderCellDef>Pattern</th>
+            <th mat-header-cell *matHeaderCellDef>URL Pattern</th>
             <td mat-cell *matCellDef="let row">{{row.pattern}}</td>
         </ng-container> 
 
@@ -27,12 +33,12 @@
             <td class="actions text-center" mat-cell *matCellDef="let route">
                 <ul>
                     <li>
-                        <a (click)="navigateToRouteUpdate(route)" title="Edit route">
+                        <a title="Edit route" [routerLink]="[route.uuid, 'edit']">
                             <i class="icon ion-md-create"></i>
                         </a>
                     </li>
                     <li>
-                        <a (click)="confirmDeletion(route)" title="Delete route">
+                        <a title="Delete route" (click)="confirmDeletion(route)">
                             <i class="icon ion-md-trash"></i>
                         </a>
                     </li>

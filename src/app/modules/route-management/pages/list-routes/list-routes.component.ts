@@ -36,7 +36,7 @@ export class ListRoutesComponent implements OnInit {
                 panelClass: 'deleteDialog',
                 data: {
                     dangerConfirm: true,
-                    message: 'You are about to delete this route!',
+                    message: 'You are about to delete the route ' + route.uuid + '!',
                     onConfirm: (ref: MatDialogRef<ConfirmDialogComponent>) => {
                         this.routingService
                             .deleteRoute(route)

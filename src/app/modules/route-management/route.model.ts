@@ -1,15 +1,59 @@
-import { Repository } from '../storage-management/repository.model';
 import { ApiResponse } from '../core/core.model';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Type } from 'class-transformer/decorators';
 
 export class Route {
     pattern: string;
     type: string;
-    uuid: string;
     storageId: string;
     repositoryId: string;
-    repository: Repository
+    uuid: string;
+    @Type(()=>Repository)
+    repositories: Repository[]
 }
 
 export class RouteListResponse extends ApiResponse {
-    routingRule: Route[];
+    rules: Route[];
+}
+
+export class Repository {
+    storageId: string;
+    repositoryId: string;
+}
+
+export enum RouteOperations {
+    CREATE,
+    UPDATE,
+    VIEW
+}
+
+export class RouteForm {
+    private form: FormGroup;
+
+    constructor(readonly operation: RouteOperations = RouteOperations.UPDATE, route: Route = new Route()) {
+        this.generateBaseFormGroup(route);
+    }
+
+    public getForm(): FormGroup {
+        return this.form;
+    }
+
+    private generateBaseFormGroup(route: Route) {
+
+        this.form = new FormGroup({
+            pattern: new FormControl(),
+            type: new FormControl(),
+            uuid: new FormControl(),
+            storageId: new FormControl(),
+            repositoryId: new FormControl(),
+            repositories: new FormControl()
+        });
+
+        this.form.patchValue(route);
+    }
+}
+
+export class RouteFormFieldsData {
+    pattern: string;
+    type: string;
 }
