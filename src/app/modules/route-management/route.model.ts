@@ -49,7 +49,7 @@ export class RouteForm {
             uuid: new FormControl(),
             storageId: new FormControl(),
             repositoryId: new FormControl(),
-            repositories: new FormControl()
+            repositories: new FormControl([{storageId:'',repositoryId:''}])
         });
 
         this.form.patchValue(route);
