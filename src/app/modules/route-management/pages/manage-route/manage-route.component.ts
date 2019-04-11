@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { Breadcrumb } from 'src/app/shared/layout/components/breadcrumb/breadcrumb.model';
-import { Route, RouteForm, RouteOperations, RouteFormFieldsData } from '../../route.model';
+import { Route, RouteForm, RouteOperations } from '../../route.model';
 import { BehaviorSubject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Store } from '@ngxs/store';
 import { plainToClass } from 'class-transformer';
 import { Navigate } from '@ngxs/router-plugin';
+
 
 @Component({
     selector: 'app-manage-route',
@@ -69,7 +70,12 @@ export class ManageRouteComponent implements OnInit {
                     this.notify.success('Route has been successfully saved!');
                 }
                 this.loading$.next(false);
+  
             });
         }
+    }
+
+    getRouteOperations() {
+        return RouteOperations;
     }
 }

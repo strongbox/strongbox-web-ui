@@ -4,7 +4,7 @@
 
         <div class="routeDetails" fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
 
-            <mat-form-field>
+            <mat-form-field *ngIf="operation !== getRouteOperations().CREATE">
                 <input matInput placeholder="UUID" formControlName="uuid">
                 <mat-error *ngIf="routeForm.get('uuid').invalid">
                     <form-field-errors formControlName="uuid"></form-field-errors>

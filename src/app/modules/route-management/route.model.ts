@@ -1,5 +1,5 @@
 import { ApiResponse } from '../core/core.model';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Type } from 'class-transformer/decorators';
 
 export class Route {
@@ -32,6 +32,9 @@ export class RouteForm {
 
     constructor(readonly operation: RouteOperations = RouteOperations.UPDATE, route: Route = new Route()) {
         this.generateBaseFormGroup(route);
+        this.form.get('type').setValidators([Validators.required]);
+        this.form.get('pattern').setValidators([Validators.required]);
+        this.form.get('uuid').disable();
     }
 
     public getForm(): FormGroup {
