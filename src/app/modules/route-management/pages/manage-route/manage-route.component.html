@@ -1,25 +1,25 @@
 <app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding">
 
-    <form (submit)="save()" *ngIf="routeForm" [formGroup]="routeForm" fxLayout="column">
+    <form class="inputFullWidth" fxLayout="column" *ngIf="routeForm" [formGroup]="routeForm" (submit)="save()">
 
-        <div class="routeDetails" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10%">
+        <div class="tabContent">
 
             <mat-form-field *ngIf="operation !== getRouteOperations().CREATE">
-                <input formControlName="uuid" matInput placeholder="UUID">
+                <input matInput placeholder="UUID" formControlName="uuid">
                 <mat-error *ngIf="routeForm.get('uuid').invalid">
                     <form-field-errors formControlName="uuid"></form-field-errors>
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <input formControlName="pattern" matInput placeholder="URL Pattern">
+                <input matInput placeholder="URL Pattern" formControlName="pattern">
                 <mat-error *ngIf="routeForm.get('pattern').invalid">
                     <form-field-errors formControlName="pattern"></form-field-errors>
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <mat-select formControlName="type" placeholder="Type">
+                <mat-select placeholder="Type" formControlName="type" >
                     <mat-option value="accept">ACCEPT</mat-option>
                     <mat-option value="deny">DENY</mat-option>
                 </mat-select>
@@ -28,14 +28,15 @@
             <div>&nbsp;</div>
         </div>
 
-        <div class="formSubmitButtons" fxLayoutAlign="center center">
+        <div fxLayoutAlign="center center" class="formSubmitButtons">
             <button mat-button routerLink="/admin/routes" type="button">
                 Back
             </button>
 
-            <button [disabled]="routeForm.invalid"
+            <button mat-raised-button
                     color="primary"
-                    mat-raised-button type="submit">
+                    type="submit"
+                    [disabled]="routeForm.invalid">
                 Save
             </button>
         </div>
