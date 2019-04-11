@@ -1,47 +1,47 @@
 <app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding">
 
-    <form fxLayout="column" *ngIf="routeForm" [formGroup]="routeForm" (submit)="save()">
+    <form (submit)="save()" *ngIf="routeForm" [formGroup]="routeForm" fxLayout="column">
 
-        <div class="routeDetails" fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
+        <div class="routeDetails" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10%">
 
             <mat-form-field *ngIf="operation !== getRouteOperations().CREATE">
-                <input matInput placeholder="UUID" formControlName="uuid">
+                <input formControlName="uuid" matInput placeholder="UUID">
                 <mat-error *ngIf="routeForm.get('uuid').invalid">
                     <form-field-errors formControlName="uuid"></form-field-errors>
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput placeholder="URL Pattern" formControlName="pattern">
-                 <mat-error *ngIf="routeForm.get('pattern').invalid"> 
+                <input formControlName="pattern" matInput placeholder="URL Pattern">
+                <mat-error *ngIf="routeForm.get('pattern').invalid">
                     <form-field-errors formControlName="pattern"></form-field-errors>
-                 </mat-error> 
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field>
-                <mat-select placeholder="Type" formControlName="type" >  
+                <mat-select formControlName="type" placeholder="Type">
                     <mat-option value="accept">ACCEPT</mat-option>
                     <mat-option value="deny">DENY</mat-option>
                 </mat-select>
             </mat-form-field>
-            
+
             <div>&nbsp;</div>
         </div>
 
-        <div fxLayoutAlign="center center" class="formSubmitButtons">
+        <div class="formSubmitButtons" fxLayoutAlign="center center">
             <button mat-button routerLink="/admin/routes" type="button">
                 Back
             </button>
 
-            <button mat-raised-button
+            <button [disabled]="routeForm.invalid"
+                    [disabled]="routeForm.invalid"
                     color="primary"
-                    type="submit"
-                    [disabled]="routeForm.invalid" [disabled]="routeForm.invalid">
+                    mat-raised-button type="submit">
                 Save
             </button>
         </div>
-   <div>&nbsp;</div>
-    
+        <div>&nbsp;</div>
+
     </form>
 
 </app-page-container>

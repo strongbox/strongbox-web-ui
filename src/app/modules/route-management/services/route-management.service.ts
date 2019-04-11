@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {Route, RouteListResponse, RouteOperations} from '../route.model';
 import {map} from 'rxjs/operators';
 import {plainToClass} from 'class-transformer';
-import { ApiResponse } from '../../core/core.model';
+import {ApiResponse} from '../../core/core.model';
 
 @Injectable({
     providedIn: 'root'
@@ -18,8 +18,8 @@ export class RouteManagementService {
 
     getRoute(uuid: string): Observable<Route> {
         return this.http
-            .get<Route>(this.baseUrl+`/${uuid}`)
-            .pipe(map(r => plainToClass(Route,r)));
+            .get<Route>(this.baseUrl + `/${uuid}`)
+            .pipe(map(r => plainToClass(Route, r)));
     }
 
     getRoutes(): Observable<Route[]> {
@@ -45,8 +45,8 @@ export class RouteManagementService {
         let header = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
 
         return this.http
-            .delete(this.baseUrl+`/remove/${route.uuid}`, {headers:header})
-            .pipe(map((r: any) => plainToClass(ApiResponse, r, {groups: ['error']}) as any))
+            .delete(this.baseUrl + `/remove/${route.uuid}`, {headers: header})
+            .pipe(map((r: any) => plainToClass(ApiResponse, r, {groups: ['error']}) as any));
     }
 
 }

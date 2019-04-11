@@ -3,10 +3,10 @@ import {Breadcrumb} from 'src/app/shared/layout/components/breadcrumb/breadcrumb
 import {BehaviorSubject} from 'rxjs';
 import {RouteManagementService} from '../../services/route-management.service';
 import {Route} from '../../route.model';
-import { MatDialog, MatDialogRef } from '@angular/material';
-import { ConfirmDialogComponent } from 'src/app/modules/core/dialogs/confirm/confirm.dialog.component';
-import { ToastrService } from 'ngx-toastr';
-import { ApiResponse } from 'src/app/modules/core/core.model';
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {ConfirmDialogComponent} from 'src/app/modules/core/dialogs/confirm/confirm.dialog.component';
+import {ToastrService} from 'ngx-toastr';
+import {ApiResponse} from 'src/app/modules/core/core.model';
 
 @Component({
     selector: 'app-list-routes',
@@ -17,7 +17,7 @@ export class ListRoutesComponent implements OnInit {
     breadcrumbs: Breadcrumb[] = [
         {label: 'Routes', url: ['/admin/routes']}
     ];
-    
+
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
     routes: BehaviorSubject<Route[]> = new BehaviorSubject<Route[]>(null);
@@ -45,10 +45,10 @@ export class ListRoutesComponent implements OnInit {
                                 if (result.isValid()) {
                                     this.routes.next(
                                         this.routes
-                                        .getValue()
-                                        .filter((value: Route) => {
-                                            return value.uuid !== route.uuid;
-                                        })
+                                            .getValue()
+                                            .filter((value: Route) => {
+                                                return value.uuid !== route.uuid;
+                                            })
                                     );
                                     this.notify.success('Route has been successfully deleted!');
                                 } else {

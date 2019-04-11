@@ -1,15 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import { Breadcrumb } from 'src/app/shared/layout/components/breadcrumb/breadcrumb.model';
-import { Route, RouteForm, RouteOperations } from '../../route.model';
-import { BehaviorSubject } from 'rxjs';
-import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { RouteManagementService } from '../../services/route-management.service';
-import { handle404error, ApiResponse } from 'src/app/modules/core/core.model';
-import { ToastrService } from 'ngx-toastr';
-import { Store } from '@ngxs/store';
-import { plainToClass } from 'class-transformer';
-import { Navigate } from '@ngxs/router-plugin';
+import {Breadcrumb} from 'src/app/shared/layout/components/breadcrumb/breadcrumb.model';
+import {Route, RouteForm, RouteOperations} from '../../route.model';
+import {BehaviorSubject} from 'rxjs';
+import {FormGroup} from '@angular/forms';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {RouteManagementService} from '../../services/route-management.service';
+import {ApiResponse, handle404error} from 'src/app/modules/core/core.model';
+import {ToastrService} from 'ngx-toastr';
+import {Store} from '@ngxs/store';
+import {plainToClass} from 'class-transformer';
+import {Navigate} from '@ngxs/router-plugin';
 
 
 @Component({
@@ -48,14 +48,14 @@ export class ManageRouteComponent implements OnInit {
                 this.breadcrumbs.push({label: 'Edit route', url: [], active: true});
                 this.operation = RouteOperations.UPDATE;
                 this.service.getRoute(uuid)
-                   .subscribe((response: Route) => {
-                       this.route$.next(response);
-                       this.routeForm = new RouteForm(this.operation, response).getForm();
-                       this.loading$.next(false);
-                    },
-                    (e) => {
-                        handle404error(e, ['/admin/routes'], this.notify, this.store);
-                    });
+                    .subscribe((response: Route) => {
+                            this.route$.next(response);
+                            this.routeForm = new RouteForm(this.operation, response).getForm();
+                            this.loading$.next(false);
+                        },
+                        (e) => {
+                            handle404error(e, ['/admin/routes'], this.notify, this.store);
+                        });
             }
         });
     }
@@ -70,7 +70,7 @@ export class ManageRouteComponent implements OnInit {
                     this.notify.success('Route has been successfully saved!');
                 }
                 this.loading$.next(false);
-  
+
             });
         }
     }

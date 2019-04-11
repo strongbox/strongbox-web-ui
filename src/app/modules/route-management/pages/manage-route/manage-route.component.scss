@@ -1,36 +1,36 @@
 .routeDetails {
 
-    padding: 0px 0px 12px 12px;
+  padding: 0px 0px 12px 12px;
 
-    &:first-of-type {
-        padding: 22px 0px 12px 12px;
-        height: 70px;
+  &:first-of-type {
+    padding: 22px 0px 12px 12px;
+    height: 70px;
+  }
+
+  .row {
+    padding: 0px 0px 0px 0px;
+
+    &:after {
+      clear: both;
+      content: ' ';
+      display: block;
     }
 
-    .row {
-        padding: 0px 0px 0px 0px;
+    .column {
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.45);
 
-        &:after {
+      &:after {
         clear: both;
         content: ' ';
         display: block;
-        }
-
-        .column {
-        font-weight: 400;
-        color: rgba(255, 255, 255, 0.45);
-
-        &:after {
-            clear: both;
-            content: ' ';
-            display: block;
-        }
-        }
-
-        .value {
-        font-weight: 300;
-        }
+      }
     }
+
+    .value {
+      font-weight: 300;
+    }
+  }
 
 }
 
@@ -45,7 +45,7 @@
 }
 
 .list-block {
-  border: solid 1px rgba(255,255,255,0.1);
+  border: solid 1px rgba(255, 255, 255, 0.1);
   min-height: 60px;
   /*background: white;*/
   /*background: $panel-background;*/

@@ -1,6 +1,6 @@
-import { ApiResponse } from '../core/core.model';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Type } from 'class-transformer/decorators';
+import {ApiResponse} from '../core/core.model';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Type} from 'class-transformer/decorators';
 
 export class Route {
     pattern: string;
@@ -8,8 +8,8 @@ export class Route {
     storageId: string;
     repositoryId: string;
     uuid: string;
-    @Type(()=>Repository)
-    repositories: Repository[]
+    @Type(() => Repository)
+    repositories: Repository[];
 }
 
 export class RouteListResponse extends ApiResponse {
@@ -49,7 +49,7 @@ export class RouteForm {
             uuid: new FormControl(),
             storageId: new FormControl(),
             repositoryId: new FormControl(),
-            repositories: new FormControl([{storageId:'',repositoryId:''}])
+            repositories: new FormControl([{storageId: '', repositoryId: ''}])
         });
 
         this.form.patchValue(route);
