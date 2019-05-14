@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {Breadcrumb} from 'src/app/shared/layout/components/breadcrumb/breadcrumb.model';
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {ToastrService} from 'ngx-toastr';
 import {BehaviorSubject} from 'rxjs';
+
+import {ApiResponse} from 'src/app/modules/core/core.model';
+import {Breadcrumb} from 'src/app/shared/layout/components/breadcrumb/breadcrumb.model';
+import {ConfirmDialogComponent} from 'src/app/modules/core/dialogs/confirm/confirm.dialog.component';
 import {RouteManagementService} from '../../services/route-management.service';
 import {Route} from '../../route.model';
-import {MatDialog, MatDialogRef} from '@angular/material';
-import {ConfirmDialogComponent} from 'src/app/modules/core/dialogs/confirm/confirm.dialog.component';
-import {ToastrService} from 'ngx-toastr';
-import {ApiResponse} from 'src/app/modules/core/core.model';
 
 @Component({
     selector: 'app-list-routes',
@@ -20,14 +21,14 @@ export class ListRoutesComponent implements OnInit {
 
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
-    routes: BehaviorSubject<Route[]> = new BehaviorSubject<Route[]>(null);
+    routes$: BehaviorSubject<Route[]> = new BehaviorSubject<Route[]>([]);
 
     public displayedColumns: string[] = ['pattern', 'type', 'storageId', 'repositoryId', 'actions'];
 
     constructor(private routingService: RouteManagementService,
                 private dialog: MatDialog,
                 private notify: ToastrService) {
-    };
+    }
 
     confirmDeletion(route: Route) {
         this.dialog.open(
@@ -43,13 +44,14 @@ export class ListRoutesComponent implements OnInit {
                             .subscribe((result: ApiResponse) => {
                                 ref.close(true);
                                 if (result.isValid()) {
-                                    this.routes.next(
-                                        this.routes
-                                            .getValue()
-                                            .filter((value: Route) => {
-                                                return value.uuid !== route.uuid;
-                                            })
-                                    );
+                                    this.routes$
+                                        .next(
+                                            this.routes$
+                                                .getValue()
+                                                .filter((value: Route) => {
+                                                    return value.uuid !== route.uuid;
+                                                })
+                                        );
                                     this.notify.success('Route has been successfully deleted!');
                                 } else {
                                     this.notify.error(result.message);
@@ -63,7 +65,7 @@ export class ListRoutesComponent implements OnInit {
     ngOnInit() {
         this.routingService.getRoutes().subscribe((results: Route[]) => {
             this.loading$.next(false);
-            this.routes.next(results);
+            this.routes$.next(results);
         });
     }
 }

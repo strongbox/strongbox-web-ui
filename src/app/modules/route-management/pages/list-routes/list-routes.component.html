@@ -6,7 +6,7 @@
         </button>
     </div>
 
-    <table [dataSource]="routes" mat-table multiTemplateDataRows>
+    <table [dataSource]="routes$" mat-table multiTemplateDataRows>
 
         <ng-container matColumnDef="pattern">
             <th *matHeaderCellDef mat-header-cell>URL Pattern</th>
@@ -48,7 +48,10 @@
 
         <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
         <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
-
     </table>
 
-</app-page-container> 
+    <div *ngIf="(routes$ | async).length === 0" class="no-records">
+        No records found
+    </div>
+
+</app-page-container>
