@@ -1,5 +1,5 @@
 # Strongbox Web UI
-[![Master Build Status](https://dev.carlspring.org/jenkins/buildStatus/icon?job=strongbox/strongbox-web-ui/master)](https://dev.carlspring.org/jenkins/blue/organizations/jenkins/strongbox%2Fstrongbox-web-ui/activity/?branch=master)
+[![Master Build Status](https://jenkins.carlspring.org/buildStatus/icon?job=/strongbox/builds/strongbox-web-ui/master)](https://jenkins.carlspring.org/blue/organizations/jenkins/strongbox%2Fbuilds%2Fstrongbox-web-ui/activity/?branch=master)
 [![RocketChat.Community.Channel](https://chat.carlspring.org/images/join-chat.svg)](https://chat.carlspring.org/channel/community)
 [![dependencies Status](https://david-dm.org/strongbox/strongbox-web-ui/status.svg)](https://david-dm.org/strongbox/strongbox-web-ui)
 [![devDependencies Status](https://david-dm.org/strongbox/strongbox-web-ui/dev-status.svg)](https://david-dm.org/strongbox/strongbox-web-ui?type=dev)
