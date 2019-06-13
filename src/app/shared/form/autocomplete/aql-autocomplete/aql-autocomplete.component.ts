@@ -61,7 +61,7 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
     loading: Observable<boolean>;
     options: Observable<AutocompleteOption<AqlSuggestion>[]>;
 
-    @ViewChild('searchInput', {read: ElementRef})
+    @ViewChild('searchInput', { read: ElementRef, static: true })
     private searchInput: ElementRef;
 
     /**
@@ -69,10 +69,10 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
      */
     public preventSubmitEmission = false;
 
-    @ViewChild('autoCompleteRef', {read: MatAutocomplete})
+    @ViewChild('autoCompleteRef', { read: MatAutocomplete, static: true })
     private autocomplete: MatAutocomplete;
 
-    @ViewChild('searchInput', {read: MatAutocompleteTrigger})
+    @ViewChild('searchInput', { read: MatAutocompleteTrigger, static: true })
     private autocompleteTrigger: MatAutocompleteTrigger;
 
     /**

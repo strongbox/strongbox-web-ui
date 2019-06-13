@@ -24,7 +24,7 @@ export class UserManagementService {
     getUsers(): Observable<User[]> {
         return this.http
             .get<UserListResponse>('/api/users')
-            .pipe(map((r: UserListResponse) => plainToClass(User, r.users)));
+            .pipe(map((r: UserListResponse) => plainToClass(User, r.users as Object[])));
     }
 
     getUserFormFields(): Observable<UserRole[] | any> {
