@@ -28,11 +28,27 @@ describe('Interceptor: token interceptor', () => {
         interceptor = TestBed.get(TokenInterceptor);
         backend = TestBed.get(HttpTestingController);
         client = TestBed.get(HttpClient);
-    }));
 
-    afterEach(() => {
-        localStorage.removeItem('session');
-    });
+        let store = {};
+        const mockLocalStorage = {
+            getItem: (key: string): string => {
+                return key in store ? store[key] : null;
+            },
+            setItem: (key: string, value: string) => {
+                store[key] = `${value}`;
+            },
+            removeItem: (key: string) => {
+                delete store[key];
+            },
+            clear: () => {
+                store = {};
+            }
+        };
+        spyOn(localStorage, 'getItem').and.callFake(mockLocalStorage.getItem);
+        spyOn(localStorage, 'setItem').and.callFake(mockLocalStorage.setItem);
+        spyOn(localStorage, 'removeItem').and.callFake(mockLocalStorage.removeItem);
+        spyOn(localStorage, 'clear').and.callFake(mockLocalStorage.clear);
+    }));
 
     it('should automatically add Authorization header when token is found', fakeAsync(() => {
         localStorage.setItem('session', JSON.stringify({token: 'a-session-token'}));
@@ -49,6 +65,8 @@ describe('Interceptor: token interceptor', () => {
     }));
 
     it('should NOT add Authorization header', fakeAsync(() => {
+        localStorage.removeItem('session');
+
         client.get('/api/some/endpoint').subscribe((response) => {
             expect(response).toBeTruthy();
         });
