@@ -6,30 +6,32 @@
         </button>
     </div>
 
-    <table [dataSource]="routes$" mat-table multiTemplateDataRows>
+    <table [dataSource]="routes" mat-table multiTemplateDataRows matSort>
 
         <ng-container matColumnDef="pattern">
-            <th *matHeaderCellDef mat-header-cell>URL Pattern</th>
-            <td *matCellDef="let row" mat-cell>{{row.pattern}}</td>
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Pattern</th>
+            <td *matCellDef="let row" mat-cell>{{ getURLPatternDefinition(row) }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="type">
-            <th *matHeaderCellDef mat-header-cell>Type</th>
-            <td *matCellDef="let row" mat-cell>{{row.type}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="storageId">
-            <th *matHeaderCellDef mat-header-cell>Storage ID</th>
-            <td *matCellDef="let row" mat-cell>{{row.storageId ? row.storageId : "any"}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="repositoryId">
-            <th *matHeaderCellDef mat-header-cell>Repository ID</th>
-            <td *matCellDef="let row" mat-cell>{{row.repositoryId ? row.repositoryId : "any"}}</td>
+        <ng-container matColumnDef="repositories">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Rule</th>
+            <td *matCellDef="let row" mat-cell>
+                <code [class.status-green]="row.type == 'accept'"
+                      [class.status-red]="row.type == 'deny'">
+                    {{ row.type | uppercase }}
+                    <ng-container [ngSwitch]="true">
+                        <ng-container *ngSwitchCase="row.repositories.length > 0">
+                            {{row.repositories.length}}
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>ALL</ng-container>
+                    </ng-container>
+                    repositories
+                </code>
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="actions">
-            <th *matHeaderCellDef class="actions" mat-header-cell>Actions</th>
+            <th *matHeaderCellDef class="actions" mat-header-cell></th>
             <td *matCellDef="let route" class="actions text-center" mat-cell>
                 <ul>
                     <li>
@@ -50,7 +52,7 @@
         <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
     </table>
 
-    <div *ngIf="(routes$ | async).length === 0" class="no-records">
+    <div *ngIf="routes.data.length === 0" class="no-records">
         No records found
     </div>
 

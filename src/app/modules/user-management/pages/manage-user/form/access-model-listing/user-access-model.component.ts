@@ -203,7 +203,7 @@ export class UserAccessModelComponent implements OnInit, AfterViewInit, OnChange
                 .getRawValue()
                 .findIndex((formPathPrivilege) => {
                     return formPathPrivilege.path === selectedPathPrivilege.path
-                        && formPathPrivilege.repositoryId === selectedPathPrivilege.repositoryId
+                        && formPathPrivilege.groupRepositoryId === selectedPathPrivilege.repositoryId
                         && formPathPrivilege.storageId === selectedPathPrivilege.storageId;
                 });
 

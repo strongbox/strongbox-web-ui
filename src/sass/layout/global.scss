@@ -132,11 +132,32 @@ div.blue-border {
 
 .tabContent {
   min-height: 100px;
-  padding: 15px 12px 10px 12px;
-
+  padding: 15px 11px 10px 10px;
   table {
     width: 100%;
   }
+}
+
+
+.padding-small {
+  padding: $page-container-padding-top $page-container-padding-right $page-container-padding-bottom $page-container-padding-left;
+}
+
+.padding-large {
+  padding: calc(#{$page-container-padding-top} * 2) calc(#{$page-container-padding-right} * 2) calc(#{$page-container-padding-bottom} * 2) calc(#{$page-container-padding-left} * 2);
+}
+
+.padding-extra {
+  padding: calc(#{$page-container-padding-top} * 2.5) calc(#{$page-container-padding-right} * 2.5) calc(#{$page-container-padding-bottom} * 2.5) calc(#{$page-container-padding-left} * 2.5);
+}
+
+code {
+  // background: rgba(0, 0, 0, 0.25); // this is
+  background: darken($panel-background, 10); // hsl(211, 30%, 15%);
+  padding: 5px 8px 6px 7px !important;
+  border-radius: 5px;
+  font-weight: 300;
+  font-size: 0.8rem;
 }
 
 ::-webkit-scrollbar-button {

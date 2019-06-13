@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {MatDialog, MatDialogRef, MatSort, MatTableDataSource} from '@angular/material';
 import {ToastrService} from 'ngx-toastr';
 import {BehaviorSubject} from 'rxjs';
 
@@ -12,8 +12,9 @@ import {Route} from '../../route.model';
 @Component({
     selector: 'app-list-routes',
     templateUrl: './list-routes.component.html',
+    styleUrls: ['./list-routes.component.scss']
 })
-export class ListRoutesComponent implements OnInit {
+export class ListRoutesComponent implements OnInit, AfterViewInit {
 
     breadcrumbs: Breadcrumb[] = [
         {label: 'Routes', url: ['/admin/routes']}
@@ -21,9 +22,12 @@ export class ListRoutesComponent implements OnInit {
 
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
-    routes$: BehaviorSubject<Route[]> = new BehaviorSubject<Route[]>([]);
+    routes: MatTableDataSource<Route> = new MatTableDataSource<Route>([]);
 
-    public displayedColumns: string[] = ['pattern', 'type', 'storageId', 'repositoryId', 'actions'];
+    @ViewChild(MatSort, {static: true})
+    sort: MatSort;
+
+    public displayedColumns: string[] = ['pattern', 'repositories', 'actions'];
 
     constructor(private routingService: RouteManagementService,
                 private dialog: MatDialog,
@@ -44,14 +48,10 @@ export class ListRoutesComponent implements OnInit {
                             .subscribe((result: ApiResponse) => {
                                 ref.close(true);
                                 if (result.isValid()) {
-                                    this.routes$
-                                        .next(
-                                            this.routes$
-                                                .getValue()
-                                                .filter((value: Route) => {
-                                                    return value.uuid !== route.uuid;
-                                                })
-                                        );
+                                    this.routes.data = this.routes.data.filter((value: Route) => {
+                                        return value.uuid !== route.uuid;
+                                    });
+
                                     this.notify.success('Route has been successfully deleted!');
                                 } else {
                                     this.notify.error(result.message);
@@ -65,7 +65,36 @@ export class ListRoutesComponent implements OnInit {
     ngOnInit() {
         this.routingService.getRoutes().subscribe((results: Route[]) => {
             this.loading$.next(false);
-            this.routes$.next(results);
+            this.routes.data = results;
         });
     }
+
+    ngAfterViewInit() {
+        this.routes.sort = this.sort;
+    }
+
+    getURLPatternDefinition(route: Route) {
+        const storageId = route.storageId;
+        const repositoryId = route.groupRepositoryId;
+        const pattern = route.pattern;
+
+        let definition = '/storages';
+
+        if (storageId != null && storageId !== '') {
+            definition += `/${storageId}`;
+        } else {
+            definition += '/*';
+        }
+
+        if (repositoryId != null && repositoryId !== '') {
+            definition += `/${repositoryId}`;
+        } else {
+            definition += `/*`;
+        }
+
+        definition += `/${pattern}`;
+
+        return definition;
+    }
+
 }

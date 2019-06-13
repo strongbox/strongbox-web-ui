@@ -1,5 +1,7 @@
+@import "../../variables";
+
 .formSubmitButtons {
-  border-top: 1px solid #2c82bc;
+  border-top: 1px solid $light-blue-1;
   padding-top: 20px !important;
 
   &.noBorder {
@@ -26,7 +28,7 @@ form {
     &:after {
       content: "";
       height: 10px;
-      border-bottom: 1px solid #2c82bc;
+      border-bottom: 1px solid $light-blue-1;
       display: block;
     }
   }

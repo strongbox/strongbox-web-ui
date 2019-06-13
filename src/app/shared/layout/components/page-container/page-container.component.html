@@ -9,6 +9,8 @@
         </div>
     </div>
 
+    <ng-content select="[pre-content]"></ng-content>
+
     <mat-card class="page-container-shadow">
         <mat-card-content *ngIf="(loading$ | async)">
             <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 1 auto">
@@ -19,5 +21,7 @@
             <ng-content></ng-content>
         </mat-card-content>
     </mat-card>
+
+    <ng-content select="[post-content]"></ng-content>
 
 </div>
