@@ -20,7 +20,7 @@ export class StorageManagerService {
         return this.http
             .get<any>('/api/configuration/strongbox/storages')
             .pipe(
-                map((r: any) => plainToClass(StorageEntity, r.storages)),
+                map((r: any) => plainToClass(StorageEntity, r.storages as Object[])),
                 switchMap((storages: StorageEntity[]) => of(storages.sort((a, b) => a.id.localeCompare(b.id))))
             );
     }

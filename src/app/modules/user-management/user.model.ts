@@ -4,6 +4,27 @@ import {ApiResponse} from '../core/core.model';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormValidators} from '../../shared/form/form.validators';
 
+// Order is important.
+export class PathPrivilege {
+    storageId: string = null;
+    repositoryId: string = null;
+    path: string = null;
+    privileges: string[] = [];
+    wildcard = false;
+
+    constructor() {
+    }
+}
+
+export class UserAccessModel {
+    @Type(() => PathPrivilege)
+    repositoriesAccess: PathPrivilege[] = [];
+
+    isRepositoriesAccessEmpty() {
+        return !this.repositoriesAccess || this.repositoriesAccess.length === 0;
+    }
+}
+
 export class User {
     username = '';
     enabled = true;
@@ -33,26 +54,6 @@ export class UserRole {
 
 export class UserPrivilege {
     constructor(public name = null, public description = null) {
-    }
-}
-
-export class UserAccessModel {
-    @Type(() => PathPrivilege)
-    repositoriesAccess: PathPrivilege[] = [];
-
-    isRepositoriesAccessEmpty() {
-        return !this.repositoriesAccess || this.repositoriesAccess.length === 0;
-    }
-}
-
-export class PathPrivilege {
-    storageId: string = null;
-    repositoryId: string = null;
-    path: string = null;
-    privileges: string[] = [];
-    wildcard = false;
-
-    constructor() {
     }
 }
 

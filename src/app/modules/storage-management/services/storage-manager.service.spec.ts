@@ -2,10 +2,17 @@ import {TestBed} from '@angular/core/testing';
 
 import {StorageManagerService} from './storage-manager.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('Service: StorageManagerService', () => {
     beforeEach(() => TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule]
+        imports: [
+            HttpClientTestingModule,
+            RouterTestingModule
+        ],
+        providers: [
+            StorageManagerService
+        ]
     }));
 
     it('should be created', () => {
