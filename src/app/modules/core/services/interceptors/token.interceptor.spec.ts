@@ -1,5 +1,5 @@
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
-import {async, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {async, fakeAsync, TestBed} from '@angular/core/testing';
 import {HTTP_INTERCEPTORS, HttpClient} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
 
@@ -30,14 +30,33 @@ describe('Interceptor: token interceptor', () => {
         client = TestBed.get(HttpClient);
     }));
 
+    afterEach(() => {
+        localStorage.removeItem('session');
+    });
+
     it('should automatically add Authorization header when token is found', fakeAsync(() => {
-        client.get('/api/login').subscribe((response) => {
+        localStorage.setItem('session', JSON.stringify({token: 'a-session-token'}));
+
+        client.get('/api/some/endpoint').subscribe((response) => {
             expect(response).toBeTruthy();
-            tick();
         });
 
-        const testRequest: TestRequest = backend.expectOne(`/api/login`);
+        const testRequest: TestRequest = backend.expectOne(`/api/some/endpoint`);
+        testRequest.flush({});
+
         expect(testRequest.request.headers.has('Authorization'));
+        expect(testRequest.request.headers.get('Authorization')).toBe('Bearer a-session-token');
     }));
 
+    it('should NOT add Authorization header', fakeAsync(() => {
+        client.get('/api/some/endpoint').subscribe((response) => {
+            expect(response).toBeTruthy();
+        });
+
+        const testRequest: TestRequest = backend.expectOne(`/api/some/endpoint`);
+        testRequest.flush({});
+
+        expect(testRequest.request.headers.has('Authorization')).toBeFalsy();
+        expect(testRequest.request.headers.get('Authorization')).toBe(null);
+    }));
 });

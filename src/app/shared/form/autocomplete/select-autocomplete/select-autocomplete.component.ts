@@ -41,13 +41,13 @@ export class SelectAutocompleteComponent implements ControlValueAccessor, AfterV
     private trackingDebounce = 150;
     private dependencyDebounce = 250;
 
-    @ViewChild('searchInput', {read: ElementRef})
+    @ViewChild('searchInput', { read: ElementRef, static: true })
     private searchInput: ElementRef;
 
-    @ViewChild('autoComplete', {read: MatAutocomplete})
+    @ViewChild('autoComplete', { read: MatAutocomplete, static: true })
     private autocomplete: MatAutocomplete;
 
-    @ViewChild('searchInput', {read: MatAutocompleteTrigger})
+    @ViewChild('searchInput', { read: MatAutocompleteTrigger, static: true })
     private autocompleteTrigger: MatAutocompleteTrigger;
 
     /**

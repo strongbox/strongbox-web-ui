@@ -75,6 +75,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
+            "deployUrl": "/",
             "browserTarget": "strongbox-web-ui:build"
           },
           "configurations": {

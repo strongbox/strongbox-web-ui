@@ -24,7 +24,7 @@ module.exports = function (config) {
             fixWebpackSourcePaths: true
         },
         //reporters: ['progress', 'kjhtml'],
-        reporters: ['verbose', 'kjhtml',  'junit'],
+        reporters: ['verbose', 'kjhtml', 'junit'],
         // the default configuration
         junitReporter: {
             outputDir: '../dist/', // results will be saved as $outputDir/$browserName.xml
@@ -54,8 +54,8 @@ module.exports = function (config) {
                 base: 'Firefox',
                 flags: [
                     '-headless'
-                ],
-            },
+                ]
+            }
         },
         browserNoActivityTimeout: 300000,
         singleRun: true

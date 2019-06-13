@@ -36,19 +36,19 @@ const routes: Routes = [
     // Administration
     {
         path: 'admin/environment-info',
-        loadChildren: './modules/environment-info/environment-info.module#EnvironmentInfoModule'
+        loadChildren: () => import('./modules/environment-info/environment-info.module').then(m => m.EnvironmentInfoModule)
     },
     {
         path: 'admin/users',
-        loadChildren: './modules/user-management/user-management.module#UserManagementModule'
+        loadChildren: () => import('./modules/user-management/user-management.module').then(m => m.UserManagementModule)
     },
     {
         path: 'admin/server-settings',
-        loadChildren: './modules/server-settings/server-settings.module#ServerSettingsModule'
+        loadChildren: () => import('./modules/server-settings/server-settings.module').then(m => m.ServerSettingsModule)
     },
     {
         path: 'admin/storages',
-        loadChildren: './modules/storage-management/storage-management.module#StorageManagementModule'
+        loadChildren: () => import('./modules/storage-management/storage-management.module').then(m => m.StorageManagementModule)
     },
     {path: '**', component: PageNotFoundComponent}
 ];

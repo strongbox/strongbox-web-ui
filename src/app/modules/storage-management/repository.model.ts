@@ -38,6 +38,33 @@ export enum RemoteRepositoryChecksumPolicyEnum {
     WARN = 'Warn'
 }
 
+export class RemoteRepositoryConfiguration {
+    public url: string;
+    public username: string;
+    public password: string;
+    public allowsDirectoryBrowsing: boolean;
+    public autoImportRemoteSSLCertificate: boolean;
+    public autoBlocking: boolean;
+    public checkIntervalSeconds = 60;
+    public checksumPolicy: RemoteRepositoryChecksumPolicyEnum;
+    public checksumValidation: boolean;
+    // TODO: Figure out how this should work.
+    // public customConfiguration: any = null;
+    public downloadRemoteIndexes: boolean;
+}
+
+export class HttpConnectionPoolConfiguration {
+    public allocatedConnections: number;
+}
+
+export class CustomStorageConfiguration {
+    [key: string]: any;
+}
+
+export class CustomRepositoryConfiguration {
+    [key: string]: any;
+}
+
 export class Repository {
     // this is used only internally to store the "owning" storage id - not actually received from the api.
     public storageId: string = null;
@@ -96,31 +123,4 @@ export class Repository {
             this.remoteRepository = new RemoteRepositoryConfiguration();
         }
     }
-}
-
-export class RemoteRepositoryConfiguration {
-    public url: string;
-    public username: string;
-    public password: string;
-    public allowsDirectoryBrowsing: boolean;
-    public autoImportRemoteSSLCertificate: boolean;
-    public autoBlocking: boolean;
-    public checkIntervalSeconds = 60;
-    public checksumPolicy: RemoteRepositoryChecksumPolicyEnum;
-    public checksumValidation: boolean;
-    // TODO: Figure out how this should work.
-    // public customConfiguration: any = null;
-    public downloadRemoteIndexes: boolean;
-}
-
-export class HttpConnectionPoolConfiguration {
-    public allocatedConnections: number;
-}
-
-export class CustomStorageConfiguration {
-    [key: string]: any;
-}
-
-export class CustomRepositoryConfiguration {
-    [key: string]: any;
 }

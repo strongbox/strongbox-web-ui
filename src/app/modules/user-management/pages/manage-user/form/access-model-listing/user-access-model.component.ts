@@ -71,7 +71,7 @@ export class UserAccessModelComponent implements OnInit, AfterViewInit, OnChange
 
     compareSelected = (val1: string, val2: string) => val1 === val2;
 
-    @ViewChild(MatSort) set content(content: ElementRef) {
+    @ViewChild(MatSort, { static: false }) set content(content: ElementRef) {
         this.sort = content;
         if (this.sort) {
             this.dataSource.sort = this.sort;
