@@ -153,20 +153,13 @@ pipeline {
                 if((params.TRIGGER_STRONGBOX && isSuccessful) || params.FORCE_DEPLOY) {
                     if(BRANCH_NAME == "master") {
                         build job: '/strongbox/builds/strongbox/master', 
-                              wait: true,
+                              wait: false,
                               parameters: [
                                   string(name: 'INTEGRATION_TESTS_BRANCH', value: 'master'), 
                                   booleanParam(name: 'RUN_ONLY_SMOKE', value: false), 
                                   booleanParam(name: 'SKIP_TESTS', value: false), 
                                   booleanParam(name: 'DEPLOY', value: true), 
                                   booleanParam(name: 'NOTIFY_EMAIL', value: true)
-                              ]
-
-                        build job: '/strongbox/deploy/strongbox-deploy-snapshot', 
-                              wait: false, 
-                              parameters: [
-                                  booleanParam(name: 'NOTIFY_EMAIL', value: true), 
-                                  booleanParam(name: 'TRIGGER_BENCHMARKS', value: false)
                               ]
                     }
                 }
