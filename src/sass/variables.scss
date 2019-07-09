@@ -26,8 +26,8 @@ $nav-link-hover: rgba(255, 255, 255, 0.90);
 
 $global-link-color: #2684bd;
 
-$status-green: hsla(123, 106%, 35%, 1);
-$status-red: #f44336;
+$status-green: hsl(123, 100%, 40%);
+$status-red: hsl(0, 100%, 63%);
 
 // Buttons
 $btn-primary-gradient-0: hsla(208, 92%, 58%, 1);
@@ -41,3 +41,12 @@ $table-row-color: darken($header-nav-background, 4);
 
 // Panels (i.e. menu, autocomplete, select, etc)
 $panel-background: #334554;
+
+
+$page-container-padding-top: 25px;
+$page-container-padding-right: 30px;
+$page-container-padding-bottom: 25px;
+$page-container-padding-left: 25px;
+
+
+$light-blue-1: #2c82bc;

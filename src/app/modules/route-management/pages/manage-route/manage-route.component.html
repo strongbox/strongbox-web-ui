@@ -1,0 +1,147 @@
+<app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding">
+
+    <div pre-content class="ruleDefinition" *ngIf="routeForm">
+        <mat-card class="page-container-shadow">
+            <mat-card-content>
+                <div class="padding-small">
+                    <h3 class="title">Explanation:</h3>
+
+                    <code>{{ routeForm.get('type').value | lowercase }}</code> artifacts from
+                    <code>
+                        <ng-container [ngSwitch]="routeForm.get('repositories').value.length > 0">
+                            <ng-container *ngSwitchCase="false">all</ng-container>
+                            <ng-container
+                                    *ngSwitchDefault>{{ routeForm.get('repositories').value.length }}</ng-container>
+                        </ng-container>
+                        repositories</code> when the URL matches
+                    <code>{{ getPatternDefinition() }}</code>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <form class="inputFullWidth" fxLayout="column" *ngIf="routeForm" [formGroup]="routeForm" (submit)="save()">
+        <div class="padding-small">
+
+            <h3 class="title">Rule configuration:</h3>
+
+            <mat-form-field *ngIf="operation !== getRouteOperations().CREATE">
+                <input matInput placeholder="UUID" formControlName="uuid">
+                <mat-error *ngIf="routeForm.get('uuid').invalid">
+                    <form-field-errors formControlName="uuid"></form-field-errors>
+                </mat-error>
+            </mat-form-field>
+
+            <div fxLayout="row" fxLayoutGap="2%">
+                <div fxFlex="1 0 auto">
+                    <ng-select formControlName="type"
+                               placeholder="Rule type"
+                               [clearable]="false"
+                               [searchable]="false"
+                               required="">
+
+                        <ng-option value="accept">ACCEPT</ng-option>
+                        <ng-option value="deny">DENY</ng-option>
+                    </ng-select>
+                </div>
+            </div>
+
+            <mat-form-field>
+                <input matInput placeholder="URL Pattern" formControlName="pattern" required>
+                <mat-error *ngIf="routeForm.get('pattern').invalid">
+                    <form-field-errors formControlName="pattern"></form-field-errors>
+                </mat-error>
+            </mat-form-field>
+
+            <div fxLayout="row" fxLayoutGap="2%">
+                <div fxFlex="1 0 auto">
+                    <ng-select formControlName="storageId"
+                               placeholder="Storage (optional)"
+                               #storageSelect
+                               bindLabel="storageId"
+                               [items]="storageItems$ | async"
+                               [loading]="storagesLoading"
+                               [typeahead]="storagesInput$"
+                               [clearable]="true"
+                    >
+                    </ng-select>
+
+                    <div class="hint">Empty value will apply this rule to all storages</div>
+                </div>
+
+                <div fxFlex="1 0 auto">
+                    <ng-select formControlName="groupRepositoryId"
+                               placeholder="Group Repository (optional)"
+                               #groupRepositorySelect
+                               bindValue="repositoryId"
+                               [items]="groupRepositoryItems$ | async"
+                               [loading]="groupRepositoriesLoading"
+                               [typeahead]="groupRepositoriesInput$"
+                               [clearable]="true"
+                    >
+                    </ng-select>
+
+                    <div class="hint">
+                        Empty value will apply this rule to all group repositories in the selected storge
+                    </div>
+                </div>
+            </div>
+            <div style="height: 50px;">&nbsp;</div>
+
+            <ng-select #searchGroupRepositoriesSelect
+                       placeholder="Search for repository"
+                       formControlName="repositories"
+                       [items]="searchGroupRepositoriesItems$ | async"
+                       [hideSelected]="true"
+                       [multiple]="true"
+                       [loading]="searchGroupRepositoriesLoading"
+                       [typeahead]="searchGroupRepositoriesInput$"
+            >
+            </ng-select>
+            <!--(change)="addRepository($event)"-->
+
+<!--            <div fxLayout="column" fxLayoutGap="2%">
+                <div fxFlex="1 0 auto">
+
+                    <mat-chip-list aria-label="Fruit selection"
+                                   aria-orientation="vertical"
+                                   class="mat-chip-list-stacked">
+                        <mat-chip *ngFor="let record of routeForm.get('repositories').value; let index"
+                                  [selectable]="true"
+                                  [removable]="true"
+                                  (removed)="removeRepository(index)"
+                        >
+                            {{record.storageId}}:{{record.repositoryId}}
+
+                            <i class="ion-md-trash" matChipRemove></i>
+                        </mat-chip>
+                    </mat-chip-list>
+
+                    <ng-container *ngIf="routeForm.get('repositories').value.length == 0">
+                        <div style="padding: 15px 0px 5px 0px;">
+                            No repositories have been selected, which means that all repositories in the group will be
+                            included.
+                        </div>
+                    </ng-container>
+
+                </div>
+            </div>-->
+
+            <div>&nbsp;</div>
+
+            <div fxLayoutAlign="center center" class="formSubmitButtons">
+                <button mat-button routerLink="/admin/routes" type="button">
+                    Back
+                </button>
+
+                <button mat-raised-button
+                        color="primary"
+                        type="submit"
+                        [disabled]="routeForm.invalid">
+                    Save
+                </button>
+            </div>
+        </div>
+    </form>
+
+</app-page-container>

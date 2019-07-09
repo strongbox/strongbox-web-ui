@@ -102,6 +102,7 @@ export class AppComponent implements OnInit, OnDestroy {
         },
         {title: 'Security', url: ['/admin/security'], icon: 'ion-md-lock', marginLeft: '2px'},
         {title: 'Users', url: ['/admin/users'], icon: 'ion-md-people'},
+        {title: 'Routes', url: ['/admin/routes'], icon: 'ion-md-git-branch'},
         {title: 'System', url: ['/admin/server-settings'], icon: 'ion-md-build'},
         {title: 'About', url: ['/admin/environment-info'], icon: 'ion-md-information-circle-outline'},
         {title: 'My account', url: ['/my-account'], icon: 'ion-md-person'}

@@ -9,15 +9,19 @@
         </div>
     </div>
 
+    <ng-content select="[pre-content]"></ng-content>
+
     <mat-card class="page-container-shadow">
         <mat-card-content *ngIf="(loading$ | async)">
             <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 1 auto">
-                <mat-spinner [strokeWidth]="5"></mat-spinner>
+                <mat-spinner [strokeWidth]="5" style="margin-top: 2rem; margin-bottom: 2rem;"></mat-spinner>
             </div>
         </mat-card-content>
         <mat-card-content *ngIf="!(loading$ | async)" fxLayout="column">
             <ng-content></ng-content>
         </mat-card-content>
     </mat-card>
+
+    <ng-content select="[post-content]"></ng-content>
 
 </div>

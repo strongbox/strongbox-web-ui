@@ -1,0 +1,39 @@
+@import "../../variables";
+
+$ng-select-text-color: rgba(255, 255, 255, 0.9);
+$ng-select-text-color-disabled: rgba(255, 255, 255, 0.7);
+
+$ng-select-highlight: $global-link-color;
+$ng-select-primary-text: $ng-select-text-color;
+$ng-select-primary-light-text: $ng-select-text-color;
+$ng-select-secondary-text: $ng-select-text-color;
+$ng-select-secondary-light-text: $ng-select-text-color;
+$ng-select-disabled-text: $ng-select-text-color;
+$ng-select-divider: rgba(black, 0.12) !default;
+$ng-select-bg: $panel-background;
+
+@import "~@ng-select/ng-select/scss/material.theme";
+
+.ng-select {
+  .ng-select-container {
+    color: $ng-select-text-color;
+
+    .ng-value {
+      margin-top: 5px;
+    }
+
+    .ng-value-container .ng-input > input, .ng-value-label {
+      color: $ng-select-text-color;
+    }
+
+    &:after {
+      border-bottom: 1px solid $ng-select-text-color;
+    }
+  }
+
+  .ng-spinner-loader {
+    top: 18px;
+    border: 2px solid transparent !important;
+    border-bottom: 2px solid $light-blue-1 !important;
+  }
+}

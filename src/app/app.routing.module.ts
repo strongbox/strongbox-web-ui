@@ -50,6 +50,10 @@ const routes: Routes = [
         path: 'admin/storages',
         loadChildren: () => import('./modules/storage-management/storage-management.module').then(m => m.StorageManagementModule)
     },
+    {
+        path: 'admin/routes',
+        loadChildren: './modules/route-management/route-management.module#RouteManagementModule'
+    },
     {path: '**', component: PageNotFoundComponent}
 ];
 

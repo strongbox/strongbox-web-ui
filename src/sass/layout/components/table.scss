@@ -65,9 +65,14 @@
     }
   }
 
+  .mat-cell, .mat-header-cell {
+    padding: 10px 10px 10px 24px;
+  }
+
   // necessary to align the action icons to the right.
   .mat-cell.actions {
     padding-right: 0px;
+    padding-left: 10px;
   }
 
   th.actions, td.actions {

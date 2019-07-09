@@ -7,6 +7,7 @@ import {
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatChipsModule,
     MatDialogModule,
     MatExpansionModule,
     MatIconModule,
@@ -23,19 +24,23 @@ import {
     MatSortModule,
     MatTableModule,
     MatTabsModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatTooltipModule
 } from '@angular/material';
 
 import {CdkTableModule} from '@angular/cdk/table';
+import {NgSelectModule} from '@ng-select/ng-select';
 
 const components = [
     CdkTableModule,
     FlexLayoutModule,
+    NgSelectModule,
     MatAutocompleteModule,
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatChipsModule,
     MatDialogModule,
     MatInputModule,
     MatIconModule,
@@ -52,7 +57,8 @@ const components = [
     MatTableModule,
     MatSortModule,
     MatTabsModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatTooltipModule
 ];
 
 @NgModule({

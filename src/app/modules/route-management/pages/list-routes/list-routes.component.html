@@ -1,0 +1,59 @@
+<app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding">
+
+    <div page-actions>
+        <button color="primary" mat-raised-button routerLink="create">
+            <i class="icon ion-md-add"></i> &nbsp; Add
+        </button>
+    </div>
+
+    <table [dataSource]="routes" mat-table multiTemplateDataRows matSort>
+
+        <ng-container matColumnDef="pattern">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Pattern</th>
+            <td *matCellDef="let row" mat-cell>{{ getURLPatternDefinition(row) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="repositories">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Rule</th>
+            <td *matCellDef="let row" mat-cell>
+                <code [class.status-green]="row.type == 'accept'"
+                      [class.status-red]="row.type == 'deny'">
+                    {{ row.type | uppercase }}
+                    <ng-container [ngSwitch]="true">
+                        <ng-container *ngSwitchCase="row.repositories.length > 0">
+                            {{row.repositories.length}}
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>ALL</ng-container>
+                    </ng-container>
+                    repositories
+                </code>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef class="actions" mat-header-cell></th>
+            <td *matCellDef="let route" class="actions text-center" mat-cell>
+                <ul>
+                    <li>
+                        <a [routerLink]="[route.uuid, 'edit']" title="Edit route">
+                            <i class="icon ion-md-create"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="confirmDeletion(route)" title="Delete route">
+                            <i class="icon ion-md-trash"></i>
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+    </table>
+
+    <div *ngIf="routes.data.length === 0" class="no-records">
+        No records found
+    </div>
+
+</app-page-container>

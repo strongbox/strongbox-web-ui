@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {plainToClass} from 'class-transformer';
 
 import {ApiFormDataValuesResponse, FormDataValue} from '../../../modules/core/core.model';
@@ -24,16 +24,16 @@ export class FormDataService {
     constructor(private http: HttpClient) {
     }
 
-    findStorages(search = ''): Observable<string[]> {
-        if (search === null) {
-            search = '';
+    findStorages(term = ''): Observable<any> {
+        if (term === null) {
+            term = '';
         } else {
-            search = search.toLowerCase();
+            term = term.toLowerCase();
         }
 
         // check cache for a value
         if (this.cache.storages.size > 0) {
-            const cached = [...this.cache.storages.values()].filter(v => v.toLowerCase().indexOf(search) > -1);
+            const cached = [...this.cache.storages.values()].filter(v => v.toLowerCase().indexOf(term) > -1);
             if (cached.length > 0) {
                 return of(cached);
             }
@@ -46,16 +46,14 @@ export class FormDataService {
         };
 
         return this.http
-            .get<ApiFormDataValuesResponse>(`/api/formData/storageNames?filter=${search}`)
+            .get(`/api/formData/storageNames?term=${term}`)
             .pipe(
-                map((r: ApiFormDataValuesResponse) => plainToClass(FormDataValue, r.formDataValues)),
-                map((r: FormDataValue[]) => r[0].values),
-                map(v => v.sort(this.collator.compare)),
-                tap(array => array.forEach(v => this.cache.storages.add(v)))
+                mapFormValueData(),
+                mapFormFieldValues('storageNames'),
             );
     }
 
-    findRepositoriesByStorage(storageId, search = ''): Observable<string[]> {
+    findRepositoriesByStorage(storageId, search = ''): Observable<any> {
         if (storageId === null || storageId === '') {
             return of([]);
         }
@@ -76,10 +74,10 @@ export class FormDataService {
         }
 
         return this.http
-            .get<ApiFormDataValuesResponse>(`/api/formData/repositoryNames?storageId=${storageId}&filter=${search}`)
+            .get<ApiFormDataValuesResponse>(`/api/formData/repositoryNames?storageId=${storageId}&term=${search}`)
             .pipe(
-                map((v: ApiFormDataValuesResponse) => plainToClass(FormDataValue, v.formDataValues)),
-                map((v: FormDataValue[]) => v[0].values),
+                mapFormValueData(),
+                mapFormFieldValues('storageNames'),
                 map(v => v.sort(this.collator.compare)),
                 tap(array => {
                     this.cache.repositories.storageId = storageId;
@@ -88,4 +86,66 @@ export class FormDataService {
             );
     }
 
+    findRepositoryNames(term = '', storageId = '', withStorageId = false, type = null): Observable<any> {
+        term = this.sanitize(term);
+        storageId = this.sanitize(storageId);
+        type = this.sanitize(type);
+
+        const url = `/api/formData/repositoryNames?term=${term}&storageId=${storageId}&withStorageId=${withStorageId}&type=${type}`;
+
+        return this.http.get(url).pipe(
+            mapFormValueData(),
+            mapFormFieldValues('repositoryNames')
+        );
+    }
+
+    findGroupRepositoryNames(term = '', storageId = '', groupRepositoryId = ''): Observable<any> {
+
+        term = this.sanitize(term);
+        storageId = this.sanitize(storageId);
+        groupRepositoryId = this.sanitize(groupRepositoryId);
+
+        const url = `/api/formData/repositoryNamesInGroupRepositories?term=${term}&storageId=${storageId}&groupRepositoryId=${groupRepositoryId}`;
+
+        return this.http
+            .get(url)
+            .pipe(
+                mapFormValueData(),
+                mapFormFieldValues('repositoryNames')
+            );
+    }
+
+    private sanitize(str) {
+        return str === null || str === '' ? '' : str;
+    }
+}
+
+export function mapFormValueData() {
+    return function (source$: Observable<any>): Observable<FormDataValue[]> {
+        return source$.pipe(
+            switchMap((response: any) => of(plainToClass(ApiFormDataValuesResponse, response).formDataValues)),
+        );
+    };
+}
+
+export function mapFormFieldValues(fieldName: string) {
+    return function (source$: Observable<FormDataValue[]>): Observable<any[] | null> {
+        return source$.pipe(
+            map((fields: FormDataValue[]) => {
+                const searchResult = fields.filter((record: FormDataValue) => {
+                    return record.name.toLocaleLowerCase() === fieldName.toLocaleLowerCase();
+                });
+
+                if (searchResult.length === 1) {
+                    return searchResult[0].values;
+                } else if (searchResult.length > 1) {
+                    console.error(`Found more form fields with the name ${fieldName} than expected!`);
+                    return searchResult[0].values;
+                } else {
+                    return null;
+                }
+            }),
+            switchMap(v => of(v))
+        );
+    };
 }
