@@ -43,13 +43,6 @@
                         </mat-selection-list>
                     </div>
                 </mat-tab>
-                <mat-tab label="Repository privileges">
-                    <app-user-access-model-listing [parentForm]="userForm"
-                                                   [assignablePrivileges]="assignablePrivileges$ | async"
-                                                   #accessModel
-                    >
-                    </app-user-access-model-listing>
-                </mat-tab>
             </mat-tab-group>
         </div>
 
@@ -63,7 +56,7 @@
             <button mat-raised-button
                     color="primary"
                     type="submit"
-                    [disabled]="userForm.invalid || accessModel.showEditForm">
+                    [disabled]="userForm.invalid">
                 Save
             </button>
         </div>
