@@ -36,7 +36,6 @@ export class ManageUserComponent implements OnInit, OnDestroy {
     public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
     public user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     public assignableRoles$: BehaviorSubject<UserRole[]> = new BehaviorSubject<UserRole[]>([]);
-    public assignablePrivileges$: BehaviorSubject<UserPrivilege[]> = new BehaviorSubject<UserPrivilege[]>([]);
 
     public operation: UserOperations = UserOperations.CREATE;
 
@@ -93,7 +92,6 @@ export class ManageUserComponent implements OnInit, OnDestroy {
                 this.userForm = new UserForm(this.operation).getForm();
                 this.service.getUserFormFields().subscribe((fields: UserFormFieldsData) => {
                     this.assignableRoles$.next(fields.assignableRoles);
-                    this.assignablePrivileges$.next(fields.assignablePrivileges.filter(v => v.name.indexOf('ARTIFACTS_') > -1));
                     this.loading$.next(false);
                 });
 
@@ -108,7 +106,6 @@ export class ManageUserComponent implements OnInit, OnDestroy {
                         (response: UserResponse) => {
                             this.user$.next(response.user);
                             this.assignableRoles$.next(response.assignableRoles);
-                            this.assignablePrivileges$.next(response.assignablePrivileges.filter(v => v.name.indexOf('ARTIFACTS_') > -1));
                             this.loading$.next(false);
                             this.userForm = new UserForm(this.operation, response.user).getForm();
                         },

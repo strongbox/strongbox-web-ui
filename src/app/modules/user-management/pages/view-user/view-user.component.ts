@@ -26,7 +26,6 @@ export class ViewUserComponent implements OnInit {
     loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
     user$: BehaviorSubject<User> = new BehaviorSubject<User>(new User());
     assignableRoles$: BehaviorSubject<UserRole[]> = new BehaviorSubject<UserRole[]>([]);
-    assignablePrivileges$: BehaviorSubject<UserPrivilege[]> = new BehaviorSubject<UserPrivilege[]>([]);
     assignedRoles: UserRole[] = [];
 
     // Necessary to generate the app-user-access-model-listing
@@ -53,7 +52,6 @@ export class ViewUserComponent implements OnInit {
                         (response: UserResponse) => {
                             this.user$.next(response.user);
                             this.assignableRoles$.next(response.assignableRoles);
-                            this.assignablePrivileges$.next(response.assignablePrivileges.filter(v => v.name.indexOf('ARTIFACTS_') > -1));
                             this.assignedRoles = response.assignableRoles.filter((ar: UserRole) => {
                                 return response.user.roles.find((ur: string) => ur === ar.name) !== undefined;
                             });

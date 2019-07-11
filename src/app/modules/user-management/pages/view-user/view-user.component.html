@@ -53,12 +53,6 @@
                     No roles have been assigned to this user yet.<br/>
                 </div>
             </mat-tab>
-            <mat-tab label="Repository privileges"
-                     [disabled]="(user$ | async)?.accessModel.isRepositoriesAccessEmpty()">
-                <app-user-access-model-listing [parentForm]="userForm"
-                                               [assignablePrivileges]="(assignablePrivileges$ | async)">
-                </app-user-access-model-listing>
-            </mat-tab>
         </mat-tab-group>
         <div>&nbsp;</div>
 
