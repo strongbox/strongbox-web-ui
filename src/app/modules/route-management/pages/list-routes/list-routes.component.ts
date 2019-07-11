@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogRef, MatSort, MatTableDataSource} from '@angular/material';
 import {ToastrService} from 'ngx-toastr';
 import {BehaviorSubject} from 'rxjs';
@@ -30,6 +30,7 @@ export class ListRoutesComponent implements OnInit, AfterViewInit {
     public displayedColumns: string[] = ['pattern', 'repositories', 'actions'];
 
     constructor(private routingService: RouteManagementService,
+                private cdr: ChangeDetectorRef,
                 private dialog: MatDialog,
                 private notify: ToastrService) {
     }
@@ -51,7 +52,7 @@ export class ListRoutesComponent implements OnInit, AfterViewInit {
                                     this.routes.data = this.routes.data.filter((value: Route) => {
                                         return value.uuid !== route.uuid;
                                     });
-
+                                    this.cdr.detectChanges();
                                     this.notify.success('Route has been successfully deleted!');
                                 } else {
                                     this.notify.error(result.message);
