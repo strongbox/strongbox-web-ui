@@ -5,7 +5,9 @@ import {ApiResponse} from '../core/core.model';
 
 export class Route {
     uuid: string;
-    type: string = RouteType[RouteType.ACCEPT];
+    // We need to be extra careful with enums, because of
+    // https://github.com/strongbox/strongbox/issues/1358
+    type: string = RouteType[RouteType.ACCEPT].toLocaleLowerCase();
     pattern: string;
     storageId: string;
     groupRepositoryId: string;
@@ -19,6 +21,20 @@ export class RouteListResponse extends ApiResponse {
 
 export class RouteRepository {
     constructor(public storageId: string, public repositoryId: string) {
+    }
+
+    get storageIdAndRepositoryId(): string {
+        if (this.isNotBlank(this.storageId) && this.isNotBlank(this.repositoryId)) {
+            return this.storageId + ':' + this.repositoryId;
+        } else if (this.isNotBlank(this.storageId)) {
+            return this.storageId;
+        } else if (this.isNotBlank(this.repositoryId)) {
+            return this.repositoryId;
+        }
+    }
+
+    private isNotBlank(str) {
+        return str !== undefined && str !== null && str.length > 0;
     }
 }
 
@@ -50,9 +66,7 @@ export class RouteForm {
             storageId: new FormControl(null),
             groupRepositoryId: new FormControl(null),
             pattern: new FormControl(null, [Validators.required]),
-            // We need to be extra careful with enums, because of
-            // https://github.com/strongbox/strongbox/issues/1358
-            type: new FormControl(RouteType[RouteType.ACCEPT].toLocaleLowerCase(), [Validators.required]),
+            type: new FormControl(null, [Validators.required]),
             repositories: new FormControl([])
         });
 

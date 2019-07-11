@@ -5,6 +5,7 @@ import {map, switchMap, tap} from 'rxjs/operators';
 import {plainToClass} from 'class-transformer';
 
 import {ApiFormDataValuesResponse, FormDataValue} from '../../../modules/core/core.model';
+import {RouteRepository} from '../../../modules/route-management/route.model';
 
 @Injectable({
     providedIn: 'root'
@@ -145,6 +146,26 @@ export function mapFormFieldValues(fieldName: string) {
                     return null;
                 }
             }),
+            switchMap(v => of(v))
+        );
+    };
+}
+
+export function mapGroupRepositoryStringToObject() {
+    return function (source$: Observable<string[]>): Observable<any[] | null> {
+        return source$.pipe(
+            map((fields: string[]) => {
+                    return fields.map(v => {
+                        const segments = v.split(':');
+
+                        if (segments.length === 2) {
+                            return new RouteRepository(segments[0], segments[1]);
+                        } else {
+                            return new RouteRepository(null, segments[0]);
+                        }
+                    });
+                }
+            ),
             switchMap(v => of(v))
         );
     };

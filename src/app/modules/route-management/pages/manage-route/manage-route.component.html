@@ -39,7 +39,6 @@
                                [clearable]="false"
                                [searchable]="false"
                                required="">
-
                         <ng-option value="accept">ACCEPT</ng-option>
                         <ng-option value="deny">DENY</ng-option>
                     </ng-select>
@@ -88,44 +87,22 @@
             </div>
             <div style="height: 50px;">&nbsp;</div>
 
+            <h3 class="title">Repositories:</h3>
+
             <ng-select #searchGroupRepositoriesSelect
-                       placeholder="Search for repository"
+                       placeholder=""
                        formControlName="repositories"
+                       clearable="true"
+                       bindLabel="storageIdAndRepositoryId"
                        [items]="searchGroupRepositoriesItems$ | async"
                        [hideSelected]="true"
                        [multiple]="true"
                        [loading]="searchGroupRepositoriesLoading"
                        [typeahead]="searchGroupRepositoriesInput$"
+                       style="margin-top: -10px;"
             >
             </ng-select>
-            <!--(change)="addRepository($event)"-->
-
-<!--            <div fxLayout="column" fxLayoutGap="2%">
-                <div fxFlex="1 0 auto">
-
-                    <mat-chip-list aria-label="Fruit selection"
-                                   aria-orientation="vertical"
-                                   class="mat-chip-list-stacked">
-                        <mat-chip *ngFor="let record of routeForm.get('repositories').value; let index"
-                                  [selectable]="true"
-                                  [removable]="true"
-                                  (removed)="removeRepository(index)"
-                        >
-                            {{record.storageId}}:{{record.repositoryId}}
-
-                            <i class="ion-md-trash" matChipRemove></i>
-                        </mat-chip>
-                    </mat-chip-list>
-
-                    <ng-container *ngIf="routeForm.get('repositories').value.length == 0">
-                        <div style="padding: 15px 0px 5px 0px;">
-                            No repositories have been selected, which means that all repositories in the group will be
-                            included.
-                        </div>
-                    </ng-container>
-
-                </div>
-            </div>-->
+            <div class="hint">Click here to select a list of repositories which will be accepted/denied by this rule.</div>
 
             <div>&nbsp;</div>
 

@@ -10,10 +10,10 @@ import {catchError, debounceTime, distinctUntilChanged, switchMap, tap} from 'rx
 import {NgSelectComponent} from '@ng-select/ng-select';
 
 import {Breadcrumb} from 'src/app/shared/layout/components/breadcrumb/breadcrumb.model';
-import {Route, RouteForm, RouteOperations, RouteRepository} from '../../route.model';
+import {Route, RouteForm, RouteOperations} from '../../route.model';
 import {RouteManagementService} from '../../services/route-management.service';
 import {ApiResponse, handle404error, handleFormError} from 'src/app/modules/core/core.model';
-import {FormDataService} from '../../../../shared/form/services/form-data.service';
+import {FormDataService, mapGroupRepositoryStringToObject} from '../../../../shared/form/services/form-data.service';
 
 @Component({
     selector: 'app-manage-route',
@@ -72,6 +72,7 @@ export class ManageRouteComponent implements OnInit {
                 this.routeForm = new RouteForm(this.operation).getForm();
                 this.loading$.next(false);
                 this.route$.next(new Route());
+                this.onStorageChangeEvents();
             } else {
                 this.breadcrumbs.push({label: 'Edit route', url: [], active: true});
                 this.operation = RouteOperations.UPDATE;
@@ -80,6 +81,7 @@ export class ManageRouteComponent implements OnInit {
                     .subscribe((route: Route) => {
                             this.route$.next(route);
                             this.routeForm = new RouteForm(this.operation, route).getForm();
+                            this.onStorageChangeEvents();
                             this.loading$.next(false);
                         },
                         (e) => {
@@ -99,7 +101,6 @@ export class ManageRouteComponent implements OnInit {
                         .findStorages(term)
                         .pipe(
                             catchError(() => of([])), // empty list on error
-                            tap(s => console.log('storages:', s)),
                             tap(() => this.storagesLoading = false)
                         )
                 )
@@ -136,20 +137,24 @@ export class ManageRouteComponent implements OnInit {
                     return this.formData
                         .findGroupRepositoryNames(term, storageId, groupRepositoryId)
                         .pipe(
+                            mapGroupRepositoryStringToObject(),
                             catchError(() => of([])), // empty list on error
                             tap(() => this.searchGroupRepositoriesLoading = false)
                         );
                 })
             )
         ).subscribe(result => {
-            console.log('search result:', result);
             this.searchGroupRepositoriesItems$.next(result);
         });
+    }
 
-        this.routeForm.get('storageId').valueChanges.subscribe(() => {
-            this.updateGroupRepositorySelect();
-        });
-
+    onStorageChangeEvents() {
+        this.routeForm
+            .get('storageId')
+            .valueChanges
+            .subscribe(() => {
+                this.updateDynamicSelectFields();
+            });
     }
 
     save() {
@@ -170,33 +175,11 @@ export class ManageRouteComponent implements OnInit {
         }
     }
 
-    // TODO: Finalize the `repositories` section.
-    addRepository(record) {
-        if (typeof record !== 'undefined') {
-            let storageId = record.split(':')[0];
-            let repositoryId = record.split(':')[1];
-
-            let repositories: any[] = this.routeForm.get('repositories').value;
-            repositories.push(new RouteRepository(storageId, repositoryId));
-
-            this.routeForm.get('repositories').setValue(repositories);
-
-            this.searchGroupRepositoriesElement.clearModel();
-            this.searchGroupRepositoriesInput$.next('');
-        }
-    }
-
-    removeRepository(index) {
-        const formField = this.routeForm.get('repositories');
-        let repositories: RouteRepository[] = formField.value;
-        repositories.splice(index, 1);
-        formField.setValue(repositories);
-    }
-
-    updateGroupRepositorySelect() {
+    updateDynamicSelectFields() {
         this.routeForm.get('groupRepositoryId').reset('');
         this.groupRepositoryElement.clearModel();
         this.groupRepositoriesInput$.next('');
+
         this.routeForm.get('repositories').setValue([]);
         this.searchGroupRepositoriesElement.clearModel();
         this.searchGroupRepositoriesInput$.next('');
