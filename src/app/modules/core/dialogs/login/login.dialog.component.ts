@@ -74,6 +74,8 @@ export class LoginDialogComponent implements OnInit {
             if (state === 'authenticated') {
                 this.close();
             } else if (state === 'invalid.credentials' || state === 'error') {
+                this.form.get('password').setValue('');
+                this.form.get('password').setErrors(null);
                 this.form.setErrors(this.wrongCredentialsFormError);
             }
         });
