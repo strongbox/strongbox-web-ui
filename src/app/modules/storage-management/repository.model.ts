@@ -72,7 +72,7 @@ export class Repository {
     public basedir: string = null;
     public policy: RepositoryPolicyEnum = RepositoryPolicyEnum.RELEASE;
     public implementation = 'file-system';
-    public layout = 'Maven 2'; // These are dynamic.
+    public layout: RepositoryLayoutEnum = RepositoryLayoutEnum.MAVEN2; // These are dynamic.
     public type: RepositoryTypeEnum = null;
     public secured = false;
     public status: RepositoryStatusEnum = RepositoryStatusEnum.IN_SERVICE;
@@ -91,7 +91,7 @@ export class Repository {
         (proxyConfiguration: ProxyConfiguration) => {
             // We need to send `null` here or backend form validation will cause issues.
             let data = null;
-            if (proxyConfiguration.hasData()) {
+            if (proxyConfiguration != null && proxyConfiguration.hasData()) {
                 data = proxyConfiguration;
             }
             return data;
