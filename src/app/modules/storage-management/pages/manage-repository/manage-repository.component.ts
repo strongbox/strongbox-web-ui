@@ -23,6 +23,7 @@ import {
 import {ApiResponse, handleFormError} from '../../../core/core.model';
 import {ProxyConfiguration, ProxyConfigurationTypeEnum} from '../../proxyConfiguration.model';
 import {StorageEntity} from '../../storage.model';
+import {FormDataService} from 'src/app/shared/form/services/form-data.service';
 
 @Component({
     selector: 'app-storage-manage',
@@ -48,7 +49,8 @@ export class ManageRepositoryComponent implements OnInit {
                 private route: ActivatedRoute,
                 private router: Router,
                 private store: Store,
-                private service: StorageManagerService) {
+                private service: StorageManagerService,
+                private formDataService: FormDataService) {
     }
 
     generateCommonFormFields(type: RepositoryTypeEnum, repo: Repository) {
@@ -241,19 +243,20 @@ export class ManageRepositoryComponent implements OnInit {
                 this.service
                     .getRepository(storageId, repositoryId)
                     .subscribe((repository: Repository) => {
+                        console.log(repository);
                         this.type$.next(this.getRepositoryEnumType(repository));
                         this.repository$.next(repository);
 
                         if (this.isGroupRepository()) {
                             this.activeGroupRepositories = repository.groupRepositories;
 
-                            this.service
-                                .getStorage(storageId)
-                                .subscribe((storage: StorageEntity) => {
-                                    this.availableGroupRepositories = storage.repositories
-                                        .map(r => r.id)
-                                        .filter((id) => {
-                                            return id !== repository.id && repository.groupRepositories.indexOf(id) === -1;
+                            this.formDataService
+                                .findRepositoryNames(null, null, true)
+                                .subscribe((storages: string[]) => {
+                                    this.availableGroupRepositories = storages
+                                        .filter((srId) => {
+                                            return srId !== repository.getStorageIdAndRepositoryId() &&
+                                                repository.groupRepositories.indexOf(srId) === -1;
                                         })
                                         .sort((a, b) => a.localeCompare(b));
 

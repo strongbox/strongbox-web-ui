@@ -66,7 +66,6 @@ export class CustomRepositoryConfiguration {
 }
 
 export class Repository {
-    // this is used only internally to store the "owning" storage id - not actually received from the api.
     public storageId: string = null;
     public id: string = null;
     public basedir: string = null;
@@ -122,5 +121,9 @@ export class Repository {
             this.proxyConfiguration = new ProxyConfiguration();
             this.remoteRepository = new RemoteRepositoryConfiguration();
         }
+    }
+
+    public getStorageIdAndRepositoryId() {
+        return this.storageId + ':' + this.id;
     }
 }
