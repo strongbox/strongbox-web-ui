@@ -87,7 +87,7 @@ export class FormDataService {
             );
     }
 
-    findRepositoryNames(term = '', storageId = '', withStorageId = false, type = null): Observable<any> {
+    findRepositoryNames(term = '', storageId = '', withStorageId = false, type = null): Observable<string[]> {
         term = this.sanitize(term);
         storageId = this.sanitize(storageId);
         type = this.sanitize(type);

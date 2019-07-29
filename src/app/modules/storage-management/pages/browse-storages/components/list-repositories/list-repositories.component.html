@@ -3,7 +3,7 @@
         <ng-container *ngFor="let column of repositoryColumns;">
             <ng-container [matColumnDef]="column">
                 <th mat-header-cell *matHeaderCellDef>{{ column | titlecase }}</th>
-                <td mat-cell *matCellDef="let repository" (click)="navigateToDirectoryListing(repository)" class="clickable">
+                <td mat-cell *matCellDef="let repository" (click)="navigateToRepositoryUpdate(repository)" class="clickable">
                     {{repository[column]}}
                 </td>
             </ng-container>
