@@ -102,7 +102,7 @@ pipeline {
                             echo "Deploying branch/PR"
                             SERVER_URL = PR_SERVER_URL;
                             if(env.CHANGE_ID) {
-                                VERSION_ID = "1.0-${env.CHANGE_ID}-SNAPSHOT"
+                                VERSION_ID = "1.0-PR-${env.CHANGE_ID}-SNAPSHOT"
                             } else {
                                 VERSION_ID = "1.0-${BRANCH_NAME}-SNAPSHOT"
                             }
