@@ -32,7 +32,7 @@ export class BootProgressService {
 
                 source.addEventListener('message', (e) => {
                     ++messages;
-                    messageElement.innerHTML = 'Loading ' + e.data + '...';
+                    messageElement.innerHTML = e.data;
                     splashScreen.querySelector('.bootStatus').removeAttribute('style');
                 });
 
