@@ -4,6 +4,7 @@ import {Action, NgxsOnInit, Select, Selector, State, StateContext} from '@ngxs/s
 import {Navigate, RouterNavigation} from '@ngxs/router-plugin';
 import {filter, take} from 'rxjs/operators';
 import {MatDialogRef} from '@angular/material';
+import {NavigationStart, Router} from '@angular/router';
 
 import {
     CloseLoginDialogAction,
@@ -18,7 +19,7 @@ import {
 import {LoginDialogComponent} from '../modules/core/dialogs/login/login.dialog.component';
 import {AppStateModel, defaultAppState, SideNavStateModel, ViewPortStateModel} from './app.state.interfaces';
 import {LogoutAction} from '../modules/core/auth/state/auth.actions';
-import {NavigationStart, Router} from '@angular/router';
+import {BootProgressService} from '../modules/core/services/boot-progress.service';
 
 @State<AppStateModel>({
     name: 'app',
@@ -64,7 +65,8 @@ export class AppState implements NgxsOnInit {
         return state.isHomepage;
     }
 
-    constructor(private dialog: MatDialog,
+    constructor(private bootProgress: BootProgressService,
+                private dialog: MatDialog,
                 private mediaObserver: MediaObserver,
                 private router: Router) {
     }
@@ -88,6 +90,8 @@ export class AppState implements NgxsOnInit {
             .subscribe((event: NavigationStart) => {
                 ctx.patchState({...ctx.getState(), isHomepage: event.url === '/' || event.url === ''});
             });
+
+        this.bootProgress.start();
     }
 
     @Action(RouterNavigation)

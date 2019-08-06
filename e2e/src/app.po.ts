@@ -5,7 +5,7 @@ export class AppPage {
         return browser.get(path);
     }
 
-    getLogo() {
-        return element(by.id('logo'));
+    getBootsplashScreen() {
+        return element(by.id('fullscreen-splash')).element(by.className('logo-text'));
     }
 }
