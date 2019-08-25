@@ -1,0 +1,13 @@
+<div class="updateLoggerDialog">
+  <form [formGroup]="form" (submit)="update()">
+    <mat-form-field>
+      <input matInput formControlName="package" required readonly>
+    </mat-form-field>
+    <div class="spacer">&nbsp;</div>
+    <mat-form-field>
+      <input type="password" matInput formControlName="level" placeholder="Level" required>
+    </mat-form-field>
+    <div class="spacer">&nbsp;</div>
+    <button mat-raised-button color="primary" type="submit">Update</button>
+  </form>
+</div>

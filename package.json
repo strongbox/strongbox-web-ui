@@ -11,7 +11,7 @@
     "serve-packaged": "./node_modules/.bin/http-server dist/packaging/strongbox-web-ui -p 4206 -g -c-1 -o",
     "clean-dist": "./node_modules/.bin/rimraf dist/packaging dist/strongbox-web-ui",
     "clean-install": "./node_modules/.bin/rimraf node_modules && npm cache clear --force && npm install",
-    "postinstall": "npm run webdriver-update && npm run patch-antlr4 && npm run antlr4",
+    "postinstall": "npm run webdriver-update && npm run antlr4",
     "ci-build": "npm run clean-dist && npm run build-prod && npm run package",
     "ci-build-stage": "npm run clean-dist && npm run build-prod-stage && npm run package",
     "ci-test": "ng test --browsers HeadlessChrome,HeadlessFirefox",
@@ -21,8 +21,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e --port 4201",
     "webdriver-update": "webdriver-manager update",
-    "antlr4": "antlr4-tool --language javascript -o src/aql/ src/aql/AQL.g4",
-    "patch-antlr4": "replace '^var fs.*' 'var fs = false;' ./node_modules/antlr4/FileStream.js ./node_modules/antlr4/CharStreams.js"
+    "antlr4": "antlr4-tool --language javascript -o src/aql/ src/aql/AQL.g4"
   },
   "private": true,
   "dependencies": {

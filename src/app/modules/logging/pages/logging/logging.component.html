@@ -1,0 +1,53 @@
+<app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding">
+
+  <mat-form-field floatLabel="never" appearance="standard">
+    <input matInput (keyup)="applyFilter($event.target.value)"
+           placeholder="Filter loggers"
+           autocomplete="off">
+  </mat-form-field>
+
+  <table mat-table [dataSource]="loggerConfigurations" mat-table multiTemplateDataRows matSort>
+
+    <ng-container matColumnDef="package">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header>Package</th>
+      <td *matCellDef="let row" mat-cell>{{ row.package }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="configuredLevel">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header>Configured Level</th>
+      <td *matCellDef="let row" mat-cell>{{ row.configuredLevel }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="effectiveLevel">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header>Effective Level</th>
+      <td *matCellDef="let row" mat-cell>{{ row.effectiveLevel }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th class="actions" mat-header-cell *matHeaderCellDef>Actions</th>
+      <td class="actions text-center" mat-cell *matCellDef="let row">
+        <ul>
+          <li>
+            <a (click)="openLoggerUpdateDialog(row)" title="Configure logger level">
+              <i class="icon ion-md-create"></i>
+            </a>
+          </li>
+        </ul>
+      </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+  </table>
+
+  <mat-paginator [length]="100"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 showFirstLastButtons>
+  </mat-paginator>
+
+  <div *ngIf="loggerConfigurations.filteredData.length === 0" class="no-records">
+    No records found
+  </div>
+
+</app-page-container>
