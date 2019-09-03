@@ -167,8 +167,4 @@ export class UserForm {
 export class UserFormFieldsData {
     @Type(() => UserRole)
     assignableRoles: UserRole[];
-
-    @Type(() => UserPrivilege)
-    @Transform(array => array.map(v => new UserPrivilege(v)), {toClassOnly: true})
-    assignablePrivileges: UserPrivilege[];
 }
