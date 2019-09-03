@@ -39,14 +39,8 @@ export class UserManagementService {
                         .values
                         .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 
-                    const assignablePrivileges = response.formDataValues
-                        .find(v => v.name === 'assignablePrivileges')
-                        .values
-                        .sort();
-
                     let userFormFields = {
-                        assignableRoles: assignableRoles,
-                        assignablePrivileges: assignablePrivileges
+                        assignableRoles: assignableRoles
                     };
 
                     return plainToClass(UserFormFieldsData, userFormFields);
