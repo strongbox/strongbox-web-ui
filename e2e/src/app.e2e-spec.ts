@@ -8,9 +8,9 @@ describe('Strongbox', () => {
         page = new AppPage();
     });
 
-    it('should display logo', () => {
+    it('should display boot splash screen', () => {
         page.navigateTo('/');
         browser.sleep(2000);
-        expect(page.getLogo().getText()).toBe('Strongbox');
+        expect(page.getBootsplashScreen().getText()).toBe('Strongbox');
     });
 });

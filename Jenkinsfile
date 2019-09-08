@@ -12,8 +12,7 @@ def notifyBranch = [recipients: [brokenTestsSuspects(), requestor()], notifyByCh
 pipeline {
     agent {
         node {
-            label 'ubuntu:jdk8-mvn-3.5-node-10-browsers'
-            customWorkspace workspace().getUniqueWorkspacePath()
+            label 'ubuntu-jdk8-mvn-3.5-node-10-browsers'
         }
     }
     parameters {
@@ -29,24 +28,30 @@ pipeline {
         stage('Node')
         {
             steps {
-                nodeInfo("npm yarn node mvn")
+                container("node") {
+                    nodeInfo("npm yarn node mvn")
+                }
             }
         }
         stage('Install dependencies')
         {
             steps {
                 script {
-                    def npmCachePath = workspace().getNPMCachePath()
-                    sh "npm config set cache ${npmCachePath}"
-                    sh "npm install"
-                    sh "npm ls --depth=0 || echo ''"
+                    container("node") {
+                        def npmCachePath = workspace().getNPMCachePath()
+                        sh "npm config set cache ${npmCachePath}"
+                        sh "npm install"
+                        sh "npm ls --depth=0 || echo ''"
+                    }
                 }
             }
         }
         stage('Build')
         {
             steps {
-                sh "npm run ci-build"
+                container("node") {
+                    sh "npm run ci-build"
+                }
             }
         }
         stage('Tests')
@@ -55,12 +60,14 @@ pipeline {
                 stage('ci-test') {
                     steps {
                         script {
-                            try {
-                                sh "npm run ci-test"
-                            } catch (e) {
-                                if(!params.FORCE_DEPLOY) {
-                                    currentBuild.result = 'FAILURE'
-                                    throw e
+                            container("node") {
+                                try {
+                                    sh "npm run ci-test"
+                                } catch (e) {
+                                    if(!params.FORCE_DEPLOY) {
+                                        currentBuild.result = 'FAILURE'
+                                        throw e
+                                    }
                                 }
                             }
                         }
@@ -70,12 +77,14 @@ pipeline {
                 stage('ci-e2e') {
                     steps {
                         script {
-                            try {
-                                sh "npm run ci-e2e"
-                            } catch (e) {
-                                if(!params.FORCE_DEPLOY) {
-                                    currentBuild.result = 'FAILURE'
-                                    throw e
+                            container("node") {
+                                try {
+                                    sh "npm run ci-e2e"
+                                } catch (e) {
+                                    if(!params.FORCE_DEPLOY) {
+                                        currentBuild.result = 'FAILURE'
+                                        throw e
+                                    }
                                 }
                             }
                         }
@@ -89,33 +98,35 @@ pipeline {
             }
             steps {
                 script {
-                    withMavenPlus(mavenLocalRepo: workspace().getM2LocalRepoPath(), mavenSettingsConfig: 'a5452263-40e5-4d71-a5aa-4fc94a0e6833', publisherStrategy: 'EXPLICIT', options: [artifactsPublisher(), mavenLinkerPublisher()])
-                    {
-                        def SERVER_URL;
-                        def VERSION_ID;
+                    container("node") {
+                        withMavenPlus(mavenLocalRepo: workspace().getM2LocalRepoPath(), mavenSettingsConfig: 'a5452263-40e5-4d71-a5aa-4fc94a0e6833', publisherStrategy: 'EXPLICIT', options: [artifactsPublisher(), mavenLinkerPublisher()])
+                        {
+                            def SERVER_URL;
+                            def VERSION_ID;
 
-                        if (BRANCH_NAME == 'master') {
-                            echo "Deploying master..."
-                            SERVER_URL = DEPLOY_SERVER_URL;
-                            VERSION_ID = "1.0-SNAPSHOT"
-                        } else {
-                            echo "Deploying branch/PR"
-                            SERVER_URL = PR_SERVER_URL;
-                            if(env.CHANGE_ID) {
-                                VERSION_ID = "1.0-${env.CHANGE_ID}-SNAPSHOT"
+                            if (BRANCH_NAME == 'master') {
+                                echo "Deploying master..."
+                                SERVER_URL = DEPLOY_SERVER_URL;
+                                VERSION_ID = "1.0-SNAPSHOT"
                             } else {
-                                VERSION_ID = "1.0-${BRANCH_NAME}-SNAPSHOT"
+                                echo "Deploying branch/PR"
+                                SERVER_URL = PR_SERVER_URL;
+                                if(env.CHANGE_ID) {
+                                    VERSION_ID = "1.0-PR-${env.CHANGE_ID}-SNAPSHOT"
+                                } else {
+                                    VERSION_ID = "1.0-${BRANCH_NAME}-SNAPSHOT"
+                                }
                             }
-                        }
 
-                        sh "mvn deploy:deploy-file " +
-                           " -Dfile=./dist/packaging/strongbox-web-ui.zip " +
-                           " -DrepositoryId=" + SERVER_ID +
-                           " -Durl=" + SERVER_URL +
-                           " -DartifactId=" + ARTIFACT_ID +
-                           " -DgroupId=org.carlspring.strongbox" +
-                           " -Dpackaging=zip" +
-                           " -Dversion=" + VERSION_ID
+                            sh "mvn deploy:deploy-file " +
+                               " -Dfile=./dist/packaging/strongbox-web-ui.zip " +
+                               " -DrepositoryId=" + SERVER_ID +
+                               " -Durl=" + SERVER_URL +
+                               " -DartifactId=" + ARTIFACT_ID +
+                               " -DgroupId=org.carlspring.strongbox" +
+                               " -Dpackaging=zip" +
+                               " -Dversion=" + VERSION_ID
+                        }
                     }
                 }
             }
@@ -144,7 +155,9 @@ pipeline {
             }
         }
         always {
-            junit 'dist/TESTS-*.xml'
+            container("node") {
+                junit 'dist/TESTS-*.xml'
+            }
 
             script {
 
@@ -163,12 +176,6 @@ pipeline {
                               ]
                     }
                 }
-            }
-
-        }
-        cleanup {
-            script {
-                workspace().clean()
             }
         }
     }

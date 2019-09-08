@@ -4,6 +4,7 @@
 #fullscreen-splash {
   height: 100vh;
   width: 100vw;
+  color: white;
   background: $body-background-color;
   background: linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* common. */
   background: -o-linear-gradient($body-gradient-degrees, $body-gradient-0 0%, $body-gradient-1 100%); /* opera 11.10+ */
@@ -28,10 +29,8 @@
   left: 0px;
 
   .container {
-    color: white;
     overflow: hidden;
     opacity: 1;
-    position: absolute;
     z-index: 999;
   }
 
@@ -41,51 +40,91 @@
     transition: visibility 0s 0.18s, opacity 0.18s linear;
   }
 
-  @include logo-text(2.8rem, 0.65rem 1rem 0px 1rem);
+  @include logo-text(2.8rem, 0rem 1rem 0px 1rem);
 
   .spinner-container {
     position: relative;
     overflow: hidden;
-    height: 100px;
+    height: 30px;
+    margin-top: 27px;
+
+    &.loaded {
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s 0.18s, opacity 0.18s linear;
+    }
   }
 
   .spinner div {
-    width: 5px;
-    height: 5px;
+    width: 4px;
+    height: 4px;
     position: absolute;
     left: -50px;
-    top: 30px;
     background-color: #fff;
     border-radius: 40%;
     //animation: spinner-move 3s infinite cubic-bezier(.32, 1, .88, .27);
-    animation: spinner-move 3s infinite cubic-bezier(0.5, 0.04, 0.08, 0.8);
+    animation: spinner-move 3s infinite cubic-bezier(.55,.1,.08,.8);
+  }
+
+  .spinner div:nth-child(1) {
+    animation-delay: 200ms;
   }
 
   .spinner div:nth-child(2) {
-    animation-delay: 150ms;
+    animation-delay: calc(200ms + 150ms);
   }
 
   .spinner div:nth-child(3) {
-    animation-delay: 300ms;
+    animation-delay: calc(200ms + 300ms);
   }
 
   .spinner div:nth-child(4) {
-    animation-delay: 450ms;
+    animation-delay: calc(200ms + 450ms);
   }
 
   .spinner div:nth-child(5) {
-    animation-delay: 600ms;
+    animation-delay: calc(200ms + 600ms);
   }
 
   @keyframes spinner-move {
     0% {
-      left: -50%;
+      opacity: 0;
+      left: -40%;
+    }
+    30% {
+      opacity: 0;
+      left: -10%;
+    }
+    40% {
+      opacity: 0;
+    }
+    70% {
+      opacity: 1;
     }
     80% {
+      opacity: 0.9;
       left: 50%;
     }
+    82% {
+      opacity: 0.5;
+    }
+    90% {
+      opacity: 0;
+      left: 100%;
+    }
     100% {
+      opacity: 0;
       left: 150%;
     }
+  }
+
+  .bootStatus {
+    font-family: $font-family;
+    font-weight: 300;
+    font-size: 0.98rem;
+    letter-spacing: 0.065rem;
+    transition: opacity 0.5s ease-in-out;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
   }
 }

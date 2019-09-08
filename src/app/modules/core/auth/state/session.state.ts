@@ -1,5 +1,5 @@
 import {HttpErrorResponse} from '@angular/common/http';
-import {Action, createSelector, NgxsOnInit, Selector, State, StateContext, Store} from '@ngxs/store';
+import {Action, createSelector, Selector, State, StateContext, Store} from '@ngxs/store';
 import {Navigate} from '@ngxs/router-plugin';
 import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
@@ -61,7 +61,7 @@ function initialSessionState() {
     name: 'session',
     defaults: initialSessionState()
 })
-export class SessionState implements NgxsOnInit {
+export class SessionState {
 
     @Selector()
     static token(session: SessionStateModel) {
@@ -114,10 +114,6 @@ export class SessionState implements NgxsOnInit {
     }
 
     constructor(private auth: AuthService, private store: Store) {
-    }
-
-    ngxsOnInit(ctx: StateContext<SessionStateModel>) {
-        this.store.dispatch(new CheckCredentialsAction());
     }
 
     @Action(CheckCredentialsAction)
