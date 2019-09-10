@@ -56,7 +56,7 @@ const routes: Routes = [
     },
     {
         path: 'admin/logging',
-        loadChildren: './modules/logging/logging.module#LoggingModule'
+        loadChildren: './modules/logging-management/logging-management.module#LoggingManagementModule'
     },
     {path: '**', component: PageNotFoundComponent}
 ];

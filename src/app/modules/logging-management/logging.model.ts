@@ -5,16 +5,16 @@ export class Logger {
 }
 
 export class Loggers {
-  public levels: string[] = [];
-  public loggers: Record<string, Level>[] = [];
+    public levels: string[] = [];
+    public loggers: Record<string, Level>[] = [];
 }
 
 export class Level {
-  public configuredLevel: string = null;
-  public effectiveLevel: string = null;
+    public configuredLevel: string = null;
+    public effectiveLevel: string = null;
 }
 
 export class LoggerConfiguration extends Level {
-  public package: string = null;
+    public package: string = null;
 }
 

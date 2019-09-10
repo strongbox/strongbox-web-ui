@@ -16,5 +16,5 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class LoggingRoutingModule {
+export class LoggingManagementRouting {
 }
