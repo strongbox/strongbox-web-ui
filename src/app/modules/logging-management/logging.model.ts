@@ -1,20 +1,32 @@
+import {Exclude, Expose, plainToClass, Transform} from 'class-transformer';
+
+@Exclude()
 export class Logger {
-    public loggerPackage: string = null;
-    public level: string = null;
-    public appenderName: string = null;
+    @Expose({groups: ['list', 'all']})
+    package: string;
+
+    @Expose({groups: ['list', 'save', 'all']})
+    configuredLevel: string;
+
+    @Expose({groups: ['list', 'all']})
+    effectiveLevel: string;
 }
 
-export class Loggers {
+export class LoggersResponse {
     public levels: string[] = [];
-    public loggers: Record<string, Level>[] = [];
-}
+    @Transform((incoming: Record<string, any>) => {
+        let result = [];
 
-export class Level {
-    public configuredLevel: string = null;
-    public effectiveLevel: string = null;
-}
+        if (incoming != null) {
+            result = Object.keys(incoming).map(key => {
+                let raw = incoming[key];
+                raw.package = key;
+                return plainToClass(Logger, raw, {groups: ['list']});
+            });
+        }
 
-export class LoggerConfiguration extends Level {
-    public package: string = null;
+        return result;
+    }, {toClassOnly: true})
+    public loggers: Logger[] = [];
 }
 

@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Logger, Loggers} from '../logging.model';
-import {map} from 'rxjs/operators';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {Observable, of, throwError} from 'rxjs';
 import {plainToClass} from 'class-transformer';
-import {ApiResponse} from '../../core/core.model';
+import {concatMap, delay, map} from 'rxjs/operators';
+
+import {Logger, LoggersResponse} from '../logging.model';
 import {Repository} from '../../storage-management/repository.model';
 
 @Injectable({
@@ -15,17 +15,36 @@ export class LoggingService {
     constructor(private http: HttpClient) {
     }
 
-    getLoggers(): Observable<Loggers> {
+    getLoggers(): Observable<LoggersResponse> {
         return this.http
             .get(`/api/monitoring/loggers`)
-            .pipe(map((r: any) => plainToClass(Loggers, r) as any));
+            .pipe(map((r: any) => plainToClass(LoggersResponse, r)));
     }
 
-    // TODO implement me
-    updateLogger(logger: Logger): Observable<ApiResponse> {
+    getLogger(name: string): Observable<Logger> {
         return this.http
-            .post(`/api/monitoring/loggers`, logger)
-            .pipe(map((r: any) => plainToClass(ApiResponse, r, {groups: ['error']}) as any));
+            .get(`/api/monitoring/loggers/${name}`)
+            .pipe(map((r: any) => {
+                let logger = plainToClass(Logger, r, {groups: ['all']});
+                logger.package = name;
+                return logger;
+            }));
+    }
+
+    save(logger: Logger): Observable<any> {
+        let data = {};
+
+        if (logger.configuredLevel !== null) {
+            data = {configuredLevel: logger.configuredLevel};
+        }
+
+        return this.http
+            .post<HttpResponse<any>>(`/api/monitoring/loggers/${logger.package}`, data, {observe: 'response'})
+            .pipe(
+                concatMap((response: HttpResponse<any>) => response.ok ? of(logger) : throwError(response)),
+                delay(250),
+                concatMap(() => logger.configuredLevel ? of(logger) : this.getLogger(logger.package))
+            );
     }
 
     // TODO implement me
