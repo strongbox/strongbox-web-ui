@@ -11,7 +11,6 @@ import {plainToClass} from 'class-transformer';
 import {LoggingService} from '../../services/logging.service';
 import {Logger, LoggersResponse} from '../../logging.model';
 import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
-import {AddLoggerDialogComponent} from '../../dialogs/add-logger/add-logger.dialog.component';
 import {GenericMessages} from '../../../core/core.model';
 
 @Component({
@@ -76,23 +75,6 @@ export class LoggingComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.emitDestroy();
         this.emitDestroyForm();
-    }
-
-    openNewLoggerDialog() {
-        this.newLoggerDialog = this.dialog.open(AddLoggerDialogComponent, {
-            data: {
-                searchTerm: this.dataSource.filter,
-                levels: this.levels
-            }
-        });
-
-        this.newLoggerDialog.afterClosed()
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((logger: Logger) => {
-                if (logger !== null && logger !== undefined) {
-                    this.updateTableRecords(logger);
-                }
-            });
     }
 
     generateForm(logger: Logger = null) {
