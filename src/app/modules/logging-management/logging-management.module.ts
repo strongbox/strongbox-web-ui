@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
-import {LoggingComponent} from './pages/logging/logging.component';
+import {ManageLoggersComponent} from './pages/manage-loggers/manage-loggers.component';
 import {LayoutModule} from '../../shared/layout/layout.module';
 import {MaterialModule} from '../../shared/material.module';
 import {FormHelperModule} from '../../shared/form/form-helper.module';
@@ -10,7 +10,7 @@ import {LoggingManagementRouting} from './logging-management.routing';
 
 @NgModule({
     declarations: [
-        LoggingComponent,
+        ManageLoggersComponent,
     ],
     imports: [
         CommonModule,

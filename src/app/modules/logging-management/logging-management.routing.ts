@@ -2,12 +2,12 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
 import {AuthGuard} from '../core/auth/auth.guard';
-import {LoggingComponent} from './pages/logging/logging.component';
+import {ManageLoggersComponent} from './pages/manage-loggers/manage-loggers.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: LoggingComponent,
+        component: ManageLoggersComponent,
         canActivate: [AuthGuard]
     }
 ];

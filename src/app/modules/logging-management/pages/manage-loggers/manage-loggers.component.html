@@ -1,7 +1,7 @@
 <app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding">
 
     <div page-actions>
-        <button mat-raised-button color="primary" [routerLink]="'/admin/logging/logs'" [disabled]="(loading$ | async) || (saving$ | async)">
+        <button mat-raised-button color="primary" [routerLink]="'/admin/loggers/logs'" [disabled]="(loading$ | async) || (saving$ | async)">
             View logs
         </button>
     </div>

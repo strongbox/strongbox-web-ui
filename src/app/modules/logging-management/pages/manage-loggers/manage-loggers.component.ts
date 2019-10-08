@@ -14,12 +14,12 @@ import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadc
 import {GenericMessages} from '../../../core/core.model';
 
 @Component({
-    selector: 'app-logging',
-    templateUrl: './logging.component.html',
-    styleUrls: ['./logging.component.scss'],
+    selector: 'app-manage-loggers',
+    templateUrl: './manage-loggers.component.html',
+    styleUrls: ['./manage-loggers.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoggingComponent implements OnInit, OnDestroy {
+export class ManageLoggersComponent implements OnInit, OnDestroy {
 
     displayedColumns: string[] = ['package', 'configuredLevel', 'effectiveLevel', 'actions'];
 
@@ -30,7 +30,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
     private destroyForm$ = new Subject();
 
     breadcrumbs: Breadcrumb[] = [
-        {label: 'Logging', url: ['/admin/logging']}
+        {label: 'Logging', url: ['/admin/manage-loggers']}
     ];
 
     levels: string[] = [];
