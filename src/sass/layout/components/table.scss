@@ -138,12 +138,16 @@
     display: inline-block;
     padding: 0;
     width: 100%;
-    margin-top: -40px;
-    margin-bottom: -40px;
+    margin-top: -10px;
+    margin-bottom: -15px;
   }
 
   .mat-form-field-infix {
     padding: 0.2em 0;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    margin-top: 0px;
   }
 
   .mat-progress-bar {
