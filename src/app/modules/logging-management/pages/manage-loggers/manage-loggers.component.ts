@@ -4,7 +4,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatTable} from '@angular/material/table';
 import {MatDialogRef} from '@angular/material/dialog';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {delay, takeUntil} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 import {plainToClass} from 'class-transformer';
 
@@ -30,7 +30,7 @@ export class ManageLoggersComponent implements OnInit, OnDestroy {
     private destroyForm$ = new Subject();
 
     breadcrumbs: Breadcrumb[] = [
-        {label: 'Logging', url: ['/admin/manage-loggers']}
+        {label: 'Logging', url: ['/admin/loggers']}
     ];
 
     levels: string[] = [];
@@ -63,7 +63,7 @@ export class ManageLoggersComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.service
             .getLoggers()
-            .pipe(takeUntil(this.destroy$))
+            .pipe(takeUntil(this.destroy$), delay(400))
             .subscribe((response: LoggersResponse) => {
                 this.levels = response.levels;
                 this.dataSource.data = response.loggers;
