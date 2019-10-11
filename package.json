@@ -54,6 +54,7 @@
     "fonts-raleway": "0.0.4",
     "ionicons": "^4.4.8",
     "ngx-toastr": "~10.0.4",
+    "ngx-virtual-scroller": "^3.0.3",
     "open-sans-fontface": "^1.4.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.9.0",
