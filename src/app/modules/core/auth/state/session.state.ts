@@ -32,30 +32,39 @@ export const defaultSessionState: SessionStateModel = {
 };
 
 function initialSessionState() {
-    let state: SessionStateModel = defaultSessionState;
+    let state: SessionStateModel;
 
-    if (localStorage.getItem('session') !== '') {
-        let session: SessionStateModel = defaultSessionState;
-
-        try {
-            const rawSession: any = JSON.parse(localStorage.getItem('session'));
-            session = {
-                user: plainToClass(AuthenticatedUser, rawSession.user) as any as AuthenticatedUser,
-                token: rawSession.token,
-                state: rawSession.state
-            };
-        } catch (e) {
-            console.warn('No valid session found.');
-            session = defaultSessionState;
-        }
-
-        if (session !== null && session.token !== '') {
-            state = session;
-        }
+    try {
+        const parsedSession: any = JSON.parse(localStorage.getItem('session'));
+        state = {
+            user: plainToClass(AuthenticatedUser, parsedSession.user) as any as AuthenticatedUser,
+            token: parsedSession.token,
+            state: parsedSession.state
+        };
+    } catch (e) {
+        state = defaultSessionState;
     }
+
+    updateBrowserSession(state);
 
     return state;
 }
+
+function updateBrowserSession(state: SessionStateModel) {
+    // Fallback to guest.
+    let sessionState = JSON.stringify(defaultSessionState);
+    let cookieState = `${authenticationCookieName}=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+
+    if (state !== null && state.state === 'authenticated') {
+        sessionState = JSON.stringify(state);
+        cookieState = `${authenticationCookieName}=${state.token}; path=/`;
+    }
+
+    localStorage.setItem('session', sessionState);
+    document.cookie = cookieState;
+}
+
+export const authenticationCookieName = 'access_token';
 
 @State<SessionStateModel>({
     name: 'session',
@@ -117,8 +126,13 @@ export class SessionState {
     }
 
     @Action(CheckCredentialsAction)
-    checkCredentials() {
-        this.auth.checkCredentials().subscribe();
+    checkCredentials(ctx: StateContext<SessionStateModel>) {
+        this.auth.checkCredentials().subscribe((result) => {
+            if (!result) {
+                ctx.patchState(defaultSessionState);
+                updateBrowserSession(defaultSessionState);
+            }
+        });
     }
 
     @Action(SetSessionStateModelAction)
@@ -129,26 +143,28 @@ export class SessionState {
     @Action(LoginAction)
     login(ctx: StateContext<SessionStateModel>, {payload}: LoginAction) {
         ctx.patchState({state: 'pending'});
-        return this.auth.login(payload).pipe(
-            tap((state: SessionStateModel) => {
-                if (state.state === 'authenticated') {
-                    localStorage.setItem('session', JSON.stringify(state));
-                }
-                ctx.setState(state);
-            }),
-            catchError((state: any, caught) => {
-                ctx.patchState(defaultSessionState);
-                console.log('Fatal authentication error!', state, caught);
-                return of(null);
-            })
-        );
+
+        return this.auth
+                   .login(payload)
+                   .pipe(
+                       tap((state: SessionStateModel) => {
+                           ctx.setState(state);
+                           updateBrowserSession(state);
+                       }),
+                       catchError((state: any, caught) => {
+                           ctx.patchState(defaultSessionState);
+                           console.log('Fatal authentication error!', state, caught);
+                           updateBrowserSession(defaultSessionState);
+                           return of(null);
+                       })
+                   );
     }
 
     @Action(LogoutAction)
     logout(ctx: StateContext<SessionStateModel>) {
         if (ctx.getState().state === 'authenticated') {
             ctx.setState(defaultSessionState);
-            localStorage.setItem('session', JSON.stringify(defaultSessionState));
+            updateBrowserSession(defaultSessionState);
             this.store.dispatch(new HideSideNavAction());
             this.store.dispatch(new Navigate(['/']));
         }
