@@ -38,7 +38,7 @@ export class AuthService {
             .pipe(
                 map((response: any): SessionStateModel => {
                     if (response.hasOwnProperty('token') && response.token !== null) {
-                        let user: AuthenticatedUser = plainToClass(AuthenticatedUser, response) as any as AuthenticatedUser;
+                        let user: AuthenticatedUser = plainToClass(AuthenticatedUser, response);
                         user.username = userCredentials.username;
 
                         return {

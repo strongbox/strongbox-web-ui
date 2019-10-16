@@ -5,7 +5,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {Location} from '@angular/common';
 import {NgxsModule, Store} from '@ngxs/store';
 
-import {defaultSessionState, SessionState} from './session.state';
+import {authenticationCookieName, defaultSessionState, SessionState} from './session.state';
 import {AuthenticatedUser, UserAuthority, UserCredentials} from '../auth.model';
 import {LoginAction, LogoutAction} from './auth.actions';
 import {AuthService} from '../auth.service';
@@ -115,6 +115,7 @@ describe('State: SessionState', () => {
                 expect(state.user).toEqual(user);
                 expect(state.token).toEqual(user.token);
                 expect(state.state).toEqual('authenticated');
+                expect(document.cookie).toEqual(`${authenticationCookieName}=${user.token}`);
             });
         });
 
@@ -124,7 +125,11 @@ describe('State: SessionState', () => {
             store.dispatch(new LoginAction(credentials));
 
             const serverResponse = {error: 'invalid.credentials'};
-            const testResponse = new HttpErrorResponse({error: serverResponse, status: 401, statusText: 'Unauthorized'});
+            const testResponse = new HttpErrorResponse({
+                error: serverResponse,
+                status: 401,
+                statusText: 'Unauthorized'
+            });
             const request = backend.expectOne(`/api/login`);
             request.flush(testResponse);
             backend.verify();
@@ -135,6 +140,7 @@ describe('State: SessionState', () => {
                 expect(state.token).toEqual(null);
                 expect(state.state).toEqual('invalid.credentials');
                 expect(state.response.status).toEqual(401);
+                expect(document.cookie).toEqual('');
             });
         });
 
@@ -144,7 +150,11 @@ describe('State: SessionState', () => {
             store.dispatch(new LoginAction(credentials));
 
             const serverResponse = {};
-            const testResponse = new HttpErrorResponse({error: serverResponse, status: 500, statusText: 'Internal Server Error'});
+            const testResponse = new HttpErrorResponse({
+                error: serverResponse,
+                status: 500,
+                statusText: 'Internal Server Error'
+            });
             const request = backend.expectOne(`/api/login`);
             request.flush(testResponse);
             backend.verify();
@@ -155,6 +165,8 @@ describe('State: SessionState', () => {
                 expect(state.token).toEqual(null);
                 expect(state.state).toEqual('error');
                 expect(state.response.status).toEqual(500);
+                expect(localStorage.getItem('session')).toEqual(JSON.stringify(defaultSessionState));
+                expect(document.cookie).toEqual('');
             });
         });
 
@@ -179,7 +191,7 @@ describe('State: SessionState', () => {
 
             store.selectOnce(SessionState).subscribe(state => {
                 expect(state).toBeTruthy();
-                expect(state).toBe(defaultSessionState);
+                expect(state).toEqual(defaultSessionState);
             });
 
             expect(location.path()).toBe('');
