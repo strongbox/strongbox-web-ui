@@ -32,7 +32,7 @@ export interface RetryAttempt {
     delay: number;
 }
 
-const initialRetryAttempt = {
+const initialRetryAttempt: RetryAttempt = {
     count: 0,
     max: 0,
     delay: defaultConfig.delay

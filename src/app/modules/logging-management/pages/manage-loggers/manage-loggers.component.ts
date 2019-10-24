@@ -155,6 +155,7 @@ export class ManageLoggersComponent implements OnInit, OnDestroy {
         this.saving$.next(true);
         this.service
             .save(this.selectedLogger)
+            .pipe(takeUntil(this.destroy$))
             .subscribe(
                 (updatedLogger: Logger) => this.handleSave(updatedLogger),
                 (e) => this.notify.error(GenericMessages.SAVE_FAILED, e)
@@ -176,6 +177,7 @@ export class ManageLoggersComponent implements OnInit, OnDestroy {
 
         this.service
             .save(this.selectedLogger)
+            .pipe(takeUntil(this.destroy$))
             .subscribe(
                 (updatedLogger: Logger) => this.handleSave(updatedLogger),
                 (e) => this.notify.error(GenericMessages.SAVE_FAILED, e)

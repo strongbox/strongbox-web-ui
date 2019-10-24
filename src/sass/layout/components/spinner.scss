@@ -1,0 +1,22 @@
+@import "../../variables";
+
+mat-progress-bar.dark-progress-bar {
+  &.mat-progress-bar {
+    height: 2px;
+  }
+
+  .mat-progress-bar-fill::after {
+    background-color: $global-link-color;
+  }
+
+  .mat-progress-bar-buffer {
+    background-color: $table-header-row-color;
+  }
+
+  /* remove animation and the dots*/
+  .mat-progress-bar-background {
+    animation: none;
+    background-color: #eceff1;
+    fill: #eceff1;
+  }
+}

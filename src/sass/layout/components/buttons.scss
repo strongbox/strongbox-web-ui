@@ -16,15 +16,16 @@
 .mat-raised-button.mat-warn:not([disabled]),
 .mat-fab.mat-warn:not([disabled]),
 .mat-mini-fab.mat-warn:not([disabled]) {
-  background: linear-gradient(to bottom, $btn-warn-gradient-0 0%, $btn-warn-gradient-1 100%);
+  //background: linear-gradient(to bottom, $btn-warn-gradient-0 0%, $btn-warn-gradient-1 100%);
   /// linear-gradient(to bottom, #f44336 0%, #f44336 100%)
+  background: linear-gradient(to bottom, hsla(351, 95%, 58%, 1) 0%, hsla(349, 75%, 37%, 1) 100%);
 }
 
 .mat-flat-button.mat-warn:not([disabled]):hover,
 .mat-raised-button.mat-warn:not([disabled]):hover,
 .mat-fab.mat-warn:not([disabled]):hover,
 .mat-mini-fab.mat-warn:not([disabled]):hover {
-  background: linear-gradient(to bottom, lighten($btn-warn-gradient-0, 2%) 0%, lighten($btn-warn-gradient-1, 5%) 100%);
+  background: linear-gradient(to bottom, hsla(351, 95%, 62%, 1) 0%, hsla(349, 75%, 42%, 1) 100%);
 }
 
 .mat-button .mat-button-wrapper > *,

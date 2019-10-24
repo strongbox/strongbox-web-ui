@@ -1,0 +1,110 @@
+<app-page-container [breadcrumbs]="breadcrumbs" class="noPadding">
+
+    <div page-actions>
+        <button mat-raised-button color="primary"
+                (click)="connect()"
+                [disabled]="(disabled$ | async)"
+                *ngIf="isDisconnected()"
+        >
+            Start
+        </button>
+
+        <button mat-raised-button color="warn"
+                (click)="disconnect()"
+                [disabled]="(disabled$ | async)"
+                *ngIf="!isDisconnected()"
+        >
+            Stop
+        </button>
+
+        <button mat-raised-button color="primary"
+                [matMenuTriggerFor]="matMenuHeader"
+                [disabled]="(disabled$ | async)"
+                #matMenuTriggerHeader="matMenuTrigger">
+            Download
+            <i class="ion splitter"
+               [class.ion-md-arrow-dropdown]="!matMenuTriggerHeader.menuOpen"
+               [class.ion-md-arrow-dropup]="matMenuTriggerHeader.menuOpen"
+            ></i>
+
+            <mat-menu #matMenuHeader="matMenu" xPosition="before" class="menu-2-offset">
+                <button mat-menu-item>Server log</button>
+                <button mat-menu-item (click)="downloadBrowserLog()"
+                        [disabled]="!hasMessages()">Browser log
+                </button>
+            </mat-menu>
+        </button>
+
+        <button mat-raised-button color="primary"
+                (click)="tailing$.next(true); startTailing()"
+                [disabled]="!isConnected() || tailing$.getValue()">
+            Follow
+        </button>
+
+        <button mat-raised-button color="primary" (click)="clearMessages()"
+                [disabled]="(disabled$ | async)">
+            Clear
+        </button>
+    </div>
+
+
+    <div class="logging fullscreen" fxLayout="column">
+
+        <app-stream-log-filter (typing)="this.source.applyFilter($event)"></app-stream-log-filter>
+
+        <div class="clearfix"></div>
+
+        <div class="streamContainer" #streamContainer>
+            <virtual-scroller #scroll
+                              [items]="(throttledMessages$ | async)"
+                              [bufferAmount]="15"
+                              [resizeBypassRefreshThreshold]="10000"
+                              [scrollAnimationTime]="800"
+                              [modifyOverflowStyleOfParentScroll]="true"
+                              [enableUnequalChildrenSizes]="true"
+                              [parentScroll]="streamContainer"
+                              [hidden]="true"
+            >
+                <div *ngFor="let message of scroll.viewPortItems;" class="item">{{message?.data}}</div>
+            </virtual-scroller>
+
+            <div *ngIf="isWaitingForMessages()"
+                 style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;">
+
+                <mat-progress-bar mode="query" class="dark-progress-bar"></mat-progress-bar>
+
+                <div style="width: 240px; margin: 25vh auto; font-size: 1.05rem;">
+                    <ng-container [ngSwitch]="this.virtualScroller.items.length < 1 && isConnecting()">
+                        <ng-container *ngSwitchCase="true">Connecting to backend...</ng-container>
+                        <ng-container *ngSwitchDefault>Waiting for log messages...</ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <div class="statusBar"
+             [class.status-green]="isConnected() || isConnecting()"
+             [class.status-red]="!isConnected()">
+            <ng-container [ngSwitch]="state$ | async">
+                <ng-container *ngSwitchCase="'open'">
+                    {{ state$ | async }} / Messages [{{(throttledMessages$ | async).length}}/{{historyLimit}}]
+                </ng-container>
+                <ng-container *ngSwitchCase="'retrying'">
+                    <ng-container
+                            *ngTemplateOutlet="retryMessage; context: { retry: retryAttempt$ | async }"></ng-container>
+                </ng-container>
+                <ng-container *ngSwitchCase="'disconnected'">
+                    Disconnected
+                </ng-container>
+                <ng-container *ngSwitchDefault>Connecting</ng-container>
+            </ng-container>
+        </div>
+
+        <ng-template #retryMessage let-retry="retry">
+            <ng-container *ngIf="retry">
+                [{{retry.count}}/{{retry.max}}] Connection failed - retrying in {{ getRetrySeconds(retry.delay) }}s
+            </ng-container>
+        </ng-template>
+    </div>
+
+</app-page-container>

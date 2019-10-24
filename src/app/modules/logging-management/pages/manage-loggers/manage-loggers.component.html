@@ -1,8 +1,12 @@
 <app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding">
 
     <div page-actions>
-        <button mat-raised-button color="primary" [routerLink]="'/admin/loggers/logs'" [disabled]="(loading$ | async) || (saving$ | async)">
-            View logs
+        <button mat-raised-button color="primary" [routerLink]="'/admin/logging/stream'" [disabled]="(loading$ | async) || (saving$ | async)">
+            Log file
+        </button>
+
+        <button mat-raised-button color="primary" [routerLink]="'/admin/logging/browse'" [disabled]="(loading$ | async) || (saving$ | async)">
+            Browse logs
         </button>
     </div>
 
@@ -114,11 +118,6 @@
     <div *ngIf="dataSource.filteredData.length === 0 && selectedLogger == null" class="no-records">
         <div fxLayout="column">
             <span>No results matching were found.</span>
-            <div style="margin-top: 25px;">
-                <button mat-raised-button color="primary" (click)="openNewLoggerDialog()" [disabled]="(saving$ | async)">
-                    Add logger
-                </button>
-            </div>
         </div>
     </div>
 

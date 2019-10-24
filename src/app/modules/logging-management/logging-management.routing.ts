@@ -3,11 +3,18 @@ import {RouterModule, Routes} from '@angular/router';
 
 import {AuthGuard} from '../core/auth/auth.guard';
 import {ManageLoggersComponent} from './pages/manage-loggers/manage-loggers.component';
+import {StreamLogComponent} from './pages/stream-log/stream-log.component';
 
 const routes: Routes = [
     {
         path: '',
+        pathMatch: 'full',
         component: ManageLoggersComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'stream',
+        component: StreamLogComponent,
         canActivate: [AuthGuard]
     }
 ];

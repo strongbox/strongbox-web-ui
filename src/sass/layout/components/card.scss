@@ -2,6 +2,10 @@
 
 .mat-card {
   background: $header-nav-background;
+
+  table {
+    width: 100%;
+  }
 }
 
 .mat-card.page-container-shadow {
