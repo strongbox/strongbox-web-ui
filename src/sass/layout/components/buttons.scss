@@ -27,15 +27,22 @@
   background: linear-gradient(to bottom, lighten($btn-warn-gradient-0, 2%) 0%, lighten($btn-warn-gradient-1, 5%) 100%);
 }
 
-i.splitter {
-  margin-left: 5px;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  margin-right: -8px;
-  line-height: 30px;
-  padding: 3px 0px 2px 7px;
-  margin-top: -3px;
+.mat-button .mat-button-wrapper > *,
+.mat-fab .mat-button-wrapper > *,
+.mat-flat-button .mat-button-wrapper > *,
+.mat-icon-button .mat-button-wrapper > *,
+.mat-mini-fab .mat-button-wrapper > *,
+.mat-raised-button .mat-button-wrapper > *,
+.mat-stroked-button .mat-button-wrapper > * {
+  vertical-align: unset !important;
 }
 
+i.splitter {
+  margin-left: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  margin-right: -8px;
+  padding: 3px 0px 3px 7px;
+}
 
 
 /*
