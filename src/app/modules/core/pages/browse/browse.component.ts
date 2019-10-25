@@ -17,6 +17,7 @@ export class BrowseComponent implements OnDestroy {
     path$: BehaviorSubject<string> = new BehaviorSubject(null);
     allowBack$: BehaviorSubject<boolean> = new BehaviorSubject(false);
     baseUrl = '/browse';
+    apiUrl = '/api/browse';
 
     private destroy$: Subject<any> = new Subject();
 

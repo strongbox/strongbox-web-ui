@@ -47,22 +47,31 @@ export class DirectoryListingService {
     constructor(private http: HttpClient) {
     }
 
-    getStorageDirectoryListing(path: string = '', allowBack: boolean = false): Observable<any> {
-        return this.http
-            .get(`/api/browse/${path}`)
-            .pipe(
-                map((r: any) => plainToClass(PathContent, r) as any),
-                switchMap((records: PathContent) => {
-                    if (allowBack) {
-                        records.directories = [
-                            new PathRecord('..', 'back'),
-                            ...records.directories
-                        ];
-                    }
+    /**
+     * @param apiUrl - the base API url which will be used to retrieve the records (i.e. `/api/browse`; `/api/storages/etc`)
+     * @param path - the path which will be retrieved (i.e. `/`, `/somewhere`)
+     * @param allowBack
+     */
+    getDirectoryListing(apiUrl: string = '/api/browse', path: string = '', allowBack: boolean = false): Observable<any> {
+        if (path === null) {
+            path = '';
+        }
 
-                    return of(records);
-                })
-            );
+        return this.http
+                   .get(`${apiUrl}/${path}`)
+                   .pipe(
+                       map((r: any) => plainToClass(PathContent, r) as any),
+                       switchMap((records: PathContent) => {
+                           if (allowBack) {
+                               records.directories = [
+                                   new PathRecord('..', 'back'),
+                                   ...records.directories
+                               ];
+                           }
+
+                           return of(records);
+                       })
+                   );
 
     }
 }

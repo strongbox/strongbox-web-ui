@@ -1,6 +1,7 @@
 <app-page-container [loading]="loading$" [breadcrumbs]="breadcrumbs" class="noPadding">
     <app-directory-listing [path]="(path$ | async)"
                            [allowBack]="(allowBack$ | async)"
+                           [apiUrl]="this.apiUrl"
                            [baseUrl]="this.baseUrl"
                            [showActions]="false"></app-directory-listing>
 </app-page-container>
