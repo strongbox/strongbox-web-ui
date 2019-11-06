@@ -1,7 +1,7 @@
 @Library('jenkins-shared-libraries') _
 
 def ARTIFACT_ID = 'strongbox-web-ui'
-def SERVER_ID  = 'carlspring-oss-snapshots'
+def SERVER_ID = 'carlspring-oss-snapshots'
 def DEPLOY_SERVER_URL = 'https://repo.carlspring.org/content/repositories/carlspring-oss-snapshots/'
 def PR_SERVER_URL = 'https://repo.carlspring.org/content/repositories/carlspring-oss-pull-requests/'
 
@@ -11,12 +11,11 @@ def notifyBranch = [recipients: [brokenTestsSuspects(), requestor()], notifyByCh
 
 pipeline {
     agent {
-        node {
-            label 'ubuntu-jdk8-mvn-3.5-node-10-browsers'
-        }
+        label 'ubuntu-jdk8-mvn3.6-node12-browsers'
     }
     parameters {
         booleanParam(defaultValue: false, description: 'Force deploy?', name: 'FORCE_DEPLOY')
+        booleanParam(defaultValue: false, description: 'Clear .npm cache on node?', name: 'CLEAR_CACHE')
         booleanParam(defaultValue: true, description: 'Trigger strongbox? (has no effect on branches/prs)', name: 'TRIGGER_STRONGBOX')
         booleanParam(defaultValue: true, description: 'Send email notification?', name: 'NOTIFY_EMAIL')
     }
@@ -24,38 +23,43 @@ pipeline {
         timeout(time: 2, unit: 'HOURS')
         disableConcurrentBuilds()
     }
+    environment {
+        // Necessary for NPM to avoid being asked questions.
+        CI="true"
+    }
     stages {
-        stage('Node')
-        {
+        stage('Node') {
             steps {
                 container("node") {
                     nodeInfo("npm yarn node mvn")
                 }
             }
         }
-        stage('Install dependencies')
-        {
+        stage('Install dependencies') {
             steps {
                 script {
                     container("node") {
                         def npmCachePath = workspace().getNPMCachePath()
-                        sh "npm config set cache ${npmCachePath}"
-                        sh "npm install"
-                        sh "npm ls --depth=0 || echo ''"
+
+                        if(params.CLEAR_CACHE) {
+                            sh label: "Clearing ${npmCachePath}", script: "rm -rf ${npmCachePath}/*"
+                        }
+
+                        sh label: "Set NPM cache directory", script: "npm config set cache ${npmCachePath}"
+                        sh label: "Install dependencies", script: "npm install"
+                        sh label: "List installed packages", script: "npm ls --depth=0 || echo ''"
                     }
                 }
             }
         }
-        stage('Build')
-        {
+        stage('Build') {
             steps {
                 container("node") {
                     sh "npm run ci-build"
                 }
             }
         }
-        stage('Tests')
-        {
+        stage('Tests') {
             parallel {
                 stage('ci-test') {
                     steps {
@@ -165,13 +169,13 @@ pipeline {
 
                 if((params.TRIGGER_STRONGBOX && isSuccessful) || params.FORCE_DEPLOY) {
                     if(BRANCH_NAME == "master") {
-                        build job: '/strongbox/builds/strongbox/master', 
+                        build job: '/strongbox/builds/strongbox/master',
                               wait: false,
                               parameters: [
-                                  string(name: 'INTEGRATION_TESTS_BRANCH', value: 'master'), 
-                                  booleanParam(name: 'RUN_ONLY_SMOKE', value: false), 
-                                  booleanParam(name: 'SKIP_TESTS', value: false), 
-                                  booleanParam(name: 'DEPLOY', value: true), 
+                                  string(name: 'INTEGRATION_TESTS_BRANCH', value: 'master'),
+                                  booleanParam(name: 'RUN_ONLY_SMOKE', value: false),
+                                  booleanParam(name: 'SKIP_TESTS', value: false),
+                                  booleanParam(name: 'DEPLOY', value: true),
                                   booleanParam(name: 'NOTIFY_EMAIL', value: true)
                               ]
                     }
