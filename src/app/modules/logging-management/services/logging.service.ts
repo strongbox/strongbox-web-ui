@@ -5,7 +5,6 @@ import {plainToClass} from 'class-transformer';
 import {concatMap, delay, map} from 'rxjs/operators';
 
 import {Logger, LoggersResponse} from '../logging.model';
-import {Repository} from '../../storage-management/repository.model';
 
 @Injectable({
     providedIn: 'root'
@@ -45,13 +44,6 @@ export class LoggingService {
                 delay(250),
                 concatMap(() => logger.configuredLevel ? of(logger) : this.getLogger(logger.package))
             );
-    }
-
-    // TODO implement me
-    downloadLog(path: string): Observable<Repository> {
-        return this.http
-            .get(`/api/monitoring/loggers`)
-            .pipe(map((r: any) => plainToClass(Repository, r) as any));
     }
 
 }

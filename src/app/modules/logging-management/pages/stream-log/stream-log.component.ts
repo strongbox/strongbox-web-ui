@@ -190,6 +190,10 @@ export class StreamLogComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    downloadServerLog(): void {
+        window.location.href = `${this.baseUrl}/api/logging/download/strongbox.log`;
+    }
+
     downloadBrowserLog(): void {
         const now = Math.floor(Date.now() / 1000);
 

@@ -1,6 +1,6 @@
 import {BehaviorSubject, Subject} from 'rxjs';
 import {auditTime, bufferTime, filter, finalize, takeUntil, tap} from 'rxjs/operators';
-import {EventEmitter, Injectable, Output} from '@angular/core';
+import {EventEmitter, Output} from '@angular/core';
 
 import {environment} from '../../../../../environments/environment';
 import fromEventSource, {ConnectionState, EventSourceMessage} from '../../../core/rxjs/fromEventSource';
