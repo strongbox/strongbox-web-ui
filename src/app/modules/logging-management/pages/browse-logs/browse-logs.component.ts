@@ -1,25 +1,25 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Subject} from 'rxjs';
+import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 import {ActivatedRoute, NavigationEnd, Router, RouterEvent} from '@angular/router';
 import {filter, takeUntil} from 'rxjs/operators';
 
-import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
-
 @Component({
-    selector: 'app-browse',
-    templateUrl: './browse.component.html',
-    styleUrls: ['./browse.component.scss']
+    selector: 'app-browse-logs',
+    templateUrl: './browse-logs.component.html',
+    styleUrls: ['./browse-logs.component.scss']
 })
-export class BrowseComponent implements OnDestroy {
+export class BrowseLogsComponent implements OnInit, OnDestroy {
 
     breadcrumbs: Breadcrumb[] = [];
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
     path$: BehaviorSubject<string> = new BehaviorSubject(null);
     allowBack$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-    baseUrl = '/browse';
-    apiUrl = '/api/browse';
+    baseUrl = '/admin/logging/browse';
+    apiUrl = '/api/logging/browse';
 
-    private destroy$: Subject<any> = new Subject();
+    private destroy$ = new Subject();
 
     constructor(private route: ActivatedRoute, private router: Router) {
         this.router
@@ -41,8 +41,13 @@ export class BrowseComponent implements OnDestroy {
 
                 this.breadcrumbs = [];
                 this.breadcrumbs.push({
-                    url: this.baseUrl,
-                    label: 'Browse',
+                    url: '/admin/logging',
+                    label: 'Logging',
+                    active: false
+                });
+                this.breadcrumbs.push({
+                    url: '/admin/logging/browse',
+                    label: 'Browse logs',
                     active: fullPathArray.length === 0
                 });
 
@@ -56,6 +61,10 @@ export class BrowseComponent implements OnDestroy {
 
                 this.path$.next(path);
             });
+    }
+
+    ngOnInit() {
+        // this.http.get('/api/monitoring/logs/browse').subscribe((result) => console.log(result));
     }
 
     ngOnDestroy(): void {

@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {MatDialog, MatDialogRef, MatTableDataSource} from '@angular/material';
-import {takeUntil, takeWhile} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {Navigate} from '@ngxs/router-plugin';
 import {Store} from '@ngxs/store';
 import {HttpClient} from '@angular/common/http';
@@ -28,6 +28,9 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
     }
 
     @Input()
+    apiUrl;
+
+    @Input()
     baseUrl;
 
     @Input()
@@ -46,8 +49,6 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
 
     private destroy$: Subject<any> = new Subject();
 
-    private cached: Set<PathRecord> = new Set<PathRecord>();
-
     constructor(private cdr: ChangeDetectorRef,
                 private dialog: MatDialog,
                 private http: HttpClient,
@@ -59,18 +60,10 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
         let path = this.path !== '/' ? this.path.split('/') : [];
 
         if (pathRecord.type === 'file') {
-            this.http
-                .get(pathRecord.url, {responseType: 'arraybuffer'})
-                .pipe(takeWhile(() => !this.cached.has(pathRecord)))
-                .subscribe((buffer) => {
-                    if (pathRecord.name.match(/md5|sha1$/i)) {
-                        pathRecord.description = String.fromCharCode.apply(null, new Uint8Array(buffer));
-                        this.cached.add(pathRecord);
-                        this.cdr.detectChanges();
-                    } else {
-                        this.downloadFile(pathRecord, buffer);
-                    }
-                });
+            // TODO: This needs to stop downloading the file and handle the file's URL to the browser
+            //       The issue here is that the download link is actually streaming the file instead of
+            //       forcing the browser to download it.
+            this.downloadFile(pathRecord);
             return;
         }
 
@@ -87,19 +80,29 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
         this.store.dispatch(new Navigate(pathname.split('/')));
     }
 
-    downloadFile(pathRecord: PathRecord, data): void {
-        const blob: Blob = new Blob([data], {type: 'application/octet-stream'});
-        const fileName = pathRecord.name;
-        const objectUrl: string = URL.createObjectURL(blob);
-        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+    downloadFile(pathRecord: PathRecord): void {
 
-        a.href = objectUrl;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
+        this.http
+            .get(pathRecord.url, {responseType: 'arraybuffer'})
+            .subscribe((buffer: ArrayBuffer) => {
+                if (pathRecord.name.match(/md5|sha1$/i)) {
+                    pathRecord.description = String.fromCharCode.apply(null, new Uint8Array(buffer));
+                    this.cdr.detectChanges();
+                } else {
+                    const blob: Blob = new Blob([buffer], {type: 'application/octet-stream'});
+                    const fileName = pathRecord.name;
+                    const objectUrl: string = URL.createObjectURL(blob);
+                    const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
 
-        document.body.removeChild(a);
-        URL.revokeObjectURL(objectUrl);
+                    a.href = objectUrl;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(objectUrl);
+                }
+            });
     }
 
     confirmDelete(pathRecord: PathRecord) {
@@ -121,6 +124,12 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
             });
     }
 
+
+    sortPathRecord(a: PathRecord, b: PathRecord
+    ) {
+        return a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase());
+    }
+
     ngOnInit() {
         this.fullPath$
             .pipe(takeUntil(this.destroy$))
@@ -135,16 +144,15 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
                 this.emitPathChange.emit(fullPath);
 
                 this.service
-                    .getStorageDirectoryListing(fullPath ? fullPath : '', this.allowBack)
+                    .getDirectoryListing(this.apiUrl, fullPath ? fullPath : '', this.allowBack)
                     .subscribe((pathContent: PathContent) => {
                         this.pathContent = pathContent;
                         this.directoryListing.data = [
-                            ...pathContent.directories.sort((a, b) => a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase())),
-                            ...pathContent.files.sort((a, b) => a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase()))
+                            ...pathContent.directories.sort((a, b) => this.sortPathRecord(a, b)),
+                            ...pathContent.files.sort((a, b) => this.sortPathRecord(a, b))
                         ];
                     });
             });
-
     }
 
     ngOnDestroy(): void {

@@ -1,0 +1,37 @@
+<div class="searchInput inputFullWidth">
+    <mat-form-field floatLabel="never" appearance="standard">
+        <input type="text"
+               placeholder="Filter incoming messages (regex supported)"
+               aria-label="string"
+               matInput
+               [formControl]="formControl"
+               [matAutocomplete]="autocomplete"
+        >
+        <mat-autocomplete [autoActiveFirstOption]="false" #autocomplete>
+            <div class="mat-optgroup-label">
+                <a [class.active]="showFilters"
+                   [class.disabled]="!showFilters"
+                   (click)="showFilters=true; $event.preventDefault();">Recent ({{filters.length}})</a> |
+                <a [class.active]="!showFilters"
+                   (click)="showFilters=false; $event.preventDefault();">Examples</a>
+            </div>
+            <ng-container *ngIf="showFilters">
+                <mat-option *ngFor="let term of filters" [value]="term">
+                    {{ term }}
+                    <button type="button"
+                            mat-button
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Clear"
+                            (click)="deleteHistory($event, term)">
+                        <i class="icon ion-md-trash"></i>
+                    </button>
+                </mat-option>
+            </ng-container>
+            <ng-container *ngIf="!showFilters">
+                <mat-option *ngFor="let term of exampleFilters" [value]="term"
+                            (onSelectionChange)="updateHistory(term)">{{term}}</mat-option>
+            </ng-container>
+        </mat-autocomplete>
+    </mat-form-field>
+</div>

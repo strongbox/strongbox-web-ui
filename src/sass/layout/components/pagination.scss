@@ -1,0 +1,15 @@
+@import "../../variables";
+
+mat-paginator.compact {
+  background: $table-header-row-color !important;
+
+  .mat-paginator-container {
+    height: 46px;
+    min-height: unset !important;
+    flex-wrap: initial !important;
+  }
+
+  .mat-paginator-page-size {
+    align-items: center;
+  }
+}

@@ -61,6 +61,11 @@ export class ApiFormError implements ValidationErrors {
     messages: string[] = [];
 }
 
+export enum GenericMessages {
+    SAVE_SUCCESSFUL = 'Changes have been successfully saved!',
+    SAVE_FAILED     = 'Failed to save changes!'
+}
+
 export function handleFormError(error: ApiResponse, form: AbstractControl, loading: Subject<any> = null, notify: ToastrService = null) {
     if (!(error instanceof ApiResponse)) {
         return throwError(error);

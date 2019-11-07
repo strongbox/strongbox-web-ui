@@ -1,0 +1,18 @@
+mat-form-field {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.mat-table-sticky {
+  top: 60px !important;
+  min-width: 100px;
+  box-sizing: border-box;
+}
+
+.no-records {
+  padding: 30px 24px 44px 24px;
+}
+
+td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:first-of-type {
+  width: 70%;
+}

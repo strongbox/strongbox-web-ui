@@ -16,30 +16,35 @@
 .mat-raised-button.mat-warn:not([disabled]),
 .mat-fab.mat-warn:not([disabled]),
 .mat-mini-fab.mat-warn:not([disabled]) {
-  background: linear-gradient(to bottom, $btn-warn-gradient-0 0%, $btn-warn-gradient-1 100%);
+  //background: linear-gradient(to bottom, $btn-warn-gradient-0 0%, $btn-warn-gradient-1 100%);
   /// linear-gradient(to bottom, #f44336 0%, #f44336 100%)
+  background: linear-gradient(to bottom, hsla(351, 95%, 58%, 1) 0%, hsla(349, 75%, 37%, 1) 100%);
 }
 
 .mat-flat-button.mat-warn:not([disabled]):hover,
 .mat-raised-button.mat-warn:not([disabled]):hover,
 .mat-fab.mat-warn:not([disabled]):hover,
 .mat-mini-fab.mat-warn:not([disabled]):hover {
-  background: linear-gradient(to bottom, lighten($btn-warn-gradient-0, 2%) 0%, lighten($btn-warn-gradient-1, 5%) 100%);
+  background: linear-gradient(to bottom, hsla(351, 95%, 62%, 1) 0%, hsla(349, 75%, 42%, 1) 100%);
 }
-
-i.splitter {
-  margin-left: 5px;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  margin-right: -8px;
-  line-height: 30px;
-  padding: 3px 0px 2px 7px;
-  margin-top: -3px;
-}
-
-
 
 /*
-.mat-flat-button.mat-warn, .mat-raised-button.mat-warn, .mat-fab.mat-warn, .mat-mini-fab.mat-warn
+TODO: This messes up the pagination. Figure out another way to solve the button alignment. Maybe a custom class?
+.mat-button .mat-button-wrapper > *,
+.mat-fab .mat-button-wrapper > *,
+.mat-flat-button .mat-button-wrapper > *,
+.mat-icon-button .mat-button-wrapper > *,
+.mat-mini-fab .mat-button-wrapper > *,
+.mat-raised-button .mat-button-wrapper > *,
+.mat-stroked-button .mat-button-wrapper > * {
+  vertical-align: unset !important;
+}
+*/
 
+i.splitter {
+  margin-left: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  margin-right: -8px;
+  padding: 3px 0px 3px 7px;
+}
 
-.mat-flat-button.mat-warn, .mat-raised-button.mat-warn, .mat-fab.mat-warn, .mat-mini-fab.mat-warn {*/

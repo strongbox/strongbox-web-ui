@@ -1,0 +1,124 @@
+<app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding">
+
+    <div page-actions>
+        <button mat-raised-button color="primary" [routerLink]="'/admin/logging/stream'" [disabled]="(loading$ | async) || (saving$ | async)">
+            Stream log
+        </button>
+
+        <button mat-raised-button color="primary" [routerLink]="'/admin/logging/browse'" [disabled]="(loading$ | async) || (saving$ | async)">
+            Browse logs
+        </button>
+    </div>
+
+    <mat-form-field floatLabel="never" appearance="standard">
+        <input matInput
+               placeholder="Filter loggers"
+               autocomplete="off"
+               (keyup)="applyFilter($event.target.value)">
+    </mat-form-field>
+
+    <table [dataSource]="dataSource" [formGroup]="selectedLoggerForm" mat-table matSort multiTemplateDataRows>
+
+        <ng-container matColumnDef="package">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Package</th>
+            <td *matCellDef="let logger; let index" mat-cell>
+                <ng-container [ngSwitch]="hasActiveForm(logger) && !(saving$ | async)">
+                    <ng-container *ngSwitchCase="true">
+                        <mat-form-field>
+                            <input matInput formControlName="package">
+                        </mat-form-field>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>{{ logger.package }}</ng-container>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="configuredLevel">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Configured Level</th>
+            <td *matCellDef="let logger; let index" mat-cell>
+                <ng-container [ngSwitch]="hasActiveForm(logger) && !(saving$ | async)">
+                    <ng-container *ngSwitchCase="true">
+                        <mat-form-field>
+                            <mat-select formControlName="configuredLevel" [disableOptionCentering]="true">
+                                <mat-option *ngIf="!isRootPackage(logger)" value="">Unset</mat-option>
+                                <mat-option *ngFor="let level of levels" [value]="level">{{ level | uppercase }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>{{ logger.configuredLevel }}</ng-container>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="effectiveLevel">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Effective Level</th>
+            <td *matCellDef="let logger" mat-cell>{{ logger.effectiveLevel }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th class="actions" mat-header-cell *matHeaderCellDef>Actions</th>
+            <td class="actions text-center" mat-cell *matCellDef="let logger; let index">
+
+                <ng-container *ngIf="hasActiveForm(logger) && (saving$ | async)">
+                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                </ng-container>
+
+                <ul>
+                    <ng-container *ngIf="!hasActiveForm(logger); then rowActions else formActions"></ng-container>
+
+                    <ng-template #rowActions>
+                        <li>
+                            <a (click)="generateForm(logger)" title="Configure logger level">
+                                <i class="icon ion-md-create"></i>
+                            </a>
+                        </li>
+                        <!-- Root package does not accept this operation. -->
+                        <li>
+                            <a (click)="clearLogLevel(logger)" title="Unset configured level">
+                                <i class="icon ion-md-refresh" [class.disabled]="isRootPackage(logger)"></i>
+                            </a>
+                        </li>
+                    </ng-template>
+
+                    <ng-template #formActions>
+                        <li [hidden]="(saving$ | async)">
+                            <ng-container *ngIf="selectedLoggerForm.valid; then saveButtonTemplate else saveDisabledButtonTemplate"></ng-container>
+                            <ng-template #saveButtonTemplate>
+                                <a (click)="saveLogger()" title="Save changes">
+                                    <i class="icon ion-md-save"></i>
+                                </a>
+                            </ng-template>
+                            <ng-template #saveDisabledButtonTemplate>
+                                <i class="icon ion-md-save disabled"></i>
+                            </ng-template>
+                        </li>
+                        <li [hidden]="(saving$ | async)">
+                            <a (click)="removeForm(true)" title="Cancel">
+                                <i class="icon ion-md-remove-circle-outline"></i>
+                            </a>
+                        </li>
+                    </ng-template>
+                </ul>
+
+            </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns; sticky: true;" mat-header-row></tr>
+
+        <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+    </table>
+
+    <mat-paginator [length]="100"
+                   [pageSize]="25"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   showFirstLastButtons
+                   class="compact"
+                   [class.hidden]="dataSource.filteredData.length === 0"></mat-paginator>
+
+    <div *ngIf="dataSource.filteredData.length === 0 && selectedLogger == null" class="no-records">
+        <div fxLayout="column">
+            <span>No results matching were found.</span>
+        </div>
+    </div>
+
+</app-page-container>

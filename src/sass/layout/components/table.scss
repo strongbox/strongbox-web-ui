@@ -3,7 +3,7 @@
 .mat-table-container {
   border-radius: 5px;
   overflow: hidden;
-  border: 1px solid $table-row-color;
+  border: 1px solid $table-header-row-color;
 }
 
 // remove the border from the last row in the table.
@@ -21,7 +21,7 @@
   background: none;
 
   thead .mat-header-row {
-    background: $table-row-color;
+    background: $table-header-row-color;
   }
 
   thead .mat-header-row.blue-bottom-border {
@@ -65,7 +65,7 @@
     }
   }
 
-  .mat-cell, .mat-header-cell {
+  .mat-cell, .mat-header-cell, .mat-footer-cell {
     padding: 10px 10px 10px 24px;
   }
 
@@ -79,6 +79,11 @@
     text-align: center;
 
     $icon-size: 30px;
+
+    i.disabled {
+      color: rgba(109, 109, 109, 0.6);
+    }
+
 
     .mat-icon-button {
       width: $icon-size;
@@ -118,7 +123,7 @@
       justify-content: center;
       width: 100%;
 
-      li {
+      li:not([hidden]) {
         display: block;
         flex: 0 1 auto; /* Default */
         margin-right: 15px;
@@ -126,5 +131,26 @@
       }
     }
 
+  }
+
+  // form input element styles
+  .mat-form-field {
+    display: inline-block;
+    padding: 0;
+    width: 100%;
+    margin-top: -10px;
+    margin-bottom: -15px;
+  }
+
+  .mat-form-field-infix {
+    padding: 0.2em 0;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    margin-top: 0px;
+  }
+
+  .mat-progress-bar {
+    width: 90%;
   }
 }

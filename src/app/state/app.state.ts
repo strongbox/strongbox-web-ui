@@ -18,7 +18,7 @@ import {
 } from './app.actions';
 import {LoginDialogComponent} from '../modules/core/dialogs/login/login.dialog.component';
 import {AppStateModel, defaultAppState, SideNavStateModel, ViewPortStateModel} from './app.state.interfaces';
-import {LogoutAction} from '../modules/core/auth/state/auth.actions';
+import {CheckCredentialsAction, LogoutAction} from '../modules/core/auth/state/auth.actions';
 import {BootProgressService} from '../modules/core/services/boot-progress.service';
 
 @State<AppStateModel>({
@@ -92,6 +92,9 @@ export class AppState implements NgxsOnInit {
             });
 
         this.bootProgress.start();
+
+        // Check the credentials at the very beginning of the lifecycle.
+        ctx.dispatch(new CheckCredentialsAction());
     }
 
     @Action(RouterNavigation)
