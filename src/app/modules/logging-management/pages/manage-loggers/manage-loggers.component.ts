@@ -1,10 +1,17 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    ViewChild
+} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatTable} from '@angular/material/table';
 import {MatDialogRef} from '@angular/material/dialog';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {delay, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 import {plainToClass} from 'class-transformer';
 
@@ -19,7 +26,7 @@ import {GenericMessages} from '../../../core/core.model';
     styleUrls: ['./manage-loggers.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ManageLoggersComponent implements OnInit, OnDestroy {
+export class ManageLoggersComponent implements AfterViewInit, OnDestroy {
 
     displayedColumns: string[] = ['package', 'configuredLevel', 'effectiveLevel', 'actions'];
 
@@ -37,13 +44,11 @@ export class ManageLoggersComponent implements OnInit, OnDestroy {
 
     dataSource: MatTableDataSource<Logger> = new MatTableDataSource();
 
-    @ViewChild(MatPaginator, {static: false}) set matPaginator(paginator: MatPaginator) {
-        this.dataSource.paginator = paginator;
-    }
+    @ViewChild(MatPaginator, {static: false})
+    paginator: MatPaginator;
 
-    @ViewChild(MatSort, {static: false}) set matSort(sort: MatSort) {
-        this.dataSource.sort = sort;
-    }
+    @ViewChild(MatSort, {static: true})
+    sort: MatSort;
 
     @ViewChild(MatTable, {static: true})
     table: MatTable<any>;
@@ -60,14 +65,19 @@ export class ManageLoggersComponent implements OnInit, OnDestroy {
                 private service: LoggingService) {
     }
 
-    ngOnInit() {
+    ngAfterViewInit() {
+        // Greatly improves the rendering time.
+        // Checkout https://stackoverflow.com/a/58742857/393805 and https://github.com/angular/components/issues/11953
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+
         this.service
             .getLoggers()
-            .pipe(takeUntil(this.destroy$), delay(400))
+            .pipe(takeUntil(this.destroy$))
             .subscribe((response: LoggersResponse) => {
                 this.levels = response.levels;
                 this.dataSource.data = response.loggers;
-                this.cdr.detectChanges();
+                // this.cdr.detectChanges();
                 this.loading$.next(false);
             });
     }
@@ -200,7 +210,6 @@ export class ManageLoggersComponent implements OnInit, OnDestroy {
     private renderRows() {
         this.table.renderRows();
         this.cdr.markForCheck();
-        this.cdr.detectChanges();
     }
 
     private updateTableRecords(logger: Logger) {

@@ -151,6 +151,10 @@ div.blue-border {
   padding: calc(#{$page-container-padding-top} * 2.5) calc(#{$page-container-padding-right} * 2.5) calc(#{$page-container-padding-bottom} * 2.5) calc(#{$page-container-padding-left} * 2.5);
 }
 
+.hidden {
+  display: none !important;
+}
+
 code {
   // background: rgba(0, 0, 0, 0.25); // this is
   background: darken($panel-background, 10); // hsl(211, 30%, 15%);

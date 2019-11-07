@@ -2,7 +2,7 @@
 
     <div page-actions>
         <button mat-raised-button color="primary" [routerLink]="'/admin/logging/stream'" [disabled]="(loading$ | async) || (saving$ | async)">
-            Log file
+            Stream log
         </button>
 
         <button mat-raised-button color="primary" [routerLink]="'/admin/logging/browse'" [disabled]="(loading$ | async) || (saving$ | async)">
@@ -113,7 +113,7 @@
                    [pageSizeOptions]="[5, 10, 25, 100]"
                    showFirstLastButtons
                    class="compact"
-                   *ngIf="dataSource.filteredData.length > 0"></mat-paginator>
+                   [class.hidden]="dataSource.filteredData.length === 0"></mat-paginator>
 
     <div *ngIf="dataSource.filteredData.length === 0 && selectedLogger == null" class="no-records">
         <div fxLayout="column">

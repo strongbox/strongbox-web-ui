@@ -28,6 +28,8 @@
   background: linear-gradient(to bottom, hsla(351, 95%, 62%, 1) 0%, hsla(349, 75%, 42%, 1) 100%);
 }
 
+/*
+TODO: This messes up the pagination. Figure out another way to solve the button alignment. Maybe a custom class?
 .mat-button .mat-button-wrapper > *,
 .mat-fab .mat-button-wrapper > *,
 .mat-flat-button .mat-button-wrapper > *,
@@ -37,6 +39,7 @@
 .mat-stroked-button .mat-button-wrapper > * {
   vertical-align: unset !important;
 }
+*/
 
 i.splitter {
   margin-left: 4px;
@@ -45,9 +48,3 @@ i.splitter {
   padding: 3px 0px 3px 7px;
 }
 
-
-/*
-.mat-flat-button.mat-warn, .mat-raised-button.mat-warn, .mat-fab.mat-warn, .mat-mini-fab.mat-warn
-
-
-.mat-flat-button.mat-warn, .mat-raised-button.mat-warn, .mat-fab.mat-warn, .mat-mini-fab.mat-warn {*/
