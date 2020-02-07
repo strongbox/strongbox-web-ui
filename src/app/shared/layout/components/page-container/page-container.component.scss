@@ -31,14 +31,14 @@
     }
 
     &.noBackground {
-      .mat-card {
+      > div > mat-card {
         background: transparent !important;
-        box-shadow: none;
+        box-shadow: none !important;
       }
     }
 
     &.noPadding {
-      .mat-card {
+      > div > mat-card {
         padding: 0px 0px 0px 0px;
       }
     }

@@ -1,0 +1,18 @@
+<app-page-container class="noBackground" [breadcrumbs]="breadcrumbs">
+    <div fxLayout="column" fxLayoutGap="3%" style="max-width: 800px; margin-left: -15px; margin-top: -15px;">
+
+        <a [routerLink]="link.route" *ngFor="let link of links">
+            <mat-card>
+                <div fxLayout="row" fxFlexFill>
+                    <div fxFlex="5" class="card-icon">
+                        <i class="icon" [ngClass]="link.icon"></i>
+                    </div>
+                    <div class="card-content">
+                        <mat-card-title>{{link.title}}</mat-card-title>
+                        <mat-card-content>{{link.content}}</mat-card-content>
+                    </div>
+                </div>
+            </mat-card>
+        </a>
+    </div>
+</app-page-container>

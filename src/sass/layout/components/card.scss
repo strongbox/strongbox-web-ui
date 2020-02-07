@@ -36,3 +36,12 @@
   background: #2384be;
   height: 1px;
 }
+
+mat-card.noBackground {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+mat-card.noPadding {
+  padding: 0px 0px 0px 0px;
+}
