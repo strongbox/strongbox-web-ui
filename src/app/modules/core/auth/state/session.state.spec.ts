@@ -6,7 +6,7 @@ import {Location} from '@angular/common';
 import {NgxsModule, Store} from '@ngxs/store';
 
 import {authenticationCookieName, defaultSessionState, SessionState} from './session.state';
-import {AuthenticatedUser, UserAuthority, UserCredentials} from '../auth.model';
+import {AuthenticatedUser, AuthenticationState, UserAuthority, UserCredentials} from '../auth.model';
 import {LoginAction, LogoutAction} from './auth.actions';
 import {AuthService} from '../auth.service';
 
@@ -14,29 +14,29 @@ describe('State: SessionState', () => {
 
     describe('selectors should work properly', () => {
         it('token() should return a proper value', () => {
-            expect(SessionState.token({user: null, token: '1234', state: 'guest'})).toBe('1234');
-            expect(SessionState.token({user: null, token: null, state: 'guest'})).toBe(null);
+            expect(SessionState.token({user: null, token: '1234', state: AuthenticationState.GUEST})).toBe('1234');
+            expect(SessionState.token({user: null, token: null, state: AuthenticationState.GUEST})).toBe(null);
         });
 
         it('user() should return the username', () => {
             const user = new AuthenticatedUser('some-user');
-            expect(SessionState.user({user: user, token: '1234', state: 'authenticated'})).toBe(user);
+            expect(SessionState.user({user: user, token: '1234', state: AuthenticationState.AUTHENTICATED})).toBe(user);
         });
 
         it('state() should return the authentication state', () => {
-            expect(SessionState.state({user: null, token: '1234', state: 'authenticated'})).toBe('authenticated');
+            expect(SessionState.state({user: null, token: '1234', state: AuthenticationState.AUTHENTICATED})).toBe('authenticated');
         });
 
         it('isAuthenticated() should return true', () => {
             expect(SessionState.isAuthenticated({
                 user: new AuthenticatedUser('some-user'),
                 token: '1234',
-                state: 'authenticated'
+                state: AuthenticationState.AUTHENTICATED
             })).toBe(true);
         });
 
         it('isAuthenticated() should return false', () => {
-            expect(SessionState.isAuthenticated({user: null, token: null, state: 'pending'})).toBe(false);
+            expect(SessionState.isAuthenticated({user: null, token: null, state: AuthenticationState.PENDING})).toBe(false);
         });
 
         it('hasAuthority() should return true', () => {
@@ -45,7 +45,7 @@ describe('State: SessionState', () => {
                 session: {
                     user: new AuthenticatedUser('authenticated-user', null, [new UserAuthority(userAuthority)]),
                     token: null,
-                    state: 'authenticated'
+                    state: AuthenticationState.AUTHENTICATED
                 }
             };
 
@@ -58,7 +58,7 @@ describe('State: SessionState', () => {
                 session: {
                     user: new AuthenticatedUser('authenticated-user', null, [new UserAuthority(userAuthority)]),
                     token: null,
-                    state: 'authenticated'
+                    state: AuthenticationState.AUTHENTICATED
                 }
             };
 

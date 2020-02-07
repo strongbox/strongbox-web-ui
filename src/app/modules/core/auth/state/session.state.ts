@@ -14,21 +14,21 @@ import {
     SetSessionStateModelAction,
     UnauthorizedAccessAction
 } from './auth.actions';
-import {AuthenticatedUser} from '../auth.model';
+import {AuthenticatedUser, AuthenticationState} from '../auth.model';
 import {AuthService} from '../auth.service';
 import {HideSideNavAction, OpenLoginDialogAction} from '../../../../state/app.actions';
 
 export interface SessionStateModel {
     user: AuthenticatedUser | null;
     token: string | null;
-    state: 'authenticated' | 'guest' | 'invalid.credentials' | 'error' | 'pending';
+    state: AuthenticationState;
     response?: HttpErrorResponse | string | any;
 }
 
 export const defaultSessionState: SessionStateModel = {
     user: null,
     token: null,
-    state: 'guest'
+    state: AuthenticationState.GUEST
 };
 
 function initialSessionState() {
@@ -55,7 +55,7 @@ function updateBrowserSession(state: SessionStateModel) {
     let sessionState = JSON.stringify(defaultSessionState);
     let cookieState = `${authenticationCookieName}=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
 
-    if (state !== null && state.state === 'authenticated') {
+    if (state !== null && state.state === AuthenticationState.AUTHENTICATED) {
         sessionState = JSON.stringify(state);
         cookieState = `${authenticationCookieName}=${state.token}; path=/`;
     }
@@ -89,7 +89,7 @@ export class SessionState {
 
     @Selector()
     static isAuthenticated(session: SessionStateModel) {
-        return session.user !== null && session.token !== null && session.state === 'authenticated';
+        return session.user !== null && session.token !== null && session.state === AuthenticationState.AUTHENTICATED;
     }
 
     @Selector()
@@ -142,7 +142,7 @@ export class SessionState {
 
     @Action(LoginAction)
     login(ctx: StateContext<SessionStateModel>, {payload}: LoginAction) {
-        ctx.patchState({state: 'pending'});
+        ctx.patchState({state: AuthenticationState.PENDING});
 
         return this.auth
                    .login(payload)
@@ -182,7 +182,7 @@ export class SessionState {
 
     @Action(InvalidCredentialsAction)
     invalidCredentialsSessionState(ctx: StateContext<SessionStateModel>) {
-        ctx.patchState({state: 'invalid.credentials'});
+        ctx.patchState({state: AuthenticationState.INVALID_CREDENTIALS});
     }
 
 }

@@ -3,11 +3,11 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, map, share} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {Store} from '@ngxs/store';
+import {plainToClass} from 'class-transformer';
 
-import {AuthenticatedUser, UserCredentials} from './auth.model';
+import {AuthenticatedUser, AuthenticationState, UserCredentials} from './auth.model';
 import {SessionStateModel} from './state/session.state';
 import {LogoutAction} from './state/auth.actions';
-import {plainToClass} from 'class-transformer';
 
 @Injectable({
     providedIn: 'root'
@@ -44,13 +44,16 @@ export class AuthService {
                         return {
                             user: user,
                             token: user.token,
-                            state: 'authenticated'
+                            state: AuthenticationState.AUTHENTICATED
                         };
                     } else {
                         return {
                             user: null,
                             token: null,
-                            state: (response instanceof HttpErrorResponse && response.status === 401 ? 'invalid.credentials' : 'error'),
+                            state: (
+                                response instanceof HttpErrorResponse && response.status === 401 ?
+                                AuthenticationState.INVALID_CREDENTIALS : AuthenticationState.ERROR
+                            ),
                             response: response
                         };
                     }
@@ -59,12 +62,12 @@ export class AuthService {
                     let session: SessionStateModel = {
                         user: null,
                         token: null,
-                        state: 'error',
+                        state: AuthenticationState.ERROR,
                         response: response
                     };
 
                     if (response instanceof HttpErrorResponse) {
-                        session.state = 'invalid.credentials';
+                        session.state = AuthenticationState.INVALID_CREDENTIALS;
                     }
 
                     return of(session);
