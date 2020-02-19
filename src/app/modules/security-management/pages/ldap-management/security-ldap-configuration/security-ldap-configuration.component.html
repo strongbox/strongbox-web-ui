@@ -1,18 +1,12 @@
 <app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding noBackground">
 
-    <div page-actions>
-        <button mat-raised-button color="warn" type="button" (click)="false" [disabled]="true">
-            Enable/Disable
-        </button>
-    </div>
-
     <form fxLayout="column"
           class="inputFullWidth"
           [formGroup]="ldapConnectionForm"
           (submit)="save()">
 
         <mat-accordion>
-            <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     Connection
                 </mat-expansion-panel-header>
@@ -30,7 +24,6 @@
                     </mat-form-field>
                 </div>
                 <div fxLayout="row" fxLayoutGap="30px">
-
                     <mat-form-field>
                         <input matInput
                                placeholder="Manager DN"
@@ -70,7 +63,7 @@
                                placeholder="Group search filter"
                                formControlName="groupSearchFilter"
                                autocomplete="off">
-                        <mat-hint>Example: <code>(uid={{'{'}}0{{'}'}})</code></mat-hint>
+                        <mat-hint>Example: <code>(ou={{'{'}}0{{'}'}})</code>, <code>(cn={{'{'}}{{'}'}})</code></mat-hint>
                         <mat-error>
                             <form-field-errors formControlName="groupSearchFilter"></form-field-errors>
                         </mat-error>
@@ -86,6 +79,11 @@
                             <form-field-errors formControlName="groupRoleAttribute"></form-field-errors>
                         </mat-error>
                     </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutGap="30px">
+                    <mat-checkbox formControlName="enableProvider" color="primary">
+                        Enable LDAP Authentication Provider
+                    </mat-checkbox>
                 </div>
             </mat-expansion-panel>
 
@@ -110,13 +108,18 @@
 
             </mat-expansion-panel>
 
-            <mat-expansion-panel>
+            <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header>
                     Role Mapping
                 </mat-expansion-panel-header>
                 <mat-hint>
-                    Map LDAP roles to existing Strongbox roles so that users have proper authority/access.
+                    Please make sure to add an LDAP role which maps to the <code>ADMIN</code> Strongbox role or you will get locked.
                 </mat-hint>
+
+                <mat-form-field class="no-form-field-underline">
+                    <app-security-ldap-role-mapping-form-field formControlName="roleMappingList">
+                    </app-security-ldap-role-mapping-form-field>
+                </mat-form-field>
             </mat-expansion-panel>
         </mat-accordion>
 
@@ -125,6 +128,7 @@
                 Back
             </button>
 
+            <!-- TODO: This part needs more attention in the backend. -->
             <button mat-button
                     type="button"
                     color="primary"

@@ -1,0 +1,43 @@
+<button mat-raised-button color="primary" type="button" (click)="addItem()" xmlns="http://www.w3.org/1999/html">Add</button>
+
+<div [formGroup]="form" fxLayout="column" fxLayoutGap="20px" style="padding-top: 20px;">
+    <ng-container formArrayName="roleMappingList" *ngFor="let record of getFormControls(); let index = index">
+        <div [formGroup]="record" fxLayout="row" fxLayoutGap="2%" class="role-mapping-item"
+             (input)="emitFormValidity()"
+        >
+            <div fxFlex="50%">
+                <ng-select [items]="strongboxRoles"
+                           [loading]="strongboxRoleSearchLoading"
+                           bindLabel="name"
+                           bindValue="name"
+                           placeholder="Strongbox Role"
+                           required="required"
+                           formControlName="strongboxRole"
+                           appendTo="body"
+                           class="ng-select-with-details"
+                           [clearable]="false"
+                           [markFirst]="true"
+                           (ngModelChange)="emitFormValidity()"
+                >
+                    <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                        <div><span [ngOptionHighlight]="search">{{item.name}}</span></div>
+                        <small>{{item.description}}</small>
+                    </ng-template>
+                </ng-select>
+            </div>
+            <div fxFlex="50%">
+                <mat-form-field>
+                    <input matInput
+                           placeholder="LDAP Role"
+                           formControlName="externalRole"
+                           required="required"
+                           autocomplete="off"
+                    >
+                </mat-form-field>
+            </div>
+            <div>
+                <a (click)="deleteItem(index)" style="margin-top: 20px;"><i class="ionicons ion-md-trash"></i></a>
+            </div>
+        </div>
+    </ng-container>
+</div>

@@ -8,6 +8,8 @@ import {SecurityLdapConfigurationComponent} from './security-ldap-configuration.
 import {MaterialModule} from '../../../../../shared/material.module';
 import {LayoutModule} from '../../../../../shared/layout/layout.module';
 import {FormHelperModule} from '../../../../../shared/form/form-helper.module';
+import {SecurityLdapRoleMappingFormFieldComponent} from './components/security-ldap-role-mapping-form-field/security-ldap-role-mapping-form-field.component';
+import {ToastrModule} from 'ngx-toastr';
 
 describe('SecurityLdapConfigurationComponent', () => {
     let component: SecurityLdapConfigurationComponent;
@@ -15,10 +17,11 @@ describe('SecurityLdapConfigurationComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [SecurityLdapConfigurationComponent],
+            declarations: [SecurityLdapConfigurationComponent, SecurityLdapRoleMappingFormFieldComponent],
             imports: [
                 NoopAnimationsModule,
                 HttpClientTestingModule,
+                ToastrModule.forRoot(),
                 RouterTestingModule,
                 MaterialModule,
                 LayoutModule,

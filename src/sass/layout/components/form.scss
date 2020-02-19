@@ -42,3 +42,9 @@ form {
 .mat-form-field-infix {
   line-height: 19px !important;
 }
+
+.no-form-field-underline {
+  > .mat-form-field-wrapper > .mat-form-field-underline {
+    background-color: transparent !important;
+  }
+}

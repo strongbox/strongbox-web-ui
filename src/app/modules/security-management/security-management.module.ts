@@ -7,11 +7,13 @@ import {MaterialModule} from '../../shared/material.module';
 import {LayoutModule} from '../../shared/layout/layout.module';
 import {FormHelperModule} from '../../shared/form/form-helper.module';
 import {SecurityLdapConfigurationComponent} from './pages/ldap-management/security-ldap-configuration/security-ldap-configuration.component';
+import {SecurityLdapRoleMappingFormFieldComponent} from './pages/ldap-management/security-ldap-configuration/components/security-ldap-role-mapping-form-field/security-ldap-role-mapping-form-field.component';
 
 @NgModule({
     declarations: [
         SecurityManagementIndexComponent,
-        SecurityLdapConfigurationComponent
+        SecurityLdapConfigurationComponent,
+        SecurityLdapRoleMappingFormFieldComponent
     ],
     imports: [
         CommonModule,

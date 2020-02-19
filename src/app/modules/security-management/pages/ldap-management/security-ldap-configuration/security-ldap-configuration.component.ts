@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {BehaviorSubject} from 'rxjs';
+import {finalize} from 'rxjs/operators';
 
 import {Breadcrumb} from '../../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 import {LdapConfigurationService} from '../../../services/ldap-configuration.service';
-import {finalize} from 'rxjs/operators';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
     selector: 'app-security-ldap-configuration',
@@ -30,9 +31,11 @@ export class SecurityLdapConfigurationComponent implements OnInit {
         groupSearchFilter: new FormControl(),
         groupRoleAttribute: new FormControl(),
         userDnPatternList: new FormControl([]),
+        enableProvider: new FormControl(),
+        roleMappingList: new FormControl()
     });
 
-    constructor(private service: LdapConfigurationService) {
+    constructor(private service: LdapConfigurationService, private notify: ToastrService) {
     }
 
     ngOnInit() {
@@ -42,7 +45,6 @@ export class SecurityLdapConfigurationComponent implements OnInit {
             this.ldapConnectionForm.patchValue(result);
             this.ldapConnectionForm.get('groupRoleAttribute').patchValue(result.authorities.groupRoleAttribute);
 
-            console.log(result, this.ldapConnectionForm);
             this.loading$.next(false);
         });
     }
@@ -55,7 +57,7 @@ export class SecurityLdapConfigurationComponent implements OnInit {
                 finalize(() => this.loading$.next(false)),
             )
             .subscribe((result: any) => {
-                console.log('save result: ', result);
+                this.notify.success('Settings successfully saved!');
             });
     }
 
