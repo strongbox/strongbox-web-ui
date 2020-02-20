@@ -1,0 +1,175 @@
+<app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding noBackground">
+
+    <form fxLayout="column"
+          class="inputFullWidth"
+          [formGroup]="ldapConnectionForm"
+          (submit)="save()">
+
+        <mat-accordion>
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    Connection
+                </mat-expansion-panel-header>
+
+                <div fxLayout="column" fxLayoutGap="10px">
+                    <mat-form-field>
+                        <input matInput
+                               placeholder="URL"
+                               formControlName="url"
+                               autocomplete="off">
+                        <mat-hint>Example: <code>ldap://1.2.3.4/dc=domain,dc=com</code></mat-hint>
+                        <mat-error>
+                            <form-field-errors formControlName="url"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutGap="30px">
+                    <mat-form-field>
+                        <input matInput
+                               placeholder="Manager DN"
+                               formControlName="managerDn"
+                               autocomplete="off">
+                        <mat-hint>Example: <code>cn=manager,ou=users,dc=domain,dc=com</code>(<span class="status-red">including the domain!</span>)</mat-hint>
+                        <mat-error>
+                            <form-field-errors formControlName="managerDn"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                               type="password"
+                               placeholder="Manager Password"
+                               formControlName="managerPassword"
+                               autocomplete="off">
+                        <mat-error>
+                            <form-field-errors formControlName="managerPassword"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutGap="30px">
+                    <mat-checkbox formControlName="enableProvider" color="primary">
+                        Enable LDAP Authentication Provider
+                    </mat-checkbox>
+                </div>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    User Mapping
+                    <!-- DN Search Patterns -->
+                </mat-expansion-panel-header>
+
+                <div fxLayout="row" fxLayoutGap="30px">
+                    <mat-form-field>
+                        <input matInput
+                               placeholder="User search base"
+                               formControlName="userSearchBase"
+                               autocomplete="off">
+                        <mat-hint>Example: <code>ou=Users</code></mat-hint>
+                        <mat-error>
+                            <form-field-errors formControlName="userSearchBase"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                               placeholder="User search filter"
+                               formControlName="userSearchFilter"
+                               autocomplete="off">
+                        <mat-hint>Example: <code>(uid={{'{'}}0{{'}'}})</code></mat-hint>
+                        <mat-error>
+                            <form-field-errors formControlName="userSearchFilter"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <ng-select placeholder=""
+                           formControlName="userDnPatternList"
+                           clearable="true"
+                           [addTag]="true"
+                           [multiple]="true"
+                           [selectOnTab]="true"
+                           [isOpen]="false"
+                ></ng-select>
+                <mat-hint>
+                    A list of possible user DN patterns which will be used when searching for the user upon
+                    authentication.<br>
+                    Examples: <code>uid={{'{'}}0{{'}'}}</code>, <code>uid={{'{'}}0{{'}'}},ou=Admins</code>
+                </mat-hint>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    Role Mapping
+                </mat-expansion-panel-header>
+
+                <h3 class="blue-border">Group search</h3>
+
+                <div fxLayout="row" fxLayoutGap="30px" formGroupName="authorities">
+                    <mat-form-field>
+                        <input matInput
+                               placeholder="Group search base"
+                               formControlName="groupSearchBase"
+                               autocomplete="off">
+                        <mat-hint>Example: <code>ou=Groups</code></mat-hint>
+                        <mat-error>
+                            <form-field-errors formControlName="groupSearchBase"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                               placeholder="Group search filter"
+                               formControlName="groupSearchFilter"
+                               autocomplete="off">
+                        <mat-hint>Example: <code>(uniqueMember={{'{'}}0{{'}'}})</code></mat-hint>
+                        <mat-error>
+                            <form-field-errors formControlName="groupSearchFilter"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                               placeholder="Group Role Attribute"
+                               formControlName="groupRoleAttribute"
+                               autocomplete="off">
+                        <mat-hint>Example: <code>cn</code>, <code>ou</code></mat-hint>
+                        <mat-error>
+                            <form-field-errors formControlName="groupRoleAttribute"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <h3 class="blue-border" style="margin-top: 30px;">Mapping</h3>
+                <mat-hint>
+                    Please make sure to add an LDAP role which maps to the <code>ADMIN</code> Strongbox role or you will get locked.
+                </mat-hint>
+
+                <mat-form-field class="no-form-field-underline">
+                    <app-security-ldap-role-mapping-form-field formControlName="roleMappingList">
+                    </app-security-ldap-role-mapping-form-field>
+                </mat-form-field>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <div fxLayoutAlign="center center" class="formSubmitButtons noBorder">
+            <button mat-button routerLink="../../" type="button">
+                Back
+            </button>
+
+            <button mat-button
+                    type="button"
+                    color="primary"
+                    [disabled]="!ldapConnectionForm.valid || (loading$ | async)"
+                    (click)="test()">
+                Test
+            </button>
+
+            <button mat-raised-button color="primary"
+                    type="submit"
+                    [disabled]="!ldapConnectionForm.valid || (loading$ | async)">
+                Save
+            </button>
+        </div>
+    </form>
+</app-page-container>

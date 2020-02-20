@@ -43,6 +43,10 @@ const routes: Routes = [
         loadChildren: () => import('./modules/user-management/user-management.module').then(m => m.UserManagementModule)
     },
     {
+        path: 'admin/security',
+        loadChildren: () => import('./modules/security-management/security-management.module').then(m => m.SecurityManagementModule)
+    },
+    {
         path: 'admin/server-settings',
         loadChildren: () => import('./modules/server-settings/server-settings.module').then(m => m.ServerSettingsModule)
     },

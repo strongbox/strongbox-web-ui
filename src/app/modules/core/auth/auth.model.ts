@@ -1,5 +1,13 @@
 import {Transform, Type} from 'class-transformer';
 
+export enum AuthenticationState {
+    AUTHENTICATED       = 'authenticated',
+    GUEST               = 'guest',
+    INVALID_CREDENTIALS = 'invalid.credentials',
+    ERROR               = 'error',
+    PENDING             = 'pending'
+}
+
 export class AuthenticatedUser {
     username: string = null;
     token: string = null;

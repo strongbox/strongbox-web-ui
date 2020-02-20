@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/for
 import {Select, Store} from '@ngxs/store';
 import {Observable} from 'rxjs';
 
-import {UserCredentials} from '../../auth/auth.model';
+import {AuthenticationState, UserCredentials} from '../../auth/auth.model';
 import {LoginAction} from '../../auth/state/auth.actions';
 import {SessionState} from '../../auth/state/session.state';
 import {CloseLoginDialogAction} from '../../../../state/app.actions';
@@ -16,7 +16,7 @@ import {CloseLoginDialogAction} from '../../../../state/app.actions';
 })
 export class LoginDialogComponent implements OnInit {
     @Select(SessionState.state)
-    public sessionState$: Observable<string>;
+    public sessionState$: Observable<AuthenticationState>;
 
     public form: FormGroup = this.formBuilder.group({
         username: ['', [Validators.required]],
