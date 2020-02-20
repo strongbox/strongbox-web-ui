@@ -36,7 +36,6 @@ export class SecurityLdapRoleMappingFormFieldComponent implements ControlValueAc
     errorState = false;
 
     strongboxRoles: UserRole[] = [];
-    strongboxRoleSearchLoading = false;
 
     form: FormGroup = new FormGroup({
         roleMappingList: new FormArray([])
@@ -129,12 +128,10 @@ export class SecurityLdapRoleMappingFormFieldComponent implements ControlValueAc
     }
 
     ngOnInit() {
-        this.strongboxRoleSearchLoading = true;
         this._userManagementService
             .getUserFormFields()
             .pipe(
                 catchError(() => of([])), // empty list on error
-                finalize(() => this.strongboxRoleSearchLoading = false)
             )
             .subscribe((roles: UserFormFieldsData) => {
                 this.strongboxRoles = roles.assignableRoles;
@@ -172,12 +169,10 @@ export class SecurityLdapRoleMappingFormFieldComponent implements ControlValueAc
 
     // will be called when an input has been updated to propagate the validation state.
     emitFormValidity() {
-        if (this.ngControl !== null && this.ngControl.control !== null) {
-            if (this.form.invalid) {
-                this.ngControl.control.setErrors([{invalidRoleMappingList: 'Role mapping list contains invalid data!'}]);
-            } else {
-                this.ngControl.control.setErrors(null);
-            }
+        if (this.form.invalid) {
+            this.form.setErrors([{invalidRoleMappingList: 'Role mapping list contains invalid data!'}]);
+        } else {
+            this.form.setErrors(null);
         }
     }
 

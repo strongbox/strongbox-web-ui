@@ -11,7 +11,7 @@ import {LdapConnectionTestDialogComponent} from './ldap-connection-test-dialog.c
 import {MaterialModule} from '../../../../../../../shared/material.module';
 
 
-fdescribe('Dialog: LdapConnectionTestDialogComponent', () => {
+describe('Dialog: LdapConnectionTestDialogComponent', () => {
     let component: LdapConnectionTestDialogComponent;
     let fixture: ComponentFixture<LdapConnectionTestDialogComponent>;
 

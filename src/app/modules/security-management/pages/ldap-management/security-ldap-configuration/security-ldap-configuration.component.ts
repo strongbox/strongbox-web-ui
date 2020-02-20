@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {BehaviorSubject} from 'rxjs';
 import {finalize} from 'rxjs/operators';
@@ -12,7 +12,8 @@ import {LdapConnectionTestDialogComponent} from './components/ldap-connection-te
 @Component({
     selector: 'app-security-ldap-configuration',
     templateUrl: './security-ldap-configuration.component.html',
-    styleUrls: ['./security-ldap-configuration.component.scss']
+    styleUrls: ['./security-ldap-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SecurityLdapConfigurationComponent implements OnInit {
 

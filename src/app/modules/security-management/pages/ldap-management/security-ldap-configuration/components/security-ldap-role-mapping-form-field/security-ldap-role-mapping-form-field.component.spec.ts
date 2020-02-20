@@ -10,7 +10,7 @@ import {LayoutModule} from '../../../../../../../shared/layout/layout.module';
 import {FormHelperModule} from '../../../../../../../shared/form/form-helper.module';
 import {LdapRoleMapping} from '../../../../../ldap-role-mapping.model';
 
-xdescribe('Form Field: SecurityLdapRoleMappingComponent', () => {
+describe('Form Field: SecurityLdapRoleMappingComponent', () => {
     let component: SecurityLdapRoleMappingFormFieldComponent;
     let fixture: ComponentFixture<SecurityLdapRoleMappingFormFieldComponent>;
 
@@ -62,16 +62,27 @@ xdescribe('Form Field: SecurityLdapRoleMappingComponent', () => {
 
         expect(dummyComponent.roleMappingField.value).toBeTruthy();
         expect(dummyComponent.roleMappingField.value.length).toEqual(3);
+        expect(component.form.valid).toBeTruthy();
     });
 
     it('should propagate invalid form status', () => {
-        const dummyFixture = TestBed.createComponent(DummyComponent);
-        const dummyComponent = dummyFixture.componentInstance;
-        dummyFixture.detectChanges();
+        const preElements = fixture.nativeElement.querySelectorAll('.role-mapping-item');
+        expect(preElements.length).toEqual(0);
 
-        expect(dummyComponent.roleMappingField.value).toBeTruthy();
-        expect(dummyComponent.roleMappingField.value.length).toEqual(3);
-        expect(dummyComponent.form.invalid).toBeTruthy();
+        const list: LdapRoleMapping[] = [
+            {externalRole: 'external1', strongboxRole: 'internal1'},
+            {externalRole: 'external2', strongboxRole: 'internal2'},
+            {externalRole: 'external3', strongboxRole: 'internal3'},
+            {externalRole: 'external4', strongboxRole: null},
+        ];
+
+        component.value = list;
+        fixture.detectChanges();
+
+        const postElements = fixture.nativeElement.querySelectorAll('.role-mapping-item');
+        expect(postElements).toBeTruthy();
+        expect(postElements.length).toEqual(list.length);
+        expect(component.form.invalid).toBeTruthy();
     });
 
 });
@@ -98,7 +109,7 @@ export class DummyComponent {
         this.form.get('roleMappingList').setValue([
             {externalRole: 'external1', strongboxRole: 'internal1'},
             {externalRole: 'external2', strongboxRole: 'internal2'},
-            {externalRole: 'external3', strongboxRole: ''},
+            {externalRole: 'external3', strongboxRole: 'internal3'},
         ]);
     }
 }
