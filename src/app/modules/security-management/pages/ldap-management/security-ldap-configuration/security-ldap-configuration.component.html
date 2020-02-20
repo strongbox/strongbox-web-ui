@@ -6,7 +6,7 @@
           (submit)="save()">
 
         <mat-accordion>
-            <mat-expansion-panel>
+            <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header>
                     Connection
                 </mat-expansion-panel-header>
@@ -29,7 +29,7 @@
                                placeholder="Manager DN"
                                formControlName="managerDn"
                                autocomplete="off">
-                        <mat-hint>Example: <code>cn=manager,ou=users,dc=domain,dc=com</code></mat-hint>
+                        <mat-hint>Example: <code>cn=manager,ou=users,dc=domain,dc=com</code>(<span class="status-red">including the domain!</span>)</mat-hint>
                         <mat-error>
                             <form-field-errors formControlName="managerDn"></form-field-errors>
                         </mat-error>
@@ -47,12 +47,71 @@
                     </mat-form-field>
                 </div>
                 <div fxLayout="row" fxLayoutGap="30px">
+                    <mat-checkbox formControlName="enableProvider" color="primary">
+                        Enable LDAP Authentication Provider
+                    </mat-checkbox>
+                </div>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    User Mapping
+                    <!-- DN Search Patterns -->
+                </mat-expansion-panel-header>
+
+                <div fxLayout="row" fxLayoutGap="30px">
+                    <mat-form-field>
+                        <input matInput
+                               placeholder="User search base"
+                               formControlName="userSearchBase"
+                               autocomplete="off">
+                        <mat-hint>Example: <code>ou=Users</code></mat-hint>
+                        <mat-error>
+                            <form-field-errors formControlName="userSearchBase"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <input matInput
+                               placeholder="User search filter"
+                               formControlName="userSearchFilter"
+                               autocomplete="off">
+                        <mat-hint>Example: <code>(uid={{'{'}}0{{'}'}})</code></mat-hint>
+                        <mat-error>
+                            <form-field-errors formControlName="userSearchFilter"></form-field-errors>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <ng-select placeholder=""
+                           formControlName="userDnPatternList"
+                           clearable="true"
+                           [addTag]="true"
+                           [multiple]="true"
+                           [selectOnTab]="true"
+                           [isOpen]="false"
+                ></ng-select>
+                <mat-hint>
+                    A list of possible user DN patterns which will be used when searching for the user upon
+                    authentication.<br>
+                    Examples: <code>uid={{'{'}}0{{'}'}}</code>, <code>uid={{'{'}}0{{'}'}},ou=Admins</code>
+                </mat-hint>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    Role Mapping
+                </mat-expansion-panel-header>
+
+                <h3 class="blue-border">Group search</h3>
+
+                <div fxLayout="row" fxLayoutGap="30px" formGroupName="authorities">
                     <mat-form-field>
                         <input matInput
                                placeholder="Group search base"
                                formControlName="groupSearchBase"
                                autocomplete="off">
-                        <mat-hint>Example: <code>ou=Admins</code></mat-hint>
+                        <mat-hint>Example: <code>ou=Groups</code></mat-hint>
                         <mat-error>
                             <form-field-errors formControlName="groupSearchBase"></form-field-errors>
                         </mat-error>
@@ -63,7 +122,7 @@
                                placeholder="Group search filter"
                                formControlName="groupSearchFilter"
                                autocomplete="off">
-                        <mat-hint>Example: <code>(ou={{'{'}}0{{'}'}})</code>, <code>(cn={{'{'}}{{'}'}})</code></mat-hint>
+                        <mat-hint>Example: <code>(uniqueMember={{'{'}}0{{'}'}})</code></mat-hint>
                         <mat-error>
                             <form-field-errors formControlName="groupSearchFilter"></form-field-errors>
                         </mat-error>
@@ -80,38 +139,8 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-                <div fxLayout="row" fxLayoutGap="30px">
-                    <mat-checkbox formControlName="enableProvider" color="primary">
-                        Enable LDAP Authentication Provider
-                    </mat-checkbox>
-                </div>
-            </mat-expansion-panel>
 
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    User DN Search Patterns
-                </mat-expansion-panel-header>
-
-                <mat-hint>
-                    A list of possible user DN patterns which will be used when searching for the user upon
-                    authentication.<br>
-                    Examples: <code>uid={{'{'}}0{{'}'}}</code>, <code>uid={{'{'}}0{{'}'}},ou=Admins</code>
-                </mat-hint>
-                <ng-select placeholder=""
-                           formControlName="userDnPatternList"
-                           clearable="true"
-                           [addTag]="true"
-                           [multiple]="true"
-                           [selectOnTab]="true"
-                           [isOpen]="false"
-                ></ng-select>
-
-            </mat-expansion-panel>
-
-            <mat-expansion-panel [expanded]="true">
-                <mat-expansion-panel-header>
-                    Role Mapping
-                </mat-expansion-panel-header>
+                <h3 class="blue-border" style="margin-top: 30px;">Mapping</h3>
                 <mat-hint>
                     Please make sure to add an LDAP role which maps to the <code>ADMIN</code> Strongbox role or you will get locked.
                 </mat-hint>
@@ -128,7 +157,6 @@
                 Back
             </button>
 
-            <!-- TODO: This part needs more attention in the backend. -->
             <button mat-button
                     type="button"
                     color="primary"

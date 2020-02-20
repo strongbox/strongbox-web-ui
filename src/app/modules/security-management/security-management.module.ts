@@ -8,12 +8,14 @@ import {LayoutModule} from '../../shared/layout/layout.module';
 import {FormHelperModule} from '../../shared/form/form-helper.module';
 import {SecurityLdapConfigurationComponent} from './pages/ldap-management/security-ldap-configuration/security-ldap-configuration.component';
 import {SecurityLdapRoleMappingFormFieldComponent} from './pages/ldap-management/security-ldap-configuration/components/security-ldap-role-mapping-form-field/security-ldap-role-mapping-form-field.component';
+import {LdapConnectionTestDialogComponent} from './pages/ldap-management/security-ldap-configuration/components/ldap-connection-test-dialog/ldap-connection-test-dialog.component';
 
 @NgModule({
     declarations: [
         SecurityManagementIndexComponent,
         SecurityLdapConfigurationComponent,
-        SecurityLdapRoleMappingFormFieldComponent
+        SecurityLdapRoleMappingFormFieldComponent,
+        LdapConnectionTestDialogComponent
     ],
     imports: [
         CommonModule,
@@ -21,7 +23,8 @@ import {SecurityLdapRoleMappingFormFieldComponent} from './pages/ldap-management
         MaterialModule,
         FormHelperModule,
         SecurityManagementRoutingModule
-    ]
+    ],
+    entryComponents: [LdapConnectionTestDialogComponent]
 })
 export class SecurityManagementModule {
 }

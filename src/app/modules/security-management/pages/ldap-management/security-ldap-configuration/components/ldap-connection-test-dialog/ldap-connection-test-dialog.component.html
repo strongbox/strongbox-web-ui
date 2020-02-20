@@ -1,0 +1,17 @@
+<h3 mat-dialog-title>
+    LDAP Username and Password
+</h3>
+<div mat-dialog-content>
+    <div class="loginDialog">
+        <form [formGroup]="form" (submit)="test()" class="inputFullWidth">
+            <mat-form-field>
+                <input matInput formControlName="username" placeholder="Username" required>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="password" matInput formControlName="password" placeholder="Password" required>
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || (loading$ | async)" style="float: right;">Login</button>
+            <div class="spacer">&nbsp;</div>
+        </form>
+    </div>
+</div>

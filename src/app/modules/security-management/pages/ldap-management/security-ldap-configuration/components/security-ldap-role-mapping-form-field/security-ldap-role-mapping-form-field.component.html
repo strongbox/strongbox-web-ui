@@ -1,5 +1,3 @@
-<button mat-raised-button color="primary" type="button" (click)="addItem()" xmlns="http://www.w3.org/1999/html">Add</button>
-
 <div [formGroup]="form" fxLayout="column" fxLayoutGap="20px" style="padding-top: 20px;">
     <ng-container formArrayName="roleMappingList" *ngFor="let record of getFormControls(); let index = index">
         <div [formGroup]="record" fxLayout="row" fxLayoutGap="2%" class="role-mapping-item"
@@ -41,3 +39,5 @@
         </div>
     </ng-container>
 </div>
+
+<button mat-raised-button color="primary" type="button" (click)="addItem()" xmlns="http://www.w3.org/1999/html">Add</button>
