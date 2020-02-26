@@ -78,7 +78,8 @@ pipeline {
                     }
                 }
 
-                stage('ci-e2e') {
+                // Disabling e2e.
+/*                 stage('ci-e2e') {
                     steps {
                         script {
                             container("node") {
@@ -93,7 +94,7 @@ pipeline {
                             }
                         }
                     }
-                }
+                } */
             }
         }
         stage('Deploy') {
