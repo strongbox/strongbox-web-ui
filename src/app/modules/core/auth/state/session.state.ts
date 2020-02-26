@@ -125,12 +125,18 @@ export class SessionState {
     constructor(private auth: AuthService, private store: Store) {
     }
 
+    private invalidateSession(ctx: StateContext<SessionStateModel>): void {
+        ctx.setState(defaultSessionState);
+        updateBrowserSession(defaultSessionState);
+        this.store.dispatch(new HideSideNavAction());
+        this.store.dispatch(new Navigate(['/']));
+    }
+
     @Action(CheckCredentialsAction)
     checkCredentials(ctx: StateContext<SessionStateModel>) {
         this.auth.checkCredentials().subscribe((result) => {
             if (!result) {
-                ctx.patchState(defaultSessionState);
-                updateBrowserSession(defaultSessionState);
+                this.invalidateSession(ctx);
             }
         });
     }
@@ -162,12 +168,7 @@ export class SessionState {
 
     @Action(LogoutAction)
     logout(ctx: StateContext<SessionStateModel>) {
-        if (ctx.getState().state === 'authenticated') {
-            ctx.setState(defaultSessionState);
-            updateBrowserSession(defaultSessionState);
-            this.store.dispatch(new HideSideNavAction());
-            this.store.dispatch(new Navigate(['/']));
-        }
+        this.invalidateSession(ctx);
     }
 
     @Action(CredentialsExpiredAction)
