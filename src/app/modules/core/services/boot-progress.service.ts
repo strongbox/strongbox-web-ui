@@ -1,155 +1,214 @@
-import {Inject, Injectable} from '@angular/core';
+import {Inject, Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngxs/store';
 import {DOCUMENT} from '@angular/common';
 import * as dayjs from 'dayjs';
-import {EventSourcePolyfill, NativeEventSource} from 'event-source-polyfill';
+import {BehaviorSubject, Observable, of, Subject, throwError} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {catchError, takeUntil, tap} from 'rxjs/operators';
 
 import {environment} from '../../../../environments/environment';
+import fromEventSource, {EventSourceMessage} from '../rxjs/fromEventSource';
+import retryWithConsecutiveBreak from '../rxjs/retryWithConsecutiveBreak';
 import {CheckCredentialsAction} from '../auth/state/auth.actions';
-
-// cross-browser Event Source.
-const EventSource = NativeEventSource || EventSourcePolyfill;
 
 @Injectable({
     providedIn: 'root'
 })
-export class BootProgressService {
+export class BootProgressService implements OnDestroy {
 
     readonly baseUrl = environment.strongboxUrl ? location.protocol + '//' + environment.strongboxUrl : '';
-    readonly defaultReconnectFrequencySeconds = 2;
 
-    private afterBootWaitSeconds = 2;
-    private reconnectFrequencySeconds = this.defaultReconnectFrequencySeconds;
-    private reconnectTimeoutId;
-
-    private messages = 0;
     private startTime = dayjs();
 
-    private splashScreenElement: HTMLElement;
-    private bootStatusContainerElement: HTMLElement;
-    private messageElement: HTMLElement;
-    private spinnerContainerElement: HTMLElement;
+    private stream$: Observable<EventSourceMessage> = null;
+    private state$: BehaviorSubject<BootState> = new BehaviorSubject<BootState>(BootState.NONE);
+    private destroy$: Subject<any> = new Subject<any>();
 
-    private source: EventSource;
+    private message$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
-    constructor(private store: Store, @Inject(DOCUMENT) private document: Document) {
+    constructor(private store: Store, @Inject(DOCUMENT) private document: Document, private http: HttpClient) {
     }
 
-    private connect() {
-        this.source = new EventSource(this.baseUrl + '/api/ping');
-        this.source.onopen = (e: Event) => this.handleOnOpen(e);
-        this.source.onerror = (e: Event) => this.handleOnError(e);
-        this.source.addEventListener('booting', (e: MessageEvent) => this.handleBooting(e));
-        this.source.addEventListener('booted', (e: MessageEvent) => this.handleBooted(e));
-        this.source.addEventListener('ready', (e: MessageEvent) => this.handleReady(e));
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
-    private reconnect() {
-        if (this.source) {
-            this.source.close();
+    // noinspection JSMethodCanBeStatic
+    private getElements(): { [p: string]: HTMLElement } {
+        const elements: { [key: string]: HTMLElement } = {
+            appElement: HTMLElement = null,
+            splashScreen: HTMLElement = null,
+            bootStatusContainer: HTMLElement = null,
+            message: HTMLElement = null,
+            spinnerContainer: HTMLElement = null
+        };
 
-            // Double every attempt to avoid overwhelming server
-            this.reconnectFrequencySeconds = Math.floor(this.reconnectFrequencySeconds * 1.6);
-
-            // Max out at 15 seconds as a compromise between user experience and server load
-            if (this.reconnectFrequencySeconds > 15) {
-                this.reconnectFrequencySeconds = 15;
-            }
-        }
-
-        this.clearTimeout();
-
-        this.reconnectTimeoutId = setTimeout(() => this.connect(), (this.reconnectFrequencySeconds * 1000));
-    }
-
-    private handleOnOpen(event: Event) {
-        // Reset reconnect frequency upon successful connection
-        this.reconnectFrequencySeconds = this.defaultReconnectFrequencySeconds;
-    }
-
-    private handleOnError(event: Event) {
-        console.log('Failed to connect to backend - retrying after ' + this.reconnectFrequencySeconds + ' seconds...');
-        this.reconnect();
-    }
-
-    private handleBooting(event: MessageEvent) {
-        ++this.messages;
-        this.messageElement.innerHTML = event.data;
-    }
-
-    // The server is about to get live (this will disconnect any existing connections)
-    private handleBooted(event: MessageEvent) {
-        ++this.messages;
-
-        // Close the existing connection
-        this.source.close();
-
-        // Clear any existing timeouts
-        this.clearTimeout();
-
-        // try to reconnect after a few seconds.
-        setTimeout(() => this.reconnect(), this.afterBootWaitSeconds);
-    }
-
-    // The server is ready to accept requests.
-    private handleReady(event: MessageEvent) {
-        if (this.source) {
-            this.source.close();
-        }
-
-        this.clearTimeout();
-
-        // longer timeout for when booting (i.e. started/restarted) to have better animations.
-        const timeout = this.messages > 0 ? 1650 : 350;
-        if (this.isBooting()) {
-            this.messageElement.innerHTML = 'Let\'s get started!';
-            this.messageElement.setAttribute('style', 'color: white !important;');
-
-            this.spinnerContainerElement.setAttribute('class', 'spinner-container loaded');
-            console.log('Strongbox booted in ~' + dayjs().diff(this.startTime, 's') + ' seconds');
-        }
-
-        setTimeout(() => {
-            if (this.splashScreenElement) {
-                this.splashScreenElement.setAttribute('class', 'loaded');
-
-                document.querySelector('app-strongbox').removeAttribute('style');
-
-                setTimeout(() => {
-                    this.splashScreenElement.remove();
-                    this.splashScreenElement = null;
-                }, 680);
-
-                this.store.dispatch(new CheckCredentialsAction());
-            }
-        }, timeout);
-    }
-
-    private clearTimeout() {
-        if (this.reconnectTimeoutId) {
-            clearTimeout(this.reconnectTimeoutId);
-        }
-
-        if (this.source) {
-            this.source.close();
-        }
-    }
-
-    private isBooting() {
-        return this.messages > 0;
-    }
-
-    start() {
         try {
-            this.splashScreenElement = document.querySelector('#fullscreen-splash');
-            if (this.splashScreenElement !== null) {
-                this.bootStatusContainerElement = this.splashScreenElement.querySelector('.bootStatus');
-                this.messageElement = this.splashScreenElement.querySelector('.message');
-                this.spinnerContainerElement = this.splashScreenElement.querySelector('.spinner-container');
-                this.connect();
+            elements.appElement = document.querySelector('app-strongbox');
+            elements.splashScreenElement = document.querySelector('#fullscreen-splash');
+            if (elements.splashScreenElement !== null) {
+                elements.bootStatusContainerElement = elements.splashScreenElement.querySelector('.bootStatus');
+                elements.messageElement = elements.splashScreenElement.querySelector('.message');
+                elements.spinnerContainerElement = elements.splashScreenElement.querySelector('.spinner-container');
             }
         } catch (e) {
             console.error(e);
         }
+
+        return elements;
     }
+
+    private propagateMessage(message: string = null) {
+        const elements = this.getElements();
+
+        if (elements.messageElement != null) {
+            // Make text stand out when we're ready.
+            if (this.state$.getValue() === BootState.READY) {
+                elements.messageElement.setAttribute('style', 'color: white !important;');
+            }
+            elements.messageElement.innerHTML = message;
+        }
+    }
+
+    private connect() {
+        if (this.stream$ === null) {
+            this.state$.next(BootState.BOOTING);
+            this.stream$ = fromEventSource(
+                `${this.baseUrl}/api/ping`,
+                ['booting', 'booted', 'ready'],
+                {withCredentials: false}
+            ).pipe(
+                // kill switch.
+                takeUntil(this.destroy$),
+
+                tap((e: EventSourceMessage) => {
+                    if (e.type === 'ready') {
+                        this.handleReady(e);
+                    } else if (e.type === 'booting') {
+                        this.handleBooting(e);
+                    } else if (e.type === 'booted') {
+                        this.handleBooted(e);
+                    }
+                }),
+
+                retryWithConsecutiveBreak({
+                    maxRetries: -1,
+                    exponentialDelay: true,
+                    incrementFraction: 1.45,
+                    maxDelay: 15000,
+                    destroy$: this.destroy$,
+                    logAttempt: true,
+                    onRetry: attempt => {
+                        if (this.state$.getValue() !== BootState.BOOTED) {
+                            this.state$.next(BootState.RETRY);
+                            this.message$.next(`Backend is down - retrying in ${Math.round(attempt.delay / 1000)}s`);
+                        }
+                    }
+                }),
+
+                catchError((err) => {
+                    this.state$.next(BootState.FATAL);
+                    this.message$.next('Something unexpected happened - open dev console.');
+                    console.log('ERROR: ', err);
+                    return throwError(err);
+                }),
+            );
+        }
+
+        this.message$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((message) => this.propagateMessage(message));
+
+        return this.stream$;
+    }
+
+    private handleBooting(event: EventSourceMessage) {
+        this.state$.next(BootState.BOOTING);
+        this.message$.next(event.data);
+    }
+
+    // The server is about to get live (this will disconnect any existing connections)
+    private handleBooted(event: EventSourceMessage) {
+        this.state$.next(BootState.BOOTED);
+        console.log('Strongbox backend has booted in ~' + dayjs().diff(this.startTime, 's') + ' seconds');
+    }
+
+    // The server is ready to accept requests.
+    private handleReady(event: EventSourceMessage) {
+        this.state$.next(BootState.READY);
+        this.destroy$.next();
+        this.destroy$.complete();
+        this.stream$ = null;
+
+        // Trigger credential check.
+        this.store.dispatch(new CheckCredentialsAction());
+
+        const elements = this.getElements();
+
+        // longer timeout for when booting (i.e. started/restarted) to have better animations.
+        const timeout = this.message$.getValue() !== null ? 1650 : 350;
+        if (this.message$.getValue() !== null) {
+            this.message$.next('Let\'s get started!');
+            elements.spinnerContainerElement.setAttribute('class', 'spinner-container loaded');
+        }
+
+        setTimeout(() => {
+            if (elements.splashScreenElement) {
+                elements.splashScreenElement.setAttribute('class', 'loaded');
+
+                elements.appElement.removeAttribute('style');
+
+                setTimeout(() => {
+                    elements.splashScreenElement.remove();
+                    elements.splashScreenElement = null;
+                }, 680);
+            }
+        }, timeout);
+
+    }
+
+    start(): Promise<any> {
+        if (this.state$.getValue() === BootState.READY) {
+            return of(true).toPromise();
+        }
+
+        return this.connect().toPromise();
+    }
+
+    getState(): Observable<BootState> {
+        return this.state$;
+    }
+
+    isBooting() {
+        return this.state$.getValue() === BootState.BOOTING;
+    }
+
+    isBooted() {
+        return this.state$.getValue() === BootState.BOOTED;
+    }
+
+    isReady() {
+        return this.state$.getValue() === BootState.READY;
+    }
+
+}
+
+export function BootProgressServiceFactory(service: BootProgressService) {
+    return () => service.start();
+}
+
+export enum BootState {
+    // Not started
+    NONE,
+    // Is booting
+    BOOTING,
+    // Backend has booted (will reload)
+    BOOTED,
+    // Backend is ready to handle traffic.
+    READY,
+    // Retrying to connect
+    RETRY,
+    // Fatal error?
+    FATAL
 }

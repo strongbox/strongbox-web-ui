@@ -18,8 +18,7 @@ import {
 } from './app.actions';
 import {LoginDialogComponent} from '../modules/core/dialogs/login/login.dialog.component';
 import {AppStateModel, defaultAppState, SideNavStateModel, ViewPortStateModel} from './app.state.interfaces';
-import {CheckCredentialsAction, LogoutAction} from '../modules/core/auth/state/auth.actions';
-import {BootProgressService} from '../modules/core/services/boot-progress.service';
+import {LogoutAction} from '../modules/core/auth/state/auth.actions';
 
 @State<AppStateModel>({
     name: 'app',
@@ -65,8 +64,7 @@ export class AppState implements NgxsOnInit {
         return state.isHomepage;
     }
 
-    constructor(private bootProgress: BootProgressService,
-                private dialog: MatDialog,
+    constructor(private dialog: MatDialog,
                 private mediaObserver: MediaObserver,
                 private router: Router) {
     }
@@ -90,11 +88,6 @@ export class AppState implements NgxsOnInit {
             .subscribe((event: NavigationStart) => {
                 ctx.patchState({...ctx.getState(), isHomepage: event.url === '/' || event.url === ''});
             });
-
-        this.bootProgress.start();
-
-        // Check the credentials at the very beginning of the lifecycle.
-        ctx.dispatch(new CheckCredentialsAction());
     }
 
     @Action(RouterNavigation)

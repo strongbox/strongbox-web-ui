@@ -50,6 +50,9 @@ export class RetryLimitExceededException extends Error {
  * @param config
  */
 export default function (config: RetryConfig) {
+    // when maxRetries is null it means infinity - fallback
+    config.maxRetries = config.maxRetries === null ? -1 : config.maxRetries;
+
     const opts = Object.assign({}, defaultConfig, config);
 
     return <T>(source$: Observable<T>) => {
@@ -66,9 +69,12 @@ export default function (config: RetryConfig) {
                             mergeMap((err, i) => {
                                 attempt.count++;
 
-                                if (attempt.count > opts.maxRetries) {
-                                    attempt.count--; // fix counter.
-                                    return throwError(new RetryLimitExceededException(opts.maxRetries));
+                                // allow infinite retries.
+                                if (opts.maxRetries !== null && opts.maxRetries > -1) {
+                                    if (attempt.count > opts.maxRetries) {
+                                        attempt.count--; // fix counter.
+                                        return throwError(new RetryLimitExceededException(opts.maxRetries));
+                                    }
                                 }
 
                                 if (opts.exponentialDelay) {

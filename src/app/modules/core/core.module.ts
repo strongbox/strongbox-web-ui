@@ -1,4 +1,4 @@
-import {NgModule, Optional, SkipSelf} from '@angular/core';
+import {APP_INITIALIZER, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -34,7 +34,8 @@ import {ConfirmDialogComponent} from './dialogs/confirm/confirm.dialog.component
 import {FormHelperModule} from '../../shared/form/form-helper.module';
 import {LayoutModule} from '../../shared/layout/layout.module';
 import {NgProgressRouterModule} from '@ngx-progressbar/router';
-import { BrowseComponent } from './pages/browse/browse.component';
+import {BrowseComponent} from './pages/browse/browse.component';
+import {BootProgressService, BootProgressServiceFactory} from './services/boot-progress.service';
 
 @NgModule({
     imports: [
@@ -131,6 +132,13 @@ import { BrowseComponent } from './pages/browse/browse.component';
         },
         AuthService,
         AuthGuard,
+        BootProgressService,
+        {
+            provide: APP_INITIALIZER,
+            useFactory: BootProgressServiceFactory,
+            deps: [BootProgressService],
+            multi: true,
+        },
         AccountService,
         RepositorySearchService,
     ]
