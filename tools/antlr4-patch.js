@@ -3,7 +3,7 @@ const options = {
     files: ['./node_modules/antlr4/CharStreams.js', './node_modules/antlr4/FileStream.js'],
     from: /var fs.*/g,
     to: 'var fs = false'
-}
+};
 
 replace(options)
     .then(results => {
