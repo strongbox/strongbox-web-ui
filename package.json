@@ -20,9 +20,9 @@
     "test": "ng test --watch --browsers Chrome --source-map=false",
     "lint": "ng lint",
     "e2e": "ng e2e --port 4201",
-    "webdriver-update": "node update-webdriver.js ",
+    "webdriver-update": "node ./tools/update-webdriver.js ",
     "antlr4": "antlr4-tool --language javascript -o src/aql/ src/aql/AQL.g4",
-    "patch-antlr4": "replace '^var fs.*' 'var fs = false;' ./node_modules/antlr4/FileStream.js ./node_modules/antlr4/CharStreams.js"
+    "patch-antlr4": "node ./tools/antlr4-patch.js"
   },
   "private": true,
   "dependencies": {
@@ -56,6 +56,7 @@
     "ngx-toastr": "~10.0.4",
     "ngx-virtual-scroller": "^3.0.3",
     "open-sans-fontface": "^1.4.0",
+    "replace-in-file": "^5.0.2",
     "rxjs": "~6.4.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
