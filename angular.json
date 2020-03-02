@@ -17,9 +17,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "baseHref": "/",
             "deployUrl": "/static/assets/",
-            "outputPath": "dist/strongbox-web-ui",
-            "index": "src/index.html",
+            "outputPath": "dist/strongbox-web-ui/static/assets",
+            "index": {
+              "input": "src/index.html",
+              "output": "../../index.html"
+            },
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
@@ -27,12 +31,13 @@
               {
                 "glob": "**/*.*",
                 "input": "src/assets",
-                "output": "/"
+                "output": "./"
               }
             ],
             "styles": [
               "src/styles.scss"
             ],
+            "resourcesOutputPath": "./",
             "scripts": []
           },
           "configurations": {
@@ -75,8 +80,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "deployUrl": "/",
-            "browserTarget": "strongbox-web-ui:build"
+            "browserTarget": "strongbox-web-ui:build",
+            "proxyConfig": "proxy.conf.js",
+            "servePath": "/static/assets",
+            "baseHref": "/",
+            "deployUrl": "/static/assets/"
           },
           "configurations": {
             "production": {
