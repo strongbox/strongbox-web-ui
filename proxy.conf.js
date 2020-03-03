@@ -18,7 +18,8 @@ const PROXY_CONFIG = [
     ],
     target: `http://${LOCAL_IP}:48080`,
     secure: false,
-    logLevel: "debug"
+    logLevel: "debug",
+    changeOrigin: true
   }
 ];
 
