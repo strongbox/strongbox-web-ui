@@ -127,7 +127,7 @@ module.exports = {
              */
             map: (data) => {
                 return {
-                    path: data.path.replace(/^strongbox-web-ui/i, '').replace('/index.html', '/'),
+                    path: data.path.replace('/index.html', '/'),
                     name: path.basename(data.name),
                     isInitial: data.isInitial,
                     isChunk: data.chunk,
@@ -136,7 +136,7 @@ module.exports = {
                 }
             },
             filter: (data) => {
-                return data.name !== 'main.main'
+                return data.name.match(/main\.main$/) === null;
             }
         }),
         new FileManagerPlugin({
