@@ -124,7 +124,7 @@ pipeline {
                             }
 
                             sh "mvn deploy:deploy-file " +
-                               " -Dfile=./dist/packaging/strongbox-web-ui.zip " +
+                               " -Dfile=./dist/strongbox-web-ui.zip " +
                                " -DrepositoryId=" + SERVER_ID +
                                " -Durl=" + SERVER_URL +
                                " -DartifactId=" + ARTIFACT_ID +
