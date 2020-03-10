@@ -1,0 +1,14 @@
+<mat-card>
+    <mat-card-content>
+        <h2>CPU</h2>
+        <hr style="border-color: #2196F3;">
+        <canvas baseChart width="350" height="200" style="margin-top: 1em;"
+            [datasets]="cpuLineChartDataSet"
+            [labels]="cpuLineChartLabels"
+            [options]="cpuLineChartOptions"
+            [colors]="cpuLineChartColors"
+            [legend]="cpuLineChartLegend"
+            [chartType]="cpuLineChartType">
+        </canvas>
+    </mat-card-content>
+</mat-card>

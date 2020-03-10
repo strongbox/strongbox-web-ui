@@ -1,0 +1,14 @@
+<mat-card style="margin-right: 1em;">
+    <mat-card-content>
+        <h2>JVM Memory</h2>
+        <hr style="border-color: #2196F3;">
+        <canvas baseChart width="350" height="200" style="margin-top: 1em;"
+            [datasets]="jvmMemoryLineChartDataSet"
+            [labels]="jvmMemoryLineChartLabels"
+            [options]="jvmLineChartOptions"
+            [colors]="jvmLineChartColors"
+            [legend]="jvmLineChartLegend"
+            [chartType]="jvmLineChartType">
+        </canvas>
+    </mat-card-content>
+</mat-card>

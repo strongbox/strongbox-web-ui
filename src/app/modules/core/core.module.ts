@@ -12,6 +12,7 @@ import {NgxsModule} from '@ngxs/store';
 import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
 import {NgxsFormPluginModule} from '@ngxs/form-plugin';
 import {ToastrModule} from 'ngx-toastr';
+import {ChartsModule} from 'ng2-charts';
 
 import {MaterialModule} from '../../shared/material.module';
 import {PageNotFoundComponent} from './pages/page-not-found/page-not-found.component';
@@ -82,7 +83,10 @@ import {BootProgressService, BootProgressServiceFactory} from './services/boot-p
             debounceTime: 50
         }),
         NgProgressHttpModule,
-        NgProgressRouterModule
+        NgProgressRouterModule,
+
+        // ng2-charts module
+        ChartsModule
     ],
     exports: [
         CommonModule,

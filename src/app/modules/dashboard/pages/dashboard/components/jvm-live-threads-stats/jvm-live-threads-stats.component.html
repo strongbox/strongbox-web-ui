@@ -1,0 +1,14 @@
+<mat-card>
+    <mat-card-content>
+        <h2>JVM Live Threads</h2>
+        <hr style="border-color: #2196F3;">
+        <canvas baseChart width="350" height="200" style="margin-top: 1em;"
+            [datasets]="jvmLiveThreadsLineChartDataSet"
+            [labels]="jvmLiveThreadsLineChartLabels"
+            [options]="jvmLiveThreadLineChartOptions"
+            [colors]="jvmLineChartColors"
+            [legend]="jvmLineChartLegend"
+            [chartType]="jvmLineChartType">
+        </canvas>
+    </mat-card-content>
+</mat-card>
