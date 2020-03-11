@@ -1,8 +1,10 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Color, BaseChartDirective} from 'ng2-charts';
-import {timer, BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, Subject, throwError, timer} from 'rxjs';
+import {catchError, mergeMap, map, takeUntil, tap} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
+
+import * as chartJs from 'chart.js';
 
 import {DashboardMetricsService} from '../../../../services/dashboard-metrics.service';
 
@@ -12,7 +14,7 @@ import {DashboardMetricsService} from '../../../../services/dashboard-metrics.se
     styleUrls: ['./cpu-stats.component.scss']
 })
 export class CpuStatsComponent implements OnInit, OnDestroy {
-    @ViewChild(BaseChartDirective, {static: false})
+    @ViewChild(BaseChartDirective, {static: true})
     cpuChart: BaseChartDirective;
 
     loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -59,7 +61,7 @@ export class CpuStatsComponent implements OnInit, OnDestroy {
     ];
 
     public cpuLineChartLegend = false;
-    public cpuLineChartType = 'line';
+    public cpuLineChartType: chartJs.ChartType = 'line';
 
     public cpuLineChartDataSet: Array<any> = [
         {
@@ -69,19 +71,18 @@ export class CpuStatsComponent implements OnInit, OnDestroy {
         }
     ];
 
-    private subscription: Subscription;
     private destroy$: Subject<any> = new Subject();
 
     constructor(private service: DashboardMetricsService,
                 private notify: ToastrService) {
     }
 
-    getCpuData() {
-        this.service.getCpuUsage()
-            .pipe(takeUntil(this.destroy$))
-            .subscribe(
-                (response: any) => {
-                    let cpuUsage = response.measurements[0].value * 100
+    ngOnInit() {
+        timer(0, 2000)
+            .pipe(
+                mergeMap(() => this.service.getCpuUsage().pipe(takeUntil(this.destroy$))),
+                map((response: any) => {
+                    let cpuUsage = response.measurements[0].value * 100;
 
                     const _lineChartData = this.cpuLineChartData;
                     const _lineChartLabels = this.cpuLineChartLabels;
@@ -99,17 +100,19 @@ export class CpuStatsComponent implements OnInit, OnDestroy {
                     this.cpuLineChartData = _lineChartData;
                     this.cpuLineChartLabels = _lineChartLabels;
                     this.cpuChart.chart.update();
-                },
-                (e) => this.notify.error('Failed to complete request')
-        );
-    }
-
-    ngOnInit() {
-        this.subscription = timer(0, 2000).subscribe(val => this.getCpuData());
+                }),
+                catchError((err: any) => {
+                    this.notify.error('Failed to complete request');
+                    console.error(err);
+                    return throwError(err);
+                }),
+                tap(() => this.loading$.next(false)),
+                takeUntil(this.destroy$)
+            )
+            .subscribe();
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
         this.destroy$.next();
         this.destroy$.complete();
     }

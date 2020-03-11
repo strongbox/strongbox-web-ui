@@ -3,9 +3,11 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
+import {ChartsModule} from 'ng2-charts';
+
+import {MaterialModule} from '../../../../../../shared/material.module';
 
 import {CpuStatsComponent} from './cpu-stats.component';
-import {MaterialModule} from '../../../../../../shared/material.module';
 
 describe('CpuStatsComponent', () => {
     let component: CpuStatsComponent;
@@ -18,7 +20,8 @@ describe('CpuStatsComponent', () => {
                 MaterialModule,
                 HttpClientTestingModule,
                 RouterTestingModule,
-                ToastrModule.forRoot()
+                ToastrModule.forRoot(),
+                ChartsModule
             ],
             declarations: [CpuStatsComponent]
         });

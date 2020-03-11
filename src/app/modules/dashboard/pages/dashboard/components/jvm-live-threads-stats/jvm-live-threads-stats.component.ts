@@ -1,7 +1,9 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Color, BaseChartDirective} from 'ng2-charts';
-import {timer, BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, Subject, throwError, timer} from 'rxjs';
+import {catchError, mergeMap, map, takeUntil, tap} from 'rxjs/operators';
+
+import * as chartJs from 'chart.js';
 
 import {DashboardMetricsService} from '../../../../services/dashboard-metrics.service';
 
@@ -11,7 +13,7 @@ import {DashboardMetricsService} from '../../../../services/dashboard-metrics.se
     styleUrls: ['./jvm-live-threads-stats.component.scss']
 })
 export class JvmLiveThreadsStatsComponent implements OnInit, OnDestroy {
-    @ViewChild(BaseChartDirective, {static: false})
+    @ViewChild(BaseChartDirective, {static: true})
     jvmLiveThreadChart: BaseChartDirective;
 
     loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -57,7 +59,7 @@ export class JvmLiveThreadsStatsComponent implements OnInit, OnDestroy {
     ];
 
     public jvmLineChartLegend = false;
-    public jvmLineChartType = 'line';
+    public jvmLineChartType: chartJs.ChartType = 'line';
 
     public jvmLiveThreadsLineChartDataSet: Array<any> = [
         {
@@ -67,17 +69,16 @@ export class JvmLiveThreadsStatsComponent implements OnInit, OnDestroy {
         }
     ];
 
-    private jvmLiveThreadsSubscription: Subscription;
     private destroy$: Subject<any> = new Subject();
 
     constructor(private service: DashboardMetricsService) {
     }
 
-    getJvmLiveThreadsData() {
-        this.service.getJvmLiveThreads()
-            .pipe(takeUntil(this.destroy$))
-            .subscribe(
-                (response: any) => {
+    ngOnInit() {
+        timer(0, 2000)
+            .pipe(
+                mergeMap(() => this.service.getJvmLiveThreads().pipe(takeUntil(this.destroy$))),
+                map((response: any) => {
                     let jvmLiveThreads = response.measurements[0].value;
 
                     const _jvmLiveThreadsLineChartData = this.jvmLiveThreadsLineChartData;
@@ -95,18 +96,19 @@ export class JvmLiveThreadsStatsComponent implements OnInit, OnDestroy {
 
                     this.jvmLiveThreadsLineChartData = _jvmLiveThreadsLineChartData;
                     this.jvmLiveThreadsLineChartLabels = _jvmLiveThreadsLineChartLabels;
-
                     this.jvmLiveThreadChart.chart.update();
-            }
-        );
-    }
-
-    ngOnInit() {
-        this.jvmLiveThreadsSubscription = timer(0, 2000).subscribe(val => this.getJvmLiveThreadsData());
+                }),
+                catchError((err: any) => {
+                    console.error(err);
+                    return throwError(err);
+                }),
+                tap(() => this.loading$.next(false)),
+                takeUntil(this.destroy$)
+            )
+            .subscribe();
     }
 
     ngOnDestroy() {
-        this.jvmLiveThreadsSubscription.unsubscribe();
         this.destroy$.next();
         this.destroy$.complete();
     }

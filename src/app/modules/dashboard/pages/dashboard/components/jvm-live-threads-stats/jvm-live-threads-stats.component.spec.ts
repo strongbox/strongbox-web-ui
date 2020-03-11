@@ -2,9 +2,11 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {ChartsModule} from 'ng2-charts';
+
+import {MaterialModule} from '../../../../../../shared/material.module';
 
 import {JvmLiveThreadsStatsComponent} from './jvm-live-threads-stats.component';
-import {MaterialModule} from '../../../../../../shared/material.module';
 
 describe('JvmLiveThreadsStatsComponent', () => {
     let component: JvmLiveThreadsStatsComponent;
@@ -16,7 +18,8 @@ describe('JvmLiveThreadsStatsComponent', () => {
                 NoopAnimationsModule,
                 MaterialModule,
                 HttpClientTestingModule,
-                RouterTestingModule
+                RouterTestingModule,
+                ChartsModule
             ],
             declarations: [JvmLiveThreadsStatsComponent]
         });

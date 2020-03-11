@@ -1,7 +1,9 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Color, BaseChartDirective} from 'ng2-charts';
-import {timer, BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, Subject, throwError, timer} from 'rxjs';
+import {catchError, mergeMap, map, takeUntil, tap} from 'rxjs/operators';
+
+import * as chartJs from 'chart.js';
 
 import {DashboardMetricsService} from '../../../../services/dashboard-metrics.service';
 
@@ -11,7 +13,7 @@ import {DashboardMetricsService} from '../../../../services/dashboard-metrics.se
     styleUrls: ['./jvm-memory-stats.component.scss']
 })
 export class JvmMemoryStatsComponent implements OnInit, OnDestroy {
-    @ViewChild(BaseChartDirective, {static: false})
+    @ViewChild(BaseChartDirective, {static: true})
     jvmMemoryChart: BaseChartDirective;
 
     loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -57,7 +59,7 @@ export class JvmMemoryStatsComponent implements OnInit, OnDestroy {
     ];
 
     public jvmLineChartLegend = false;
-    public jvmLineChartType = 'line';
+    public jvmLineChartType: chartJs.ChartType = 'line';
 
     public jvmMemoryLineChartDataSet: Array<any> = [
         {
@@ -67,17 +69,16 @@ export class JvmMemoryStatsComponent implements OnInit, OnDestroy {
         }
     ];
 
-    private jvmMemorySubscription: Subscription;
     private destroy$: Subject<any> = new Subject();
 
     constructor(private service: DashboardMetricsService) {
     }
 
-    getJvmMemoryData() {
-        this.service.getJvmUsedMemory()
-            .pipe(takeUntil(this.destroy$))
-            .subscribe(
-                (response: any) => {
+    ngOnInit() {
+        timer(0, 2000)
+            .pipe(
+                mergeMap(() => this.service.getJvmUsedMemory().pipe(takeUntil(this.destroy$))),
+                map((response: any) => {
                     // conversion from bytes to gigabytes
                     let jvmUsedMemory = response.measurements[0].value / 1024 / 1024 / 1024;
 
@@ -97,16 +98,18 @@ export class JvmMemoryStatsComponent implements OnInit, OnDestroy {
                     this.jvmMemoryLineChartData = _jvmMemoryLineChartData;
                     this.jvmMemoryLineChartLabels = _jvmMemoryLineChartLabels;
                     this.jvmMemoryChart.chart.update();
-                }
-            );
-    }
-
-    ngOnInit() {
-        this.jvmMemorySubscription = timer(0, 2000).subscribe(val => this.getJvmMemoryData());
+                }),
+                catchError((err: any) => {
+                    console.error(err);
+                    return throwError(err);
+                }),
+                tap(() => this.loading$.next(false)),
+                takeUntil(this.destroy$)
+            )
+            .subscribe();
     }
 
     ngOnDestroy() {
-        this.jvmMemorySubscription.unsubscribe();
         this.destroy$.next();
         this.destroy$.complete();
     }
