@@ -1,0 +1,15 @@
+<app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$" class="noPadding noBackground">
+    <div fxLayout="column" fxLayoutGap="3%">
+        <div fxLayout="row">
+            <div fxFlex="40" class="card-icon" style="margin-right: 1em;">
+                <app-cpu-stats-component></app-cpu-stats-component>
+            </div>
+            <div fxFlex="40" class="card-icon">
+                <app-jvm-memory-stats-component></app-jvm-memory-stats-component>
+            </div>
+            <div fxFlex="40" class="card-icon">
+                <app-jvm-live-threads-stats-component></app-jvm-live-threads-stats-component>
+            </div>
+        </div>
+    </div>
+</app-page-container>

@@ -1,0 +1,20 @@
+<mat-card style="margin-right: 1em;">
+    <mat-card-content>
+        <h3>JVM Memory (GB)</h3>
+
+        <div class="blue-border">&nbsp;</div>
+
+        <mat-progress-spinner mode="indeterminate" strokeWidth="2" *ngIf="loading$ | async"></mat-progress-spinner>
+
+        <canvas baseChart width="350" height="200"
+            [style.display]="(loading$ | async) ? 'none' : ''"
+            style="margin-top: 1em;"
+            [datasets]="jvmMemoryLineChartDataSet"
+            [labels]="jvmMemoryLineChartLabels"
+            [options]="jvmLineChartOptions"
+            [colors]="jvmLineChartColors"
+            [legend]="jvmLineChartLegend"
+            [chartType]="jvmLineChartType">
+        </canvas>
+    </mat-card-content>
+</mat-card>

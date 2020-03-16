@@ -62,6 +62,10 @@ const routes: Routes = [
         path: 'admin/logging',
         loadChildren: './modules/logging-management/logging-management.module#LoggingManagementModule'
     },
+    {
+        path: 'admin/dashboard',
+        loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
+    },
     {path: '**', component: PageNotFoundComponent}
 ];
 
