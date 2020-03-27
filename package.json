@@ -64,6 +64,7 @@
     "@angular/cli": "~8.3.25",
     "@angular/compiler-cli": "8.1.0",
     "@angular/language-service": "8.1.0",
+    "@babel/compat-data": "~7.8.0",
     "@ngxs/devtools-plugin": "^3.3.4",
     "@ngxs/logger-plugin": "^3.3.4",
     "@types/antlr4-autosuggest": "0.0.0",
