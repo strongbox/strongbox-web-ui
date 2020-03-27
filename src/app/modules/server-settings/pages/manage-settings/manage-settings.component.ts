@@ -36,7 +36,7 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.settingsForm = new FormGroup({
             instanceName: new FormControl(this.randomName(), [Validators.required, Validators.minLength(3)]),
-            baseUrl: new FormControl(this.guessUrl(), [Validators.required]),
+            baseUrl: new FormControl(null, []),
             port: new FormControl(48080, [
                 Validators.required,
                 (control: FormControl) => {
