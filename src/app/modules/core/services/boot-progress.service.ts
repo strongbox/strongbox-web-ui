@@ -2,13 +2,13 @@ import {Inject, Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngxs/store';
 import {DOCUMENT} from '@angular/common';
 import * as dayjs from 'dayjs';
-import {BehaviorSubject, Observable, of, Subject, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject, throwError, timer} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {catchError, takeUntil, tap} from 'rxjs/operators';
+import {catchError, delay, finalize, take, takeUntil, tap} from 'rxjs/operators';
 
 import {environment} from '../../../../environments/environment';
 import fromEventSource, {EventSourceMessage} from '../rxjs/fromEventSource';
-import retryWithConsecutiveBreak from '../rxjs/retryWithConsecutiveBreak';
+import retryWithConsecutiveBreak, {RetryAttempt} from '../rxjs/retryWithConsecutiveBreak';
 import {CheckCredentialsAction} from '../auth/state/auth.actions';
 
 @Injectable({
@@ -71,6 +71,28 @@ export class BootProgressService implements OnDestroy {
         }
     }
 
+    private propagateRetryMessage(attempt: RetryAttempt) {
+        // set boot state to retry
+        this.state$.next(BootState.RETRY);
+
+        let retryInSeconds = Math.round(attempt.delay / 1000) - 1;
+
+        timer(0, 1000)
+            .pipe(
+                take(retryInSeconds),
+                finalize(() => {
+                    of(null)
+                        .pipe(delay(850), takeUntil(this.destroy$))
+                        .subscribe(() => this.message$.next('Connecting...'));
+                }),
+                takeUntil(this.destroy$)
+            )
+            .subscribe((number) => {
+                const remainingTime = retryInSeconds - number;
+                this.message$.next(`Backend is down - retrying in ${remainingTime}s`);
+            });
+    }
+
     private connect() {
         if (this.stream$ === null) {
             this.state$.next(BootState.BOOTING);
@@ -79,9 +101,6 @@ export class BootProgressService implements OnDestroy {
                 ['booting', 'booted', 'ready'],
                 {withCredentials: false}
             ).pipe(
-                // kill switch.
-                takeUntil(this.destroy$),
-
                 tap((e: EventSourceMessage) => {
                     if (e.type === 'ready') {
                         this.handleReady(e);
@@ -96,16 +115,18 @@ export class BootProgressService implements OnDestroy {
                     maxRetries: -1,
                     exponentialDelay: true,
                     incrementFraction: 1.45,
-                    maxDelay: 15000,
+                    maxDelay: 16000,
                     destroy$: this.destroy$,
                     logAttempt: true,
                     onRetry: attempt => {
                         if (this.state$.getValue() !== BootState.BOOTED) {
-                            this.state$.next(BootState.RETRY);
-                            this.message$.next(`Backend is down - retrying in ${Math.round(attempt.delay / 1000)}s`);
+                            this.propagateRetryMessage(attempt);
                         }
                     }
                 }),
+
+                // kill switch.
+                takeUntil(this.destroy$),
 
                 catchError((err) => {
                     this.state$.next(BootState.FATAL);
