@@ -27,8 +27,8 @@
                             <mat-form-field>
                                 <input matInput placeholder="Base URL" formControlName="baseUrl" #url>
                                 <mat-hint>
-                                    The URL from which Strongbox is accessed (i.e. if you're using reverse proxy
-                                    this should be the public url)
+                                    (Optional) If set it will be used when generating links across Strongbox.
+                                    If empty - will guess automatically using request headers.
                                 </mat-hint>
                                 <mat-error>
                                     <form-field-errors formControlName="baseUrl"></form-field-errors>

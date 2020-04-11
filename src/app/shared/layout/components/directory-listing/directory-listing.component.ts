@@ -81,28 +81,21 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
     }
 
     downloadFile(pathRecord: PathRecord): void {
-
-        this.http
-            .get(pathRecord.url, {responseType: 'arraybuffer'})
-            .subscribe((buffer: ArrayBuffer) => {
-                if (pathRecord.name.match(/md5|sha1$/i)) {
+        if (pathRecord.name.match(/md5|sha1$/i)) {
+            this.http
+                .get(pathRecord.url, {responseType: 'arraybuffer'})
+                .subscribe((buffer: ArrayBuffer) => {
                     pathRecord.description = String.fromCharCode.apply(null, new Uint8Array(buffer));
                     this.cdr.detectChanges();
-                } else {
-                    const blob: Blob = new Blob([buffer], {type: 'application/octet-stream'});
-                    const fileName = pathRecord.name;
-                    const objectUrl: string = URL.createObjectURL(blob);
-                    const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-
-                    a.href = objectUrl;
-                    a.download = fileName;
-                    document.body.appendChild(a);
-                    a.click();
-
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(objectUrl);
-                }
-            });
+                });
+        } else {
+            const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+            a.href = pathRecord.url;
+            a.target = '_window';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
     }
 
     confirmDelete(pathRecord: PathRecord) {
@@ -123,7 +116,6 @@ export class DirectoryListingComponent implements OnInit, OnDestroy {
                 }
             });
     }
-
 
     sortPathRecord(a: PathRecord, b: PathRecord
     ) {
