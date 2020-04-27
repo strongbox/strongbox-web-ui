@@ -23,7 +23,7 @@
             "outputPath": "dist/strongbox-web-ui/static/assets",
             "index": {
               "input": "src/index.html",
-              "output": "../../index.html"
+              "output": "index.html"
             },
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
