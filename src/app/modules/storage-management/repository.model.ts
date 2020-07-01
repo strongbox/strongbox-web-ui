@@ -70,7 +70,7 @@ export class Repository {
     public id: string = null;
     public basedir: string = null;
     public policy: RepositoryPolicyEnum = RepositoryPolicyEnum.RELEASE;
-    public implementation = 'file-system';
+    public storageProvider = 'file-system';
     public layout: RepositoryLayoutEnum = RepositoryLayoutEnum.MAVEN2; // These are dynamic.
     public type: RepositoryTypeEnum = null;
     public secured = false;

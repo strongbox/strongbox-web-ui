@@ -62,7 +62,7 @@ export class ManageRepositoryComponent implements OnInit {
             status: new FormControl(repo.status, [Validators.required]),
             secured: new FormControl(repo.secured),
             layout: new FormControl(repo.layout, [Validators.required]),
-            implementation: new FormControl({value: repo.implementation, disabled: true}, [Validators.required]),
+            storageProvider: new FormControl({value: repo.storageProvider, disabled: true}, [Validators.required]),
             artifactMaxSize: new FormControl(repo.artifactMaxSize),
             trashEnabled: new FormControl(repo.trashEnabled),
             allowsForceDeletion: new FormControl(repo.allowsForceDeletion),
