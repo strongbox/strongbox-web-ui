@@ -45,7 +45,7 @@
     "antlr4-autosuggest": "0.0.28",
     "antlr4ts": "^0.4.1-alpha.0",
     "chart.js": "^2.9.3",
-    "class-transformer": "~0.2.3",
+    "class-transformer": "~0.3.1",
     "core-js": "^2.6.3",
     "dayjs": "~1.8.15",
     "event-source-polyfill": "^1.0.9",
