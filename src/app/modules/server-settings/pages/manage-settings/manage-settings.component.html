@@ -51,6 +51,16 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
+
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
+                        <mat-form-field>
+                            <input matInput placeholder="Max upload size" formControlName="maxUploadSize">
+                            <mat-hint>Maximum artifact size that will be accepted by the server.</mat-hint>
+                            <mat-error>
+                                <form-field-errors formControlName="maxFileSize"></form-field-errors>
+                            </mat-error>
+                      </mat-form-field>
+                    </div>
                 </div>
             </mat-tab>
             <mat-tab>

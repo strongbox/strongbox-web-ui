@@ -55,6 +55,21 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
                     return null;
                 }
             ]),
+            maxUploadSize: new FormControl('unlimited', [
+              Validators.required,
+              Validators.pattern('^unlimited$|([1-9][0-9]*[kmgKMG]?[bB])'),
+              (control: FormControl) => {
+                const message = {
+                  invalidSize: 'Max file upload size should be: "unlimited" or for example 100MB'
+                };
+
+                if (control.invalid) {
+                  return message;
+                }
+
+                return null;
+              }
+            ]),
             corsConfigurationForm: new FormGroup({
                 allowedOrigins: new FormControl(),
                 corsAllowAll: new FormControl(),
