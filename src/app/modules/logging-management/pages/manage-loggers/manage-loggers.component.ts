@@ -44,7 +44,7 @@ export class ManageLoggersComponent implements AfterViewInit, OnDestroy {
 
     dataSource: MatTableDataSource<Logger> = new MatTableDataSource();
 
-    @ViewChild(MatPaginator, {static: false})
+    @ViewChild(MatPaginator)
     paginator: MatPaginator;
 
     @ViewChild(MatSort, {static: true})

@@ -1,11 +1,12 @@
 import {BehaviorSubject, Subject} from 'rxjs';
 import {auditTime, bufferTime, filter, finalize, takeUntil, tap} from 'rxjs/operators';
-import {EventEmitter, Output} from '@angular/core';
+import { EventEmitter, Output, Directive } from '@angular/core';
 
 import {environment} from '../../../../../environments/environment';
 import fromEventSource, {ConnectionState, EventSourceMessage} from '../../../core/rxjs/fromEventSource';
 import retryWithConsecutiveBreak, {RetryAttempt} from '../../../core/rxjs/retryWithConsecutiveBreak';
 
+@Directive()
 export class StreamLogDataSource {
     readonly baseUrl = environment.strongboxUrl ? location.protocol + '//' + environment.strongboxUrl : '';
 

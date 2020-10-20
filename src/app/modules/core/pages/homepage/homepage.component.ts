@@ -27,7 +27,7 @@ export class HomepageComponent implements OnInit {
 
     public aqlDataSource: AbstractAutocompleteDataSource;
 
-    @ViewChild('aqlSearch', { static: false })
+    @ViewChild('aqlSearch')
     private aqlSearch: AqlAutocompleteComponent;
 
     constructor(public auth: AuthService,
