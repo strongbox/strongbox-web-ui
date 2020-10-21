@@ -52,7 +52,7 @@
     "fonts-raleway": "0.0.4",
     "ionicons": "^4.4.8",
     "ng2-charts": "^2.3.0",
-    "ngx-toastr": "~10.0.4",
+    "ngx-toastr": "~12.1.0",
     "ngx-virtual-scroller": "^3.0.3",
     "open-sans-fontface": "^1.4.0",
     "rxjs": "~6.6.3",
