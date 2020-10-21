@@ -1,5 +1,5 @@
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {Component, ViewChild} from '@angular/core';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
@@ -14,7 +14,7 @@ describe('Form Field: SecurityLdapRoleMappingComponent', () => {
     let component: SecurityLdapRoleMappingFormFieldComponent;
     let fixture: ComponentFixture<SecurityLdapRoleMappingFormFieldComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,

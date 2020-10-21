@@ -1,5 +1,5 @@
 import {AbstractAuthorityGuard} from './abstract-authority-guard';
-import {async, TestBed} from '@angular/core/testing';
+import {async, TestBed, waitForAsync} from '@angular/core/testing';
 import {NgxsModule, Store} from '@ngxs/store';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 
@@ -12,7 +12,7 @@ describe('Guard: Abstract Authority Guard', () => {
 
     let store: Store;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,

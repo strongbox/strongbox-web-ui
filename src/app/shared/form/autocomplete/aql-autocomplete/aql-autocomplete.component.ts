@@ -280,10 +280,10 @@ export class AqlAutocompleteComponent implements ControlValueAccessor, AfterView
      * @private
      */
     _movePanel() {
-        combineLatest(
+        combineLatest([
             this.inputValue$,
             this.inputCursorPosition
-        ).pipe(
+        ]).pipe(
             startWith(<SearchAndCursorData>{search: '', cursor: null}),
             switchMap((v) => {
                 v[1] = this.getInputCursorPosition();

@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 import {Selector, State} from '@ngxs/store';
 
 export interface ProfileStateModel {

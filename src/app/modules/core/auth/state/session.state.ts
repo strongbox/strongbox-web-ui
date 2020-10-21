@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Action, createSelector, Selector, State, StateContext, Store} from '@ngxs/store';
 import {Navigate} from '@ngxs/router-plugin';

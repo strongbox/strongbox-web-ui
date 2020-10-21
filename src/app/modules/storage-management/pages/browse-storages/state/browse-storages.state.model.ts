@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {ToastrService} from 'ngx-toastr';
 import {catchError, tap} from 'rxjs/operators';

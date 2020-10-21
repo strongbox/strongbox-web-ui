@@ -199,7 +199,7 @@ export class SelectAutocompleteComponent implements ControlValueAccessor, AfterV
             this.searchControl.disable();
         }
 
-        combineLatest(this.dependsOn.statusChanges)
+        combineLatest([this.dependsOn.statusChanges])
             .pipe(
                 startWith([this.dependsOn.status || 'PENDING']),
                 pairwise(),
