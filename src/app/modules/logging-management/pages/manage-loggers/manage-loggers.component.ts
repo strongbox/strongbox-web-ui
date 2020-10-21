@@ -6,10 +6,11 @@ import {
     OnDestroy,
     ViewChild
 } from '@angular/core';
-import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MatTable} from '@angular/material/table';
-import {MatDialogRef} from '@angular/material/dialog';
+import {MatTable, MatTableDataSource} from '@angular/material/table';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';

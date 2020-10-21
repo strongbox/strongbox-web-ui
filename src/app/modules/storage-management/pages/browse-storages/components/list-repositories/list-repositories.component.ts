@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import {MatDialog, MatDialogRef, MatTableDataSource} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Select, Store} from '@ngxs/store';
 import {Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';

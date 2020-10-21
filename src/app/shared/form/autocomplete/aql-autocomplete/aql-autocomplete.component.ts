@@ -14,7 +14,7 @@ import {
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject, combineLatest, interval, Observable, of, Subject} from 'rxjs';
 import {delayWhen, distinctUntilChanged, filter, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
-import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material';
+import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 import {AutocompleteOption, AutocompleteSelectFunction, InputCursorPosition} from '../autocomplete.model';
 import {AqlSuggestion} from '../../services/aql-autocomplete.service';

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
-import {MatTableDataSource} from '@angular/material';
+import {MatTableDataSource} from '@angular/material/table';
 
 import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 import {EnvironmentInfoService} from '../../services/environment-info.service';

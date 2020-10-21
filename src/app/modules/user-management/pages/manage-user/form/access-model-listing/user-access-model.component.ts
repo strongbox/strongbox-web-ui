@@ -13,7 +13,8 @@ import {
 } from '@angular/core';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SelectionModel} from '@angular/cdk/collections';
-import {MatSort, MatTableDataSource} from '@angular/material';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatSort} from '@angular/material/sort';
 import {Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 

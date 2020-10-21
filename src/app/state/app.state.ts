@@ -1,9 +1,8 @@
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MediaChange, MediaObserver} from '@angular/flex-layout';
 import {Action, NgxsOnInit, Select, Selector, State, StateContext} from '@ngxs/store';
 import {Navigate, RouterNavigation} from '@ngxs/router-plugin';
 import {filter, take} from 'rxjs/operators';
-import {MatDialogRef} from '@angular/material';
 import {NavigationStart, Router} from '@angular/router';
 
 import {

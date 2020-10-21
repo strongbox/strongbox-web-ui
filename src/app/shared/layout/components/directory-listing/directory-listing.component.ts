@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {MatDialog, MatDialogRef, MatTableDataSource} from '@angular/material';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {takeUntil} from 'rxjs/operators';
 import {Navigate} from '@ngxs/router-plugin';
 import {Store} from '@ngxs/store';
