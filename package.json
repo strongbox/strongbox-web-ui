@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --aot",
-    "build": "npm run clean-dist && ng build --prod --aot",
+    "start": "ng serve",
+    "build": "npm run clean-dist && ng build --prod",
     "postbuild": "./node_modules/.bin/webpack --config ./tools/webpack.config.js",
     "build-source-map": "npm run clean-dist && npm run build -- --source-map && source-map-explorer dist/strongbox-web-ui/static/assets/main-es5.*.js && source-map-explorer dist/strongbox-web-ui/static/assets/main-es2015.*.js",
     "serve-packaged": "./node_modules/.bin/http-server dist/strongbox-web-ui -p 4206 -g -c-1 -o",
