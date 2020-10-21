@@ -11,7 +11,7 @@ import {FormHelperModule} from '../../../../shared/form/form-helper.module';
 import {StorageManagerService} from '../../services/storage-manager.service';
 import {AppState} from '../../../../state/app.state';
 import {BrowseStoragesState} from '../../pages/browse-storages/state/browse-storages.state.model';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {of} from 'rxjs';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
