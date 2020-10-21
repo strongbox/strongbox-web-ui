@@ -43,13 +43,13 @@ describe('Interceptor: error interceptor', () => {
             ]
         });
 
-        interceptor = TestBed.get(ErrorInterceptor);
-        toastr = TestBed.get(ToastrService);
+        interceptor = TestBed.inject(ErrorInterceptor);
+        toastr = TestBed.inject(ToastrService);
         toastrSpy = spyOn(toastr, 'error').and.callThrough();
-        backend = TestBed.get(HttpTestingController);
-        client = TestBed.get(HttpClient);
-        store = TestBed.get(Store);
-        actions = TestBed.get(Actions);
+        backend = TestBed.inject(HttpTestingController);
+        client = TestBed.inject(HttpClient);
+        store = TestBed.inject(Store);
+        actions = TestBed.inject(Actions);
     }));
 
     afterEach(() => {

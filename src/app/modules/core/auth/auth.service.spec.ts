@@ -37,9 +37,9 @@ describe('AuthService', () => {
             ]
         });
 
-        store = TestBed.get(Store);
-        service = TestBed.get(AuthService);
-        backend = TestBed.get(HttpTestingController);
+        store = TestBed.inject(Store);
+        service = TestBed.inject(AuthService);
+        backend = TestBed.inject(HttpTestingController);
     });
 
     afterEach(() => {

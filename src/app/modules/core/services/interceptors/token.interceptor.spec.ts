@@ -25,9 +25,9 @@ describe('Interceptor: token interceptor', () => {
             ]
         });
 
-        interceptor = TestBed.get(TokenInterceptor);
-        backend = TestBed.get(HttpTestingController);
-        client = TestBed.get(HttpClient);
+        interceptor = TestBed.inject(TokenInterceptor);
+        backend = TestBed.inject(HttpTestingController);
+        client = TestBed.inject(HttpClient);
 
         let store = {};
         const mockLocalStorage = {

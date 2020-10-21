@@ -37,7 +37,7 @@ describe('Dialog: LoginDialogComponent', () => {
         });
 
         fixture = TestBed.createComponent(LoginDialogComponent);
-        store = TestBed.get(Store);
+        store = TestBed.inject(Store);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

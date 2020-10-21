@@ -53,8 +53,8 @@ describe('Guard: ViewUser should', () => {
             ]
         }).compileComponents(); // compile template and css
 
-        viewUserGuard = TestBed.get(ViewUserGuard);
-        store = TestBed.get(Store);
+        viewUserGuard = TestBed.inject(ViewUserGuard);
+        store = TestBed.inject(Store);
     });
 
     it('allow logged in users with VIEW_USER authority to access route', () => {

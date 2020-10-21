@@ -23,8 +23,7 @@ import {LdapConnectionTestDialogComponent} from './pages/ldap-management/securit
         MaterialModule,
         FormHelperModule,
         SecurityManagementRoutingModule
-    ],
-    entryComponents: [LdapConnectionTestDialogComponent]
+    ]
 })
 export class SecurityManagementModule {
 }

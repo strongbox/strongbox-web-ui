@@ -7,7 +7,7 @@ describe('EnvironmentInfoService', () => {
     beforeEach(() => TestBed.configureTestingModule({imports: [HttpClientModule]}));
 
     it('should be created', () => {
-        const service: EnvironmentInfoService = TestBed.get(EnvironmentInfoService);
+        const service: EnvironmentInfoService = TestBed.inject(EnvironmentInfoService);
         expect(service).toBeTruthy();
     });
 });

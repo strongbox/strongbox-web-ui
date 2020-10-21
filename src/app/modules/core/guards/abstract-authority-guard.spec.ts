@@ -28,7 +28,7 @@ describe('Guard: Abstract Authority Guard', () => {
             ]
         }).compileComponents();
 
-        store = TestBed.get(Store);
+        store = TestBed.inject(Store);
         store.reset(defaultSessionState);
     }));
 
@@ -39,7 +39,7 @@ describe('Guard: Abstract Authority Guard', () => {
             state: 'authenticated'
         }));
 
-        TestBed.get(TestGuard).canActivate().subscribe((result: boolean) => {
+        TestBed.inject(TestGuard).canActivate().subscribe((result: boolean) => {
             expect<boolean>(result).toBe(true);
         });
     });
@@ -51,7 +51,7 @@ describe('Guard: Abstract Authority Guard', () => {
             state: 'authenticated'
         }));
 
-        TestBed.get(TestGuard).canActivate().subscribe((result: boolean) => {
+        TestBed.inject(TestGuard).canActivate().subscribe((result: boolean) => {
             expect<boolean>(result).toBe(false);
         });
     });
@@ -65,7 +65,7 @@ describe('Guard: Abstract Authority Guard', () => {
             state: 'authenticated'
         }));
 
-        TestBed.get(TestGuard).canActivate().subscribe((result: boolean) => {
+        TestBed.inject(TestGuard).canActivate().subscribe((result: boolean) => {
             expect<boolean>(result).toBe(false);
         });
     });
@@ -80,7 +80,7 @@ describe('Guard: Abstract Authority Guard', () => {
             state: 'authenticated'
         }));
 
-        TestBed.get(TestAllAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
+        TestBed.inject(TestAllAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
             expect<boolean>(result).toBe(true);
         });
     });
@@ -94,7 +94,7 @@ describe('Guard: Abstract Authority Guard', () => {
             state: 'authenticated'
         }));
 
-        TestBed.get(TestAllAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
+        TestBed.inject(TestAllAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
             expect<boolean>(result).toBe(false);
         });
     });
@@ -108,7 +108,7 @@ describe('Guard: Abstract Authority Guard', () => {
             state: 'authenticated'
         }));
 
-        TestBed.get(TestAnyAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
+        TestBed.inject(TestAnyAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
             expect<boolean>(result).toBe(true);
         });
     });
@@ -122,7 +122,7 @@ describe('Guard: Abstract Authority Guard', () => {
             state: 'authenticated'
         }));
 
-        TestBed.get(TestAnyAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
+        TestBed.inject(TestAnyAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
             expect<boolean>(result).toBe(false);
         });
     });
@@ -137,7 +137,7 @@ describe('Guard: Abstract Authority Guard', () => {
             state: 'authenticated'
         }));
 
-        TestBed.get(TestCombineAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
+        TestBed.inject(TestCombineAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
             expect<boolean>(result).toBe(true);
         });
     });
@@ -152,7 +152,7 @@ describe('Guard: Abstract Authority Guard', () => {
             state: 'authenticated'
         }));
 
-        TestBed.get(TestCombineAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
+        TestBed.inject(TestCombineAuthoritiesGuard).canActivate().subscribe((result: boolean) => {
             expect<boolean>(result).toBe(false);
         });
     });

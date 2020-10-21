@@ -16,7 +16,7 @@ describe('BootProgressService', () => {
     }));
 
     it('should be created', () => {
-        const service: BootProgressService = TestBed.get(BootProgressService);
+        const service: BootProgressService = TestBed.inject(BootProgressService);
         expect(service).toBeTruthy();
     });
 });

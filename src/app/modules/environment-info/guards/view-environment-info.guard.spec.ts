@@ -45,8 +45,8 @@ describe('Guard: ViewEnvironmentInfo', () => {
             ]
         }).compileComponents(); // compile template and css
 
-        guard = TestBed.get(ViewEnvironmentInfoGuard);
-        store = TestBed.get(Store);
+        guard = TestBed.inject(ViewEnvironmentInfoGuard);
+        store = TestBed.inject(Store);
     });
 
     it('allow logged in users with ADMIN authority to access route', () => {

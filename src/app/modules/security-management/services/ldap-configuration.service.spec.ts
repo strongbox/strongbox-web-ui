@@ -9,7 +9,7 @@ describe('LdapConfigurationService', () => {
     }));
 
     it('should be created', () => {
-        const service: LdapConfigurationService = TestBed.get(LdapConfigurationService);
+        const service: LdapConfigurationService = TestBed.inject(LdapConfigurationService);
         expect(service).toBeTruthy();
     });
 });

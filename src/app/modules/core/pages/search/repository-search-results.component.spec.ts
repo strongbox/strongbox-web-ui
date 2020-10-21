@@ -30,8 +30,8 @@ describe('Component: RepositorySearchResultsComponent', () => {
             ]
         });
 
-        httpClient = TestBed.get(HttpClient);
-        httpTestingController = TestBed.get(HttpTestingController);
+        httpClient = TestBed.inject(HttpClient);
+        httpTestingController = TestBed.inject(HttpTestingController);
 
         fixture = TestBed.createComponent(RepositorySearchResultsComponent);
         component = fixture.componentInstance;

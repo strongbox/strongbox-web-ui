@@ -39,8 +39,8 @@ describe('Component: BrowseRepositoryComponent', () => {
             declarations: [BrowseRepositoryComponent]
         }).compileComponents();
 
-        router = TestBed.get(Router);
-        ngZone = TestBed.get(NgZone);
+        router = TestBed.inject(Router);
+        ngZone = TestBed.inject(NgZone);
         ngZone.run(() => {
             router.initialNavigation();
             router.navigateByUrl('admin/storages/myStorageId/myRepositoryId/some/long/path');

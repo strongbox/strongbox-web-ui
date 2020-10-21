@@ -17,8 +17,8 @@ describe('RepositorySearchService', () => {
     }));
 
     beforeEach(() => {
-        service = TestBed.get(RepositorySearchService);
-        backend = TestBed.get(HttpTestingController);
+        service = TestBed.inject(RepositorySearchService);
+        backend = TestBed.inject(HttpTestingController);
     });
 
     afterEach(() => {

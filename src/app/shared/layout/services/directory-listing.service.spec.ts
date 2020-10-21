@@ -9,7 +9,7 @@ describe('Service: DirectoryListingService', () => {
     }));
 
     it('should be created', () => {
-        const service: DirectoryListingService = TestBed.get(DirectoryListingService);
+        const service: DirectoryListingService = TestBed.inject(DirectoryListingService);
         expect(service).toBeTruthy();
     });
 });

@@ -83,9 +83,9 @@ describe('State: SessionState', () => {
                 ]
             });
 
-            store = TestBed.get(Store);
-            backend = TestBed.get(HttpTestingController);
-            location = TestBed.get(Location);
+            store = TestBed.inject(Store);
+            backend = TestBed.inject(HttpTestingController);
+            location = TestBed.inject(Location);
         });
 
         afterEach(() => {

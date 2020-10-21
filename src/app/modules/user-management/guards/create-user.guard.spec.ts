@@ -53,8 +53,8 @@ describe('Guard: CreateUserGuard should', () => {
             ]
         }).compileComponents(); // compile template and css
 
-        createUserGuard = TestBed.get(CreateUserGuard);
-        store = TestBed.get(Store);
+        createUserGuard = TestBed.inject(CreateUserGuard);
+        store = TestBed.inject(Store);
     });
 
     it('allow logged in users with CREATE_USER authority to access route', () => {
