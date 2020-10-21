@@ -1,3 +1,4 @@
+import {Injectable} from "@angular/core";
 import {Selector, State} from '@ngxs/store';
 
 export interface ProfileStateModel {
@@ -28,6 +29,7 @@ export interface ProfileStateModel {
         }
     }
 })
+@Injectable()
 export class AccountFormState {
     @Selector()
     static formState(state: ProfileStateModel) {

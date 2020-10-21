@@ -1,3 +1,4 @@
+import {Injectable} from "@angular/core";
 import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {ToastrService} from 'ngx-toastr';
 import {catchError, tap} from 'rxjs/operators';
@@ -36,6 +37,7 @@ export interface BrowseStoragesStateModel {
         repositories: []
     }
 })
+@Injectable()
 export class BrowseStoragesState {
     @Selector()
     static selectedStorage(state: BrowseStoragesStateModel) {
