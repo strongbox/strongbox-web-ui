@@ -45,8 +45,8 @@ describe('Guard: ManageSettings should', () => {
             ]
         }).compileComponents(); // compile template and css
 
-        guard = TestBed.get(ManageSettingsGuard);
-        store = TestBed.get(Store);
+        guard = TestBed.inject(ManageSettingsGuard);
+        store = TestBed.inject(Store);
     });
 
     it('allow logged in users with ADMIN authority to access route', () => {

@@ -1,5 +1,5 @@
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {async, TestBed} from '@angular/core/testing';
+import {async, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {RepositorySearchService} from './repository-search.service';
 import {SearchResponse, SearchResult} from './search-result-interfaces';
@@ -9,7 +9,7 @@ describe('RepositorySearchService', () => {
     let service: RepositorySearchService;
     let backend: HttpTestingController;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, MaterialModule],
             providers: [RepositorySearchService]
@@ -17,8 +17,8 @@ describe('RepositorySearchService', () => {
     }));
 
     beforeEach(() => {
-        service = TestBed.get(RepositorySearchService);
-        backend = TestBed.get(HttpTestingController);
+        service = TestBed.inject(RepositorySearchService);
+        backend = TestBed.inject(HttpTestingController);
     });
 
     afterEach(() => {

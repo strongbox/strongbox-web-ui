@@ -38,9 +38,6 @@ import {BrowseRepositoryComponent} from './pages/browse-repository/browse-reposi
         ManageRepositoryComponent,
         StorageFormDialogComponent,
         BrowseRepositoryComponent
-    ],
-    entryComponents: [
-        StorageFormDialogComponent
     ]
 })
 export class StorageManagementModule {

@@ -53,8 +53,8 @@ describe('Guard: DeleteUserGuard should', () => {
             ]
         }).compileComponents(); // compile template and css
 
-        deleteUserGuard = TestBed.get(DeleteUserGuard);
-        store = TestBed.get(Store);
+        deleteUserGuard = TestBed.inject(DeleteUserGuard);
+        store = TestBed.inject(Store);
     });
 
     it('allow logged in users with DELETE_USER authority to access route', () => {

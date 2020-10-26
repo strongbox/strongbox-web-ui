@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpErrorResponse} from '@angular/common/http';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {NgxsModule, Store} from '@ngxs/store';
 
@@ -37,9 +37,9 @@ describe('AuthService', () => {
             ]
         });
 
-        store = TestBed.get(Store);
-        service = TestBed.get(AuthService);
-        backend = TestBed.get(HttpTestingController);
+        store = TestBed.inject(Store);
+        service = TestBed.inject(AuthService);
+        backend = TestBed.inject(HttpTestingController);
     });
 
     afterEach(() => {

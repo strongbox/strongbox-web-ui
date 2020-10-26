@@ -11,7 +11,7 @@ describe('ServerSettingsService', () => {
     }));
 
     it('should be created', () => {
-        const service: ServerSettingsService = TestBed.get(ServerSettingsService);
+        const service: ServerSettingsService = TestBed.inject(ServerSettingsService);
         expect(service).toBeTruthy();
     });
 });

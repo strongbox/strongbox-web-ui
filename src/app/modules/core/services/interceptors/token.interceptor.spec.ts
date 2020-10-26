@@ -1,5 +1,5 @@
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
-import {async, fakeAsync, TestBed} from '@angular/core/testing';
+import {async, fakeAsync, TestBed, waitForAsync} from '@angular/core/testing';
 import {HTTP_INTERCEPTORS, HttpClient} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
 
@@ -10,7 +10,7 @@ describe('Interceptor: token interceptor', () => {
     let backend: HttpTestingController;
     let client: HttpClient;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
@@ -25,9 +25,9 @@ describe('Interceptor: token interceptor', () => {
             ]
         });
 
-        interceptor = TestBed.get(TokenInterceptor);
-        backend = TestBed.get(HttpTestingController);
-        client = TestBed.get(HttpClient);
+        interceptor = TestBed.inject(TokenInterceptor);
+        backend = TestBed.inject(HttpTestingController);
+        client = TestBed.inject(HttpClient);
 
         let store = {};
         const mockLocalStorage = {

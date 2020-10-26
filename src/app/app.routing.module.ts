@@ -56,11 +56,11 @@ const routes: Routes = [
     },
     {
         path: 'admin/routes',
-        loadChildren: './modules/route-management/route-management.module#RouteManagementModule'
+        loadChildren: () => import('./modules/route-management/route-management.module').then(m => m.RouteManagementModule)
     },
     {
         path: 'admin/logging',
-        loadChildren: './modules/logging-management/logging-management.module#LoggingManagementModule'
+        loadChildren: () => import('./modules/logging-management/logging-management.module').then(m => m.LoggingManagementModule)
     },
     {
         path: 'admin/dashboard',

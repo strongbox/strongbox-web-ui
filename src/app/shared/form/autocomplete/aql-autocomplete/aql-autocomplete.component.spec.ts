@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {AqlAutocompleteComponent} from './aql-autocomplete.component';
@@ -10,7 +10,7 @@ describe('AqlAutocompleteComponent', () => {
     let component: AqlAutocompleteComponent;
     let fixture: ComponentFixture<AqlAutocompleteComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 CommonModule,

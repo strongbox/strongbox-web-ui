@@ -2,7 +2,8 @@ import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, forwardRe
 import {AbstractControl, ControlValueAccessor, FormControl, FormGroupDirective, NG_VALUE_ACCESSOR, NgForm} from '@angular/forms';
 import {BehaviorSubject, combineLatest, EMPTY, Observable, of, Subject, timer} from 'rxjs';
 import {debounce, debounceTime, distinctUntilChanged, filter, pairwise, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
-import {ErrorStateMatcher, MatAutocomplete, MatAutocompleteTrigger} from '@angular/material';
+import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {ErrorStateMatcher} from '@angular/material/core';
 
 import {AbstractAutocompleteDataSource, AutocompleteOption} from '../autocomplete.model';
 import {DefaultAutocompleteDataSource} from '../default-autocomplete.data-source';
@@ -198,7 +199,7 @@ export class SelectAutocompleteComponent implements ControlValueAccessor, AfterV
             this.searchControl.disable();
         }
 
-        combineLatest(this.dependsOn.statusChanges)
+        combineLatest([this.dependsOn.statusChanges])
             .pipe(
                 startWith([this.dependsOn.status || 'PENDING']),
                 pairwise(),

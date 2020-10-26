@@ -53,8 +53,8 @@ describe('Guard: UpdateUserGuard should', () => {
             ]
         }).compileComponents(); // compile template and css
 
-        updateUserGuard = TestBed.get(UpdateUserGuard);
-        store = TestBed.get(Store);
+        updateUserGuard = TestBed.inject(UpdateUserGuard);
+        store = TestBed.inject(Store);
     });
 
     it('allow logged in users with UPDATE_USER authority to access route', () => {

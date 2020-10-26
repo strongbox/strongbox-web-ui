@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {BehaviorSubject} from 'rxjs';
 import {Select, Store} from '@ngxs/store';
 import {ToastrService} from 'ngx-toastr';

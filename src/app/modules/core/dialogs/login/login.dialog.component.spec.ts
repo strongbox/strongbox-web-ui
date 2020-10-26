@@ -4,7 +4,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {NgxsModule, Store} from '@ngxs/store';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {of} from 'rxjs';
 
 import {LoginDialogComponent} from './login.dialog.component';
@@ -37,7 +37,7 @@ describe('Dialog: LoginDialogComponent', () => {
         });
 
         fixture = TestBed.createComponent(LoginDialogComponent);
-        store = TestBed.get(Store);
+        store = TestBed.inject(Store);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

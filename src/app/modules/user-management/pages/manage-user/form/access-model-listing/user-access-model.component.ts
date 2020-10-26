@@ -13,7 +13,8 @@ import {
 } from '@angular/core';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SelectionModel} from '@angular/cdk/collections';
-import {MatSort, MatTableDataSource} from '@angular/material';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatSort} from '@angular/material/sort';
 import {Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 
@@ -71,7 +72,7 @@ export class UserAccessModelComponent implements OnInit, AfterViewInit, OnChange
 
     compareSelected = (val1: string, val2: string) => val1 === val2;
 
-    @ViewChild(MatSort, { static: false }) set content(content: ElementRef) {
+    @ViewChild(MatSort) set content(content: ElementRef) {
         this.sort = content;
         if (this.sort) {
             this.dataSource.sort = this.sort;

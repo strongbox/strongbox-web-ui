@@ -17,7 +17,8 @@ import {UserManagementService} from '../../../../../../user-management/services/
         {provide: MatFormFieldControl, useExisting: SecurityLdapRoleMappingFormFieldComponent}
     ],
 })
-export class SecurityLdapRoleMappingFormFieldComponent implements ControlValueAccessor, MatFormFieldControl<LdapRoleMapping[]>, OnInit, OnDestroy {
+export class SecurityLdapRoleMappingFormFieldComponent implements ControlValueAccessor,
+  MatFormFieldControl<LdapRoleMapping[]>, OnInit, OnDestroy {
     static nextId = 0;
 
     private static _formFieldName = 'roleMappingList';

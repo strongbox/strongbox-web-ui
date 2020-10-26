@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 
 import {SecurityManagementIndexComponent} from './pages/security-management-index/security-management-index.component';
 import {AuthGuard} from '../core/auth/auth.guard';
+// tslint:disable-next-line:max-line-length
 import {SecurityLdapConfigurationComponent} from './pages/ldap-management/security-ldap-configuration/security-ldap-configuration.component';
 
 const routes: Routes = [

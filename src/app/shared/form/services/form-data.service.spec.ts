@@ -11,7 +11,7 @@ describe('FormDataServiceService', () => {
     }));
 
     it('should be created', () => {
-        const service: FormDataService = TestBed.get(FormDataService);
+        const service: FormDataService = TestBed.inject(FormDataService);
         expect(service).toBeTruthy();
     });
 });

@@ -6,7 +6,7 @@ describe('AqlAutocompleteService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: AqlAutocompleteService = TestBed.get(AqlAutocompleteService);
+        const service: AqlAutocompleteService = TestBed.inject(AqlAutocompleteService);
         expect(service).toBeTruthy();
     });
 });

@@ -43,13 +43,13 @@ export class ManageRouteComponent implements OnInit {
 
     routeForm: FormGroup;
 
-    @ViewChild('storageSelect', {static: false, read: NgSelectComponent})
+    @ViewChild('storageSelect', { read: NgSelectComponent })
     storageSelectElement: NgSelectComponent;
 
-    @ViewChild('groupRepositorySelect', {static: false, read: NgSelectComponent})
+    @ViewChild('groupRepositorySelect', { read: NgSelectComponent })
     groupRepositoryElement: NgSelectComponent;
 
-    @ViewChild('searchGroupRepositoriesSelect', {static: false, read: NgSelectComponent})
+    @ViewChild('searchGroupRepositoriesSelect', { read: NgSelectComponent })
     searchGroupRepositoriesElement: NgSelectComponent;
 
     public breadcrumbs: Breadcrumb[] = [

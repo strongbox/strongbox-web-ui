@@ -42,8 +42,8 @@ describe('AuthGuard should', () => {
             ]
         }).compileComponents(); // compile template and css
 
-        authGuard = TestBed.get(AuthGuard);
-        store = TestBed.get(Store);
+        authGuard = TestBed.inject(AuthGuard);
+        store = TestBed.inject(Store);
     });
 
     it('allow logged in users to access route', () => {

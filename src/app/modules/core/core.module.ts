@@ -110,10 +110,6 @@ import {BootProgressService, BootProgressServiceFactory} from './services/boot-p
         MyAccountComponent,
         BrowseComponent
     ],
-    entryComponents: [
-        LoginDialogComponent,
-        ConfirmDialogComponent
-    ],
     providers: [
         {
             provide: HTTP_INTERCEPTORS,

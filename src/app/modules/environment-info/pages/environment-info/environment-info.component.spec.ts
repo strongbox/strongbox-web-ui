@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {CommonModule} from '@angular/common';
 
 import {EnvironmentInfoComponent} from './environment-info.component';
@@ -12,7 +12,7 @@ describe('Component: EnvironmentInfoComponent', () => {
     let component: EnvironmentInfoComponent;
     let fixture: ComponentFixture<EnvironmentInfoComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 CommonModule,

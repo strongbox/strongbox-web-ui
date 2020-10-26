@@ -23,9 +23,9 @@ describe('Interceptor: api-url interceptor', () => {
             ]
         });
 
-        interceptor = TestBed.get(ApiURLInterceptor);
-        backend = TestBed.get(HttpTestingController);
-        client = TestBed.get(HttpClient);
+        interceptor = TestBed.inject(ApiURLInterceptor);
+        backend = TestBed.inject(HttpTestingController);
+        client = TestBed.inject(HttpClient);
     });
 
     afterEach(() => {

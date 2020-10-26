@@ -1,3 +1,4 @@
+import {Injectable} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Action, createSelector, Selector, State, StateContext, Store} from '@ngxs/store';
 import {Navigate} from '@ngxs/router-plugin';
@@ -70,6 +71,7 @@ export const authenticationCookieName = 'access_token';
     name: 'session',
     defaults: initialSessionState()
 })
+@Injectable()
 export class SessionState {
 
     @Selector()
