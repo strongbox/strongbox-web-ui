@@ -9,8 +9,8 @@ import {ToastrModule} from 'ngx-toastr';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {of} from 'rxjs';
 import {ActivatedRoute, convertToParamMap} from '@angular/router';
-import {NgProgressModule} from '@ngx-progressbar/core';
-import {NgProgressHttpModule} from '@ngx-progressbar/http';
+import {NgProgressModule} from 'ngx-progressbar';
+import {NgProgressHttpModule} from 'ngx-progressbar/http';
 
 import {ManageRepositoryComponent} from './manage-repository.component';
 import {MaterialModule} from '../../../../shared/material.module';
