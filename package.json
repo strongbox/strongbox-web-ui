@@ -41,7 +41,7 @@
     "@ngxs/form-plugin": "~3.7.0",
     "@ngxs/router-plugin": "~3.7.0",
     "@ngxs/store": "~3.7.0",
-    "antlr4": "^4.7.1",
+    "antlr4": "~4.7.1",
     "antlr4-autosuggest": "0.0.28",
     "antlr4ts": "^0.4.1-alpha.0",
     "chart.js": "^2.9.3",
