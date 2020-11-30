@@ -96,6 +96,14 @@
                     authentication.<br>
                     Examples: <code>uid={{'{'}}0{{'}'}}</code>, <code>uid={{'{'}}0{{'}'}},ou=Admins</code>
                 </mat-hint>
+
+                <div style="height: 30px;"></div>
+
+                <div fxLayout="row" fxLayoutGap="30px">
+                    <mat-checkbox formControlName="userPasswordEncoded" color="primary">
+                        User password is base64 encoded?
+                    </mat-checkbox>
+                </div>
             </mat-expansion-panel>
 
             <mat-expansion-panel>
