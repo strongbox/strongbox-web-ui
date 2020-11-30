@@ -51,6 +51,15 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
+                        <mat-form-field>
+                            <input matInput placeholder="Maximal upload size" formControlName="maxUploadSize">
+                            <mat-hint>The maximal size of request which will be accepted by Strongbox (Default: unlimited).</mat-hint>
+                            <mat-error>
+                                <form-field-errors formControlName="maxUploadSize"></form-field-errors>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
                 </div>
             </mat-tab>
             <mat-tab>

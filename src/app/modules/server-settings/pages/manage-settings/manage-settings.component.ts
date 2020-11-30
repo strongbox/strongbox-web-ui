@@ -55,6 +55,21 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
                     return null;
                 }
             ]),
+            maxUploadSize: new FormControl('Unlimited', [
+                Validators.required,
+                  (control: FormControl) => {
+                  const message = {
+                      invalidUploadSize: 'Please enter a valid upload size: f.e 10mb'
+                  };
+                  const regex = '(unlimited|([0-9]+\\s*(b|kb|mb|gb)))';
+
+                  if(control.value && !control.value.toLowerCase().match(regex)){
+                      return message;
+                  }
+
+                return null;
+              }
+            ]),
             corsConfigurationForm: new FormGroup({
                 allowedOrigins: new FormControl(),
                 corsAllowAll: new FormControl(),
