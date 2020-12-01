@@ -33,6 +33,7 @@ export class SecurityLdapConfigurationComponent implements OnInit {
         userSearchBase: new FormControl(),
         userSearchFilter: new FormControl(),
         userDnPatternList: new FormControl([]),
+        userPasswordEncoded: new FormControl(false),
         authorities: new FormGroup({
             groupSearchBase: new FormControl(),
             groupSearchFilter: new FormControl(),
