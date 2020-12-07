@@ -1,13 +1,13 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {BehaviorSubject, of, Subject} from 'rxjs';
-import {Actions, Store} from '@ngxs/store';
-import {catchError} from 'rxjs/operators';
-import {ToastrService} from 'ngx-toastr';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { Actions, Store } from '@ngxs/store';
+import { catchError } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
-import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
-import {ServerSettingsService} from '../../services/server-settings.service';
-import {ApiResponse, handleFormError} from '../../../core/core.model';
+import { Breadcrumb } from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
+import { ServerSettingsService } from '../../services/server-settings.service';
+import { ApiResponse, handleFormError } from '../../../core/core.model';
 
 @Component({
     selector: 'app-manage-settings',
@@ -21,16 +21,16 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
     settingsForm: FormGroup;
 
     breadcrumbs: Breadcrumb[] = [
-        {label: 'Global settings', url: ['/admin/server-settings']}
+        { label: 'Global settings', url: ['/admin/server-settings'] }
     ];
 
     private destroy = new Subject();
 
     constructor(private actions: Actions,
-                private cdr: ChangeDetectorRef,
-                private service: ServerSettingsService,
-                private store: Store,
-                private notify: ToastrService) {
+        private cdr: ChangeDetectorRef,
+        private service: ServerSettingsService,
+        private store: Store,
+        private notify: ToastrService) {
     }
 
     ngOnInit() {
@@ -72,7 +72,7 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
                 type: new FormControl(),
                 username: new FormControl(),
                 password: new FormControl(),
-                nonProxyHosts: new FormControl()
+                nonProxyHosts: new FormArray([])
             })
         });
 
@@ -127,6 +127,23 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
         this.destroy.complete();
     }
 
+    get nonProxyHost(): FormArray {
+        return this.settingsForm.get('proxyConfigurationForm.nonProxyHosts') as FormArray;
+    }
+
+    addNonProxyHost() {
+        const group = this.settingsForm.get('proxyConfigurationForm');
+        group['controls']['nonProxyHosts'].push(new FormControl(''));
+    }
+
+    removeNonProxyHost(index: number) {
+        this.nonProxyHost.removeAt(index);
+    }
+
+    showNonProxyHostButton() {
+        return this.settingsForm.get('proxyConfigurationForm').value.type === undefined;
+    }
+
     getCorsConfigurationGroup(field = null) {
         const group = this.settingsForm.get('corsConfigurationForm');
         return field === null ? group : group.get(field);
@@ -139,6 +156,7 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
 
     getProxyConfigurationGroup(field = null) {
         const group = this.settingsForm.get('proxyConfigurationForm');
+        console.log(group);
         return field === null ? group : group.get(field);
     }
 

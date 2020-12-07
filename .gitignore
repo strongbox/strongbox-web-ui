@@ -46,3 +46,4 @@ src/aql/*
 
 # Avoid unintentionally changing the environment files.
 src/environments/*
+debug.log
