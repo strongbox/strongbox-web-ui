@@ -19,7 +19,7 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     settingsForm: FormGroup;
-
+    nonProxyHosts: FormArray;
     breadcrumbs: Breadcrumb[] = [
         { label: 'Global settings', url: ['/admin/server-settings'] }
     ];
@@ -76,6 +76,7 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
             })
         });
 
+        this.nonProxyHosts = this.settingsForm.get('proxyConfigurationForm.nonProxyHosts') as FormArray;
         let valueBeforeDisable = '';
         this.getCorsConfigurationGroup('corsAllowAll').valueChanges.subscribe(value => {
             const allowedOrigins = this.getCorsConfigurationGroup('allowedOrigins');
@@ -103,7 +104,7 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
         });
 
         this.loading$.next(true);
-
+        
         this.service
             .getSettings()
             .pipe(
@@ -127,23 +128,6 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
         this.destroy.complete();
     }
 
-    get nonProxyHost(): FormArray {
-        return this.settingsForm.get('proxyConfigurationForm.nonProxyHosts') as FormArray;
-    }
-
-    addNonProxyHost() {
-        const group = this.settingsForm.get('proxyConfigurationForm');
-        group['controls']['nonProxyHosts'].push(new FormControl(''));
-    }
-
-    removeNonProxyHost(index: number) {
-        this.nonProxyHost.removeAt(index);
-    }
-
-    showNonProxyHostButton() {
-        return this.settingsForm.get('proxyConfigurationForm').value.type === undefined;
-    }
-
     getCorsConfigurationGroup(field = null) {
         const group = this.settingsForm.get('corsConfigurationForm');
         return field === null ? group : group.get(field);
@@ -156,8 +140,16 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
 
     getProxyConfigurationGroup(field = null) {
         const group = this.settingsForm.get('proxyConfigurationForm');
-        console.log(group);
         return field === null ? group : group.get(field);
+    }
+    
+    addNonProxyHost() {
+        this.nonProxyHosts.push(new FormControl('', Validators.required));
+        this.cdr.detectChanges();
+    }
+
+    removeNonProxyHost(index: number) {
+        this.nonProxyHosts.removeAt(index);
     }
 
     basicSettingsInvalid() {

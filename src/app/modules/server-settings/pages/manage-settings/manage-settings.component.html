@@ -1,6 +1,9 @@
 <app-page-container [breadcrumbs]="breadcrumbs" [loading]="loading$">
 
-    <form fxLayout="column" class="inputFullWidth" [formGroup]="settingsForm" (submit)="save()">
+    <form fxLayout="column"
+          class="inputFullWidth"
+          [formGroup]="settingsForm"
+          (submit)="save()">
 
         <mat-tab-group [dynamicHeight]="true">
             <mat-tab label="Basic settings">
@@ -60,9 +63,13 @@
                     <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
                         <mat-form-field floatLabel="always">
                             <mat-label>Origins</mat-label>
-                            <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-                                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="15"
-                                formControlName="allowedOrigins"></textarea>
+                            <textarea matInput
+                                      cdkTextareaAutosize
+                                      #autosize="cdkTextareaAutosize"
+                                      cdkAutosizeMinRows="1"
+                                      cdkAutosizeMaxRows="15"
+                                      formControlName="allowedOrigins"
+                            ></textarea>
                             <mat-hint>Insert one origin per line</mat-hint>
                             <mat-error>
                                 <form-field-errors formControlName="allowedOrigins"></form-field-errors>
@@ -102,8 +109,7 @@
                         </mat-form-field>
 
                         <mat-form-field>
-                            <mat-select placeholder="Encryption" formControlName="connection"
-                                [disableOptionCentering]="true">
+                            <mat-select placeholder="Encryption" formControlName="connection" [disableOptionCentering]="true">
                                 <mat-option>None</mat-option>
                                 <mat-option value="plain">Plain</mat-option>
                                 <mat-option value="ssl">SSL</mat-option>
@@ -165,7 +171,7 @@
                         </mat-form-field>
 
                         <mat-form-field>
-                            <mat-select placeholder="Type" formControlName="type" [disableOptionCentering]="true">
+                            <mat-select placeholder="Type" formControlName="type" [disableOptionCentering]="true" #proxyType>
                                 <mat-option>None</mat-option>
                                 <mat-option value="DIRECT">Direct</mat-option>
                                 <mat-option value="HTTP">HTTP</mat-option>
@@ -193,23 +199,20 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-                    <div *ngIf="showNonProxyHostButton()">
+                    <div formArrayName="nonProxyHosts">
                         <button mat-raised-button color="primary" type="button" (click)="addNonProxyHost()">
-                            Add nonProxyHost
+                            Add non-proxy hosts
                         </button>
                         <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%"
-                            *ngFor="let control of nonProxyHost.controls; index as i">
+                        *ngFor="let control of nonProxyHosts.controls; let i = index" fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%">
                             <mat-form-field>
-                                <input matInput placeholder="Host" [formControl]="nonProxyHost.controls[i]">
+                                <input matInput placeholder="Host" [formControlName]="i">
                                 <button mat-icon-button matSuffix (click)="removeNonProxyHost(i)">
                                     <i class="ion-md-trash"></i>
                                 </button>
                             </mat-form-field>
                         </div>
                     </div>
-
-                    <!-- TODO: nonProxyHosts similar to CORS origins. -->
-
                 </div>
             </mat-tab>
         </mat-tab-group>
