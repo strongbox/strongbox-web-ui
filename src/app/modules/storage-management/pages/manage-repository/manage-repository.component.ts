@@ -43,7 +43,7 @@ export class ManageRepositoryComponent implements OnInit {
 
     activeGroupRepositories: string[] = [];
     availableGroupRepositories: string[] = [];
-    availableDigestAlgorithmSet: string[] = ['MD5', 'SHA-1', 'SHA-256', 'SHA-512'];
+    availableDigestAlgorithmSet = this.formDataService.getAvailableDigestAlgorithmSet();
     overrideAlgorithmConfig = false;
 
     form: FormGroup;
