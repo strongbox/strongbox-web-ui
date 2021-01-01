@@ -205,21 +205,22 @@
             </mat-tab>
 
             <mat-tab>
-              <ng-template mat-tab-label>
-                <span [class.invalid]="getCorsConfigurationGroup().invalid">Repository configuration</span>
-              </ng-template>
+                <ng-template mat-tab-label>
+                    <span>Repository configuration</span>
+                </ng-template>
 
-              <div class="tabContent">
-                <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
-                  <mat-form-field>
-                    <mat-select formControlName="digestAlgorithmSet" placeholder="Checksum digest algorithms" [disableOptionCentering]="true" multiple>
-                      <mat-option *ngFor="let algorithm of availableDigestAlgorithmSet" [value]="algorithm">
-                        {{ algorithm }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                <div class="tabContent">
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
+                        <mat-form-field>
+                            <mat-select formControlName="digestAlgorithmSet" placeholder="Checksum digest algorithms"
+                                [disableOptionCentering]="true" multiple>
+                                <mat-option *ngFor="let algorithm of availableDigestAlgorithmSet" [value]="algorithm">
+                                    {{ algorithm }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                 </div>
-              </div>
             </mat-tab>
         </mat-tab-group>
 

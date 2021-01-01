@@ -59,7 +59,7 @@ export class ManageRepositoryComponent implements OnInit {
     generateCommonFormFields(type: RepositoryTypeEnum, repo: Repository) {
         let repositoryConfiguration;
         if (repo.layout === RepositoryLayoutEnum.MAVEN2) {
-            repositoryConfiguration = new FormGroup({...this.generateMavenRepositoryFormFields(repo.repositoryConfiguration)});
+            repositoryConfiguration = new FormGroup({ ...this.generateMavenRepositoryFormFields(repo.repositoryConfiguration) });
         } else {
             repositoryConfiguration = new FormControl(null);
         }
@@ -100,7 +100,7 @@ export class ManageRepositoryComponent implements OnInit {
 
     generateMavenRepositoryFormFields(repositoryConfiguration: CustomRepositoryConfiguration) {
         if (repositoryConfiguration['digestAlgorithmSet']
-          && repositoryConfiguration['digestAlgorithmSet'].length > 0) {
+            && repositoryConfiguration['digestAlgorithmSet'].length > 0) {
             this.overrideAlgorithmConfig = true;
         }
         return {
@@ -110,7 +110,7 @@ export class ManageRepositoryComponent implements OnInit {
             cronExpression: new FormControl(repositoryConfiguration['cronExpression']),
             metadataExpirationStrategy: new FormControl(repositoryConfiguration['metadataExpirationStrategy']),
             digestAlgorithmSet: new FormControl(repositoryConfiguration['digestAlgorithmSet'],
-              this.overrideAlgorithmConfig ? Validators.required : null)
+                this.overrideAlgorithmConfig ? Validators.required : null)
         };
     }
 
@@ -346,7 +346,7 @@ export class ManageRepositoryComponent implements OnInit {
     }
 
     isMavenLayout() {
-      return this.form.get('layout').value === RepositoryLayoutEnum.MAVEN2;
+        return this.form.get('layout').value === RepositoryLayoutEnum.MAVEN2;
     }
 
 }
