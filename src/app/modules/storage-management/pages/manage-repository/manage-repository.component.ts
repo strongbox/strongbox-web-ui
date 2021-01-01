@@ -217,7 +217,10 @@ export class ManageRepositoryComponent implements OnInit {
                 repository.groupRepositories = this.activeGroupRepositories;
             }
 
-            if (!this.overrideAlgorithmConfig) {
+            if (!this.isMavenLayout()) {
+                repository.repositoryConfiguration = null;
+            }
+            else if (!this.overrideAlgorithmConfig) {
                 repository.repositoryConfiguration['digestAlgorithmSet'] = [];
             }
 
