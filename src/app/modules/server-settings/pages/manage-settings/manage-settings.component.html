@@ -203,25 +203,6 @@
 
                 </div>
             </mat-tab>
-
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    <span>Repository configuration</span>
-                </ng-template>
-
-                <div class="tabContent">
-                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
-                        <mat-form-field>
-                            <mat-select formControlName="digestAlgorithmSet" placeholder="Checksum digest algorithms"
-                                [disableOptionCentering]="true" multiple>
-                                <mat-option *ngFor="let algorithm of availableDigestAlgorithmSet" [value]="algorithm">
-                                    {{ algorithm }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                </div>
-            </mat-tab>
         </mat-tab-group>
 
         <div fxLayoutAlign="center center" class="formSubmitButtons noBorder">

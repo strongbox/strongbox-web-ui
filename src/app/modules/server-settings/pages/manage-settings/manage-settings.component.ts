@@ -8,7 +8,6 @@ import {ToastrService} from 'ngx-toastr';
 import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 import {ServerSettingsService} from '../../services/server-settings.service';
 import {ApiResponse, handleFormError} from '../../../core/core.model';
-import {FormDataService} from '../../../../shared/form/services/form-data.service';
 
 @Component({
     selector: 'app-manage-settings',
@@ -20,7 +19,6 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     settingsForm: FormGroup;
-    availableDigestAlgorithmSet = this.formDataService.getAvailableDigestAlgorithmSet();
 
     breadcrumbs: Breadcrumb[] = [
         {label: 'Global settings', url: ['/admin/server-settings']}
@@ -32,8 +30,7 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
                 private cdr: ChangeDetectorRef,
                 private service: ServerSettingsService,
                 private store: Store,
-                private notify: ToastrService,
-                private formDataService: FormDataService) {
+                private notify: ToastrService) {
     }
 
     ngOnInit() {
@@ -58,7 +55,6 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
                     return null;
                 }
             ]),
-            digestAlgorithmSet: new FormControl(),
             corsConfigurationForm: new FormGroup({
                 allowedOrigins: new FormControl(),
                 corsAllowAll: new FormControl(),
