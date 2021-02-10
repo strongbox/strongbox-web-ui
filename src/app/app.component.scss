@@ -131,7 +131,7 @@ a:hover {
 
 .side-navigation {
   display: flex;
-  width: 48px;
+  width: 5vh;
   min-height: 690px;
   position: fixed;
   top: 0px;
@@ -170,7 +170,7 @@ a:hover {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 49px;
+    width: 5vh;
     height: $header-nav-height;
     background: rgba(0, 0, 0, 0.15);
   }
