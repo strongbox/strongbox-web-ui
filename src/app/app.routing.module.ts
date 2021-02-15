@@ -71,7 +71,7 @@ const routes: Routes = [
 
 @NgModule({
     // TODO Preload modules to which we actually have access to.
-    imports: [RouterModule.forRoot(routes, {urlUpdateStrategy: 'eager', scrollPositionRestoration: 'top'})],
+    imports: [RouterModule.forRoot(routes, { urlUpdateStrategy: 'eager', scrollPositionRestoration: 'top', relativeLinkResolution: 'legacy' })],
     exports: [RouterModule],
     providers: [
         RepositorySearchResultResolver
