@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {CommonModule} from '@angular/common';
 
 import {EnvironmentInfoComponent} from './environment-info.component';

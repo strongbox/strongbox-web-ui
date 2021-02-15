@@ -1,5 +1,5 @@
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {async, ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {Component, ViewChild} from '@angular/core';
 import {HttpClientTestingModule} from '@angular/common/http/testing';

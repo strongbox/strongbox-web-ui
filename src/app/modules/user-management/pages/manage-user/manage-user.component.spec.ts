@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ToastrModule} from 'ngx-toastr';

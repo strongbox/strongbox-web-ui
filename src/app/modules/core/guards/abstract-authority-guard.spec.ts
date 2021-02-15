@@ -1,5 +1,5 @@
 import {AbstractAuthorityGuard} from './abstract-authority-guard';
-import {async, TestBed, waitForAsync} from '@angular/core/testing';
+import { async, TestBed, waitForAsync } from '@angular/core/testing';
 import {NgxsModule, Store} from '@ngxs/store';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 

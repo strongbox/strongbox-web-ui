@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 
 import {PageContainerComponent} from './page-container.component';
