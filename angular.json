@@ -93,9 +93,7 @@
           "options": {
             "browserTarget": "strongbox-web-ui:build",
             "proxyConfig": "./tools/proxy.conf.js",
-            "servePath": "/static/assets",
-            "baseHref": "/",
-            "deployUrl": "/static/assets/"
+            "servePath": "/static/assets"
           },
           "configurations": {
             "production": {
