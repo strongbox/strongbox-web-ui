@@ -3,8 +3,8 @@ import {BrowserModule} from '@angular/platform-browser';
 import {RouterTestingModule} from '@angular/router/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {NgProgressModule} from '@ngx-progressbar/core';
-import {NgProgressHttpModule} from '@ngx-progressbar/http';
+import {NgProgressModule} from 'ngx-progressbar';
+import {NgProgressHttpModule} from 'ngx-progressbar/http';
 import {NgxsModule} from '@ngxs/store';
 
 import {AppComponent} from './app.component';
