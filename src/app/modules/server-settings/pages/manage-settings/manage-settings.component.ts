@@ -1,13 +1,13 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {BehaviorSubject, of, Subject} from 'rxjs';
-import {Actions, Store} from '@ngxs/store';
-import {catchError} from 'rxjs/operators';
-import {ToastrService} from 'ngx-toastr';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { Actions, Store } from '@ngxs/store';
+import { catchError } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
-import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
-import {ServerSettingsService} from '../../services/server-settings.service';
-import {ApiResponse, handleFormError} from '../../../core/core.model';
+import { Breadcrumb } from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
+import { ServerSettingsService } from '../../services/server-settings.service';
+import { ApiResponse, handleFormError } from '../../../core/core.model';
 
 @Component({
     selector: 'app-manage-settings',
@@ -19,18 +19,18 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     settingsForm: FormGroup;
-
+    nonProxyHosts: FormArray;
     breadcrumbs: Breadcrumb[] = [
-        {label: 'Global settings', url: ['/admin/server-settings']}
+        { label: 'Global settings', url: ['/admin/server-settings'] }
     ];
 
     private destroy = new Subject();
 
     constructor(private actions: Actions,
-                private cdr: ChangeDetectorRef,
-                private service: ServerSettingsService,
-                private store: Store,
-                private notify: ToastrService) {
+        private cdr: ChangeDetectorRef,
+        private service: ServerSettingsService,
+        private store: Store,
+        private notify: ToastrService) {
     }
 
     ngOnInit() {
@@ -72,10 +72,11 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
                 type: new FormControl(),
                 username: new FormControl(),
                 password: new FormControl(),
-                nonProxyHosts: new FormControl()
+                nonProxyHosts: new FormArray([])
             })
         });
 
+        this.nonProxyHosts = this.settingsForm.get('proxyConfigurationForm.nonProxyHosts') as FormArray;
         let valueBeforeDisable = '';
         this.getCorsConfigurationGroup('corsAllowAll').valueChanges.subscribe(value => {
             const allowedOrigins = this.getCorsConfigurationGroup('allowedOrigins');
@@ -103,7 +104,7 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
         });
 
         this.loading$.next(true);
-
+        
         this.service
             .getSettings()
             .pipe(
@@ -140,6 +141,15 @@ export class ManageSettingsComponent implements OnInit, OnDestroy {
     getProxyConfigurationGroup(field = null) {
         const group = this.settingsForm.get('proxyConfigurationForm');
         return field === null ? group : group.get(field);
+    }
+    
+    addNonProxyHost() {
+        this.nonProxyHosts.push(new FormControl('', Validators.required));
+        this.cdr.detectChanges();
+    }
+
+    removeNonProxyHost(index: number) {
+        this.nonProxyHosts.removeAt(index);
     }
 
     basicSettingsInvalid() {

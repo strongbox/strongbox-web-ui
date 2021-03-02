@@ -14,7 +14,8 @@
                 <div class="tabContent">
                     <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="10%">
                         <mat-form-field>
-                            <input matInput placeholder="Instance name" formControlName="instanceName" autocomplete="off">
+                            <input matInput placeholder="Instance name" formControlName="instanceName"
+                                autocomplete="off">
                             <mat-hint>Give this instance a cool name.</mat-hint>
                             <mat-error>
                                 <form-field-errors formControlName="instanceName"></form-field-errors>
@@ -108,7 +109,7 @@
                         </mat-form-field>
 
                         <mat-form-field>
-                            <mat-select placeholder="Encryption" formControlName="connection" [disableOptionCentering]="true" >
+                            <mat-select placeholder="Encryption" formControlName="connection" [disableOptionCentering]="true">
                                 <mat-option>None</mat-option>
                                 <mat-option value="plain">Plain</mat-option>
                                 <mat-option value="ssl">SSL</mat-option>
@@ -136,7 +137,7 @@
                         </mat-form-field>
                     </div>
 
-<!--
+                    <!--
                     // TODO: Make it possible to send a testing email when we have support for this.
                     <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%">
                         <div >
@@ -170,7 +171,7 @@
                         </mat-form-field>
 
                         <mat-form-field>
-                            <mat-select placeholder="Type" formControlName="type" [disableOptionCentering]="true">
+                            <mat-select placeholder="Type" formControlName="type" [disableOptionCentering]="true" #proxyType>
                                 <mat-option>None</mat-option>
                                 <mat-option value="DIRECT">Direct</mat-option>
                                 <mat-option value="HTTP">HTTP</mat-option>
@@ -198,9 +199,20 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-
-                    <!-- TODO: nonProxyHosts similar to CORS origins. -->
-
+                    <div formArrayName="nonProxyHosts">
+                        <button mat-raised-button color="primary" type="button" (click)="addNonProxyHost()">
+                            Add non-proxy hosts
+                        </button>
+                        <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%"
+                        *ngFor="let control of nonProxyHosts.controls; let i = index" fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="3%">
+                            <mat-form-field>
+                                <input matInput placeholder="Host" [formControlName]="i">
+                                <button mat-icon-button matSuffix (click)="removeNonProxyHost(i)">
+                                    <i class="ion-md-trash"></i>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                    </div>
                 </div>
             </mat-tab>
         </mat-tab-group>
@@ -210,7 +222,8 @@
                 Back
             </button>
 
-            <button mat-raised-button color="primary" type="submit" [disabled]="!settingsForm.valid || (loading$ | async)">
+            <button mat-raised-button color="primary" type="submit"
+                [disabled]="!settingsForm.valid || (loading$ | async)">
                 Save
             </button>
         </div>
