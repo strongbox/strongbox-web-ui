@@ -1,5 +1,5 @@
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {async, TestBed, waitForAsync} from '@angular/core/testing';
+import { async, TestBed, waitForAsync } from '@angular/core/testing';
 import {HTTP_INTERCEPTORS, HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Actions, NgxsModule, ofActionDispatched, Store} from '@ngxs/store';
 import {NgxsFormPluginModule} from '@ngxs/form-plugin';

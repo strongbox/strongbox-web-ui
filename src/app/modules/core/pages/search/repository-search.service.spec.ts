@@ -1,5 +1,5 @@
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {async, TestBed, waitForAsync} from '@angular/core/testing';
+import { async, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {RepositorySearchService} from './repository-search.service';
 import {SearchResponse, SearchResult} from './search-result-interfaces';
