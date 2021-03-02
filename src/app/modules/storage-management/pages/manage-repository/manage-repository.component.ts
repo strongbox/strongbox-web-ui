@@ -12,6 +12,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import {Breadcrumb} from '../../../../shared/layout/components/breadcrumb/breadcrumb.model';
 import {StorageManagerService} from '../../services/storage-manager.service';
 import {
+    CustomRepositoryConfiguration,
     RemoteRepositoryChecksumPolicyEnum,
     RemoteRepositoryConfiguration,
     Repository,
@@ -42,6 +43,8 @@ export class ManageRepositoryComponent implements OnInit {
 
     activeGroupRepositories: string[] = [];
     availableGroupRepositories: string[] = [];
+    availableDigestAlgorithmSet = this.formDataService.getAvailableDigestAlgorithmSet();
+    overrideAlgorithmConfig = false;
 
     form: FormGroup;
 
@@ -54,6 +57,12 @@ export class ManageRepositoryComponent implements OnInit {
     }
 
     generateCommonFormFields(type: RepositoryTypeEnum, repo: Repository) {
+        let repositoryConfiguration;
+        if (repo.layout === RepositoryLayoutEnum.MAVEN2) {
+            repositoryConfiguration = new FormGroup({ ...this.generateMavenRepositoryFormFields(repo.repositoryConfiguration) });
+        } else {
+            repositoryConfiguration = new FormControl(null);
+        }
         let fields = {
             type: new FormControl(type, [Validators.required]),
             id: new FormControl(repo.id),
@@ -74,7 +83,7 @@ export class ManageRepositoryComponent implements OnInit {
             proxyConfiguration: new FormControl(null),
             remoteRepository: new FormControl(null),
             httpConnectionPool: new FormControl(null),
-            repositoryConfiguration: new FormControl(null),
+            repositoryConfiguration: repositoryConfiguration,
             groupRepositories: new FormControl(null),
             artifactCoordinateValidators: new FormControl(null),
         };
@@ -87,6 +96,22 @@ export class ManageRepositoryComponent implements OnInit {
         }
 
         return fields;
+    }
+
+    generateMavenRepositoryFormFields(repositoryConfiguration: CustomRepositoryConfiguration) {
+        if (repositoryConfiguration['digestAlgorithmSet']
+            && repositoryConfiguration['digestAlgorithmSet'].length > 0) {
+            this.overrideAlgorithmConfig = true;
+        }
+        return {
+            layout: new FormControl(RepositoryLayoutEnum.MAVEN2),
+            indexingEnabled: new FormControl(repositoryConfiguration['indexingEnabled']),
+            indexingClassNamesEnabled: new FormControl(repositoryConfiguration['indexingClassNamesEnabled']),
+            cronExpression: new FormControl(repositoryConfiguration['cronExpression']),
+            metadataExpirationStrategy: new FormControl(repositoryConfiguration['metadataExpirationStrategy']),
+            digestAlgorithmSet: new FormControl(repositoryConfiguration['digestAlgorithmSet'],
+                this.overrideAlgorithmConfig ? Validators.required : null)
+        };
     }
 
     isHostedRepository() {
@@ -186,11 +211,17 @@ export class ManageRepositoryComponent implements OnInit {
     submit() {
         if (this.form.valid) {
             this.loading$.next(true);
-
             const repository: Repository = plainToClass(Repository, this.form.getRawValue(), {groups: ['submit']}) as any;
 
             if (this.isGroupRepository()) {
                 repository.groupRepositories = this.activeGroupRepositories;
+            }
+
+            if (!this.isMavenLayout()) {
+                repository.repositoryConfiguration = null;
+            }
+            else if (!this.overrideAlgorithmConfig) {
+                repository.repositoryConfiguration['digestAlgorithmSet'] = [];
             }
 
             this.service
@@ -289,6 +320,16 @@ export class ManageRepositoryComponent implements OnInit {
         });
     }
 
+    onOverrideAlgorithmConfigChange() {
+        this.overrideAlgorithmConfig = !this.overrideAlgorithmConfig;
+        if (this.overrideAlgorithmConfig) {
+            this.form.get('repositoryConfiguration.digestAlgorithmSet').setValidators([Validators.required]);
+        } else {
+            this.form.get('repositoryConfiguration.digestAlgorithmSet').clearValidators();
+        }
+        this.form.get('repositoryConfiguration.digestAlgorithmSet').updateValueAndValidity();
+    }
+
     getRepositoryEnumType(repository: Repository | string): RepositoryTypeEnum {
         if (repository instanceof Repository) {
             return RepositoryTypeEnum[repository.type.toLocaleUpperCase()];
@@ -302,6 +343,10 @@ export class ManageRepositoryComponent implements OnInit {
     isValidRepositoryType(repositoryType) {
         return repositoryType !== null
             && Object.values(RepositoryTypeEnum).map(v => v.toLocaleUpperCase()).includes(repositoryType.toLocaleUpperCase());
+    }
+
+    isMavenLayout() {
+        return this.form.get('layout').value === RepositoryLayoutEnum.MAVEN2;
     }
 
 }

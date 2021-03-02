@@ -119,6 +119,10 @@ export class FormDataService {
     private sanitize(str) {
         return str === null || str === '' ? '' : str;
     }
+
+    getAvailableDigestAlgorithmSet(): string[] {
+        return ['MD5', 'SHA-1', 'SHA-256', 'SHA-512'];
+    }
 }
 
 export function mapFormValueData() {

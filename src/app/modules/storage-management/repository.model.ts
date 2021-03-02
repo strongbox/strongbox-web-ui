@@ -116,6 +116,7 @@ export class Repository {
 
     constructor(type: RepositoryTypeEnum = null) {
         this.type = type;
+        this.repositoryConfiguration = new CustomRepositoryConfiguration();
 
         if (type === RepositoryTypeEnum.PROXY) {
             this.proxyConfiguration = new ProxyConfiguration();

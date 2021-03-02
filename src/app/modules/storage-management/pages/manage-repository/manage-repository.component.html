@@ -56,6 +56,21 @@
                         </mat-select>
                     </mat-form-field>
 
+                    <div formGroupName="repositoryConfiguration">
+                        <mat-checkbox *ngIf="isMavenLayout()" [checked]="overrideAlgorithmConfig" color="primary"
+                            (change)="onOverrideAlgorithmConfigChange()">
+                            Override checksum digest algorithms
+                        </mat-checkbox>
+                        <mat-form-field *ngIf="isMavenLayout() && overrideAlgorithmConfig">
+                            <mat-select formControlName="digestAlgorithmSet" placeholder="Checksum digest algorithms"
+                                [disableOptionCentering]="true" multiple>
+                                <mat-option *ngFor="let algorithm of availableDigestAlgorithmSet" [value]="algorithm">
+                                    {{ algorithm }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
                     <section>
                         <mat-checkbox formControlName="trashEnabled" color="primary">
                             Enable trash
